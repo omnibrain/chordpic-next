@@ -76,10 +76,10 @@ const MenuToggle: React.FunctionComponent<{
 
 const MenuItem: React.FunctionComponent<
   PropsWithChildren<{ isLast?: boolean; to: string }>
-> = ({ children, isLast, to = "/" }) => {
+> = ({ children, to = "/" }) => {
   return (
     <NextLink href={to} passHref>
-      <Link>{children}</Link>
+      <Link whiteSpace="nowrap">{children}</Link>
     </NextLink>
   );
 };
@@ -128,6 +128,7 @@ const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
         <MenuItem to="/news">News</MenuItem>
         <MenuItem to="/help">Help</MenuItem>
         <MenuItem to="/about">About</MenuItem>
+        <MenuItem to="/signin">Sign in</MenuItem>
         {asPath !== "/" && (
           <MenuItem to="/signup" isLast={true}>
             <Button
