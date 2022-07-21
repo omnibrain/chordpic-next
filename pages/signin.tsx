@@ -145,7 +145,7 @@ const SignIn = () => {
             </span>
 
             <span className="pt-1 text-center text-sm">
-              <span className="text-zinc-200">Don't have an account?</span>
+              <span className="text-zinc-200">Don&apos;t have an account?</span>
               {` `}
               <Link href="/signup">
                 <a className="text-accent-9 font-bold hover:underline cursor-pointer">
