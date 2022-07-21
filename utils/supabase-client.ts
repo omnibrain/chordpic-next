@@ -1,5 +1,5 @@
-import { supabaseClient, User } from '@supabase/supabase-auth-helpers/nextjs';
-import { ProductWithPrice, UserDetails } from 'types';
+import { supabaseClient, User } from "@supabase/supabase-auth-helpers/nextjs";
+import { ProductWithPrice, UserDetails } from "../types";
 
 export const supabase = supabaseClient;
 
@@ -7,12 +7,12 @@ export const getActiveProductsWithPrices = async (): Promise<
   ProductWithPrice[]
 > => {
   const { data, error } = await supabase
-    .from('products')
-    .select('*, prices(*)')
-    .eq('active', true)
-    .eq('prices.active', true)
-    .order('metadata->index')
-    .order('unit_amount', { foreignTable: 'prices' });
+    .from("products")
+    .select("*, prices(*)")
+    .eq("active", true)
+    .eq("prices.active", true)
+    .order("metadata->index")
+    .order("unit_amount", { foreignTable: "prices" });
 
   if (error) {
     console.log(error.message);
@@ -24,9 +24,9 @@ export const getActiveProductsWithPrices = async (): Promise<
 
 export const updateUserName = async (user: User, name: string) => {
   await supabase
-    .from<UserDetails>('users')
+    .from<UserDetails>("users")
     .update({
-      full_name: name
+      full_name: name,
     })
-    .eq('id', user.id);
+    .eq("id", user.id);
 };

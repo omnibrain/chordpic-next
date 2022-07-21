@@ -1,14 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
-import { stripe } from './stripe';
-import { toDateTime } from './helpers';
-import { Customer, UserDetails, Price, Product } from 'types';
-import Stripe from 'stripe';
+import { createClient } from "@supabase/supabase-js";
+import { stripe } from "./stripe";
+import { toDateTime } from "./helpers";
+import Stripe from "stripe";
+import { Product, Price, Customer, UserDetails } from "../types";
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin priviliges and overwrites RLS policies!
 const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
 const upsertProductRecord = async (product: Stripe.Product) => {
@@ -18,11 +18,11 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     name: product.name,
     description: product.description ?? undefined,
     image: product.images?.[0] ?? null,
-    metadata: product.metadata
+    metadata: product.metadata,
   };
 
   const { error } = await supabaseAdmin
-    .from<Product>('products')
+    .from<Product>("products")
     .upsert([productData]);
   if (error) throw error;
   console.log(`Product inserted/updated: ${product.id}`);
@@ -31,7 +31,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 const upsertPriceRecord = async (price: Stripe.Price) => {
   const priceData: Price = {
     id: price.id,
-    product_id: typeof price.product === 'string' ? price.product : '',
+    product_id: typeof price.product === "string" ? price.product : "",
     active: price.active,
     currency: price.currency,
     description: price.nickname ?? undefined,
@@ -40,11 +40,11 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
     interval: price.recurring?.interval,
     interval_count: price.recurring?.interval_count,
     trial_period_days: price.recurring?.trial_period_days,
-    metadata: price.metadata
+    metadata: price.metadata,
   };
 
   const { error } = await supabaseAdmin
-    .from<Price>('prices')
+    .from<Price>("prices")
     .upsert([priceData]);
   if (error) throw error;
   console.log(`Price inserted/updated: ${price.id}`);
@@ -52,29 +52,29 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
 
 const createOrRetrieveCustomer = async ({
   email,
-  uuid
+  uuid,
 }: {
   email: string;
   uuid: string;
 }) => {
   const { data, error } = await supabaseAdmin
-    .from<Customer>('customers')
-    .select('stripe_customer_id')
-    .eq('id', uuid)
+    .from<Customer>("customers")
+    .select("stripe_customer_id")
+    .eq("id", uuid)
     .single();
   if (error) {
     // No customer record found, let's create one.
     const customerData: { metadata: { supabaseUUID: string }; email?: string } =
       {
         metadata: {
-          supabaseUUID: uuid
-        }
+          supabaseUUID: uuid,
+        },
       };
     if (email) customerData.email = email;
     const customer = await stripe.customers.create(customerData);
     // Now insert the customer ID into our Supabase mapping table.
     const { error: supabaseError } = await supabaseAdmin
-      .from('customers')
+      .from("customers")
       .insert([{ id: uuid, stripe_customer_id: customer.id }]);
     if (supabaseError) throw supabaseError;
     console.log(`New customer created and inserted for ${uuid}.`);
@@ -97,12 +97,12 @@ const copyBillingDetailsToCustomer = async (
   //@ts-ignore
   await stripe.customers.update(customer, { name, phone, address });
   const { error } = await supabaseAdmin
-    .from<UserDetails>('users')
+    .from<UserDetails>("users")
     .update({
       billing_address: address,
-      payment_method: payment_method[payment_method.type]
+      payment_method: payment_method[payment_method.type],
     })
-    .eq('id', uuid);
+    .eq("id", uuid);
   if (error) throw error;
 };
 
@@ -113,16 +113,16 @@ const manageSubscriptionStatusChange = async (
 ) => {
   // Get customer's UUID from mapping table.
   const { data: customerData, error: noCustomerError } = await supabaseAdmin
-    .from<Customer>('customers')
-    .select('id')
-    .eq('stripe_customer_id', customerId)
+    .from<Customer>("customers")
+    .select("id")
+    .eq("stripe_customer_id", customerId)
     .single();
   if (noCustomerError) throw noCustomerError;
 
   const { id: uuid } = customerData || {};
 
   const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
-    expand: ['default_payment_method']
+    expand: ["default_payment_method"],
   });
   // Upsert the latest status of the subscription object.
   const subscriptionData = {
@@ -150,11 +150,11 @@ const manageSubscriptionStatusChange = async (
       : null,
     trial_end: subscription.trial_end
       ? toDateTime(subscription.trial_end)
-      : null
+      : null,
   };
 
   const { error } = await supabaseAdmin
-    .from('subscriptions')
+    .from("subscriptions")
     .upsert([subscriptionData]);
   if (error) throw error;
   console.log(
@@ -175,5 +175,5 @@ export {
   upsertProductRecord,
   upsertPriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
 };

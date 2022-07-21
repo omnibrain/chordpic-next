@@ -1,11 +1,10 @@
-import { useEffect, useState, createContext, useContext } from 'react';
+import { useEffect, useState, createContext, useContext } from "react";
 import {
   useUser as useSupaUser,
-  User
-} from '@supabase/supabase-auth-helpers/react';
-import { UserDetails } from 'types';
-import { Subscription } from 'types';
-import { SupabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+  User,
+} from "@supabase/supabase-auth-helpers/react";
+import { SupabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { UserDetails, Subscription } from "../types";
 
 type UserContextType = {
   accessToken: string | null;
@@ -32,12 +31,12 @@ export const MyUserContextProvider = (props: Props) => {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
 
   const getUserDetails = () =>
-    supabase.from<UserDetails>('users').select('*').single();
+    supabase.from<UserDetails>("users").select("*").single();
   const getSubscription = () =>
     supabase
-      .from<Subscription>('subscriptions')
-      .select('*, prices(*, products(*))')
-      .in('status', ['trialing', 'active'])
+      .from<Subscription>("subscriptions")
+      .select("*, prices(*, products(*))")
+      .in("status", ["trialing", "active"])
       .single();
 
   useEffect(() => {
@@ -48,10 +47,10 @@ export const MyUserContextProvider = (props: Props) => {
           const userDetailsPromise = results[0];
           const subscriptionPromise = results[1];
 
-          if (userDetailsPromise.status === 'fulfilled')
+          if (userDetailsPromise.status === "fulfilled")
             setUserDetails(userDetailsPromise.value.data);
 
-          if (subscriptionPromise.status === 'fulfilled')
+          if (subscriptionPromise.status === "fulfilled")
             setSubscription(subscriptionPromise.value.data);
 
           setIsloadingData(false);
@@ -68,7 +67,7 @@ export const MyUserContextProvider = (props: Props) => {
     user,
     userDetails,
     isLoading: isLoadingUser || isLoadingData,
-    subscription
+    subscription,
   };
 
   return <UserContext.Provider value={value} {...props} />;
