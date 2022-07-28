@@ -8,17 +8,16 @@ interface Props {
 }
 
 export default function PricingPage({ products }: Props) {
-  return null;
-  // return <Pricing products={products} />;
+  return <Pricing products={products} />;
 }
 
-// export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
-//   // const products = await getActiveProductsWithPrices();
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  const products = await getActiveProductsWithPrices();
 
-//   return {
-//     props: {
-//       // products,
-//     },
-//     revalidate: 60,
-//   };
-// }
+  return {
+    props: {
+      products,
+    },
+    revalidate: 60,
+  };
+}

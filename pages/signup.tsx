@@ -51,7 +51,7 @@ const SignUp = () => {
     if (newUser || user) {
       router.replace("/account");
     }
-  }, [newUser, user]);
+  }, [newUser, user, router]);
 
   return (
     <div className="flex justify-center height-screen-helper">

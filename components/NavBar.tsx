@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
 import { Switch } from "@chakra-ui/react";
 import { MoonIcon } from "@chakra-ui/icons";
+import { useUser } from "../utils/useUser";
 
 const Logo: React.FunctionComponent = () => {
   const bg = useColorModeValue("black", "white");
@@ -87,12 +88,15 @@ const MenuItem: React.FunctionComponent<
 const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
   isOpen,
 }) => {
+  const { user } = useUser();
   const { asPath } = useRouter();
   const { colorMode, toggleColorMode } = useColorMode();
 
   const highlightButtonBg = useColorModeValue("black", "white");
   const highlightButtonBgHover = useColorModeValue("gray.700", "gray.300");
   const highlightButtonColor = useColorModeValue("white", "black");
+
+  console.log(user);
 
   return (
     <Box
@@ -106,6 +110,22 @@ const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
         direction={["column", "row", "row", "row"]}
         pt={[4, 4, 0, 0]}
       >
+        {asPath !== "/" && (
+          <MenuItem to="/signup" isLast={true}>
+            <Button
+              as="span"
+              size="md"
+              rounded="md"
+              color={highlightButtonColor}
+              bg={highlightButtonBg}
+              _hover={{
+                bg: highlightButtonBgHover,
+              }}
+            >
+              Create chord diagram
+            </Button>
+          </MenuItem>
+        )}
         <FormControl
           display="flex"
           alignItems="center"
@@ -125,25 +145,12 @@ const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
             isChecked={colorMode === "dark"}
           />
         </FormControl>
-        <MenuItem to="/news">News</MenuItem>
-        <MenuItem to="/help">Help</MenuItem>
-        <MenuItem to="/about">About</MenuItem>
-        <MenuItem to="/signin">Sign in</MenuItem>
-        {asPath !== "/" && (
-          <MenuItem to="/signup" isLast={true}>
-            <Button
-              as="span"
-              size="md"
-              rounded="md"
-              color={highlightButtonColor}
-              bg={highlightButtonBg}
-              _hover={{
-                bg: highlightButtonBgHover,
-              }}
-            >
-              Create Account
-            </Button>
-          </MenuItem>
+        <MenuItem to="/pricing">Pricing</MenuItem>
+        <MenuItem to="/account">Account</MenuItem>
+        {user ? (
+          <MenuItem to="/api/auth/logout">Sign out</MenuItem>
+        ) : (
+          <MenuItem to="/signin">Sign in</MenuItem>
         )}
       </Stack>
     </Box>

@@ -1,12 +1,11 @@
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
-import Link from "next/link";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
-import { Button, Input } from "@chakra-ui/react";
+import { Box, Button, Input, Text, Link } from "@chakra-ui/react";
 import { Provider } from "@supabase/supabase-js";
-import { Logo } from "../components/Logo";
 import { getURL } from "../utils/helpers";
 
 const SignIn = () => {
@@ -56,32 +55,21 @@ const SignIn = () => {
     if (user) {
       router.replace("/account");
     }
-  }, [user]);
+  }, [user, router]);
 
   if (!user)
     return (
       <div className="flex justify-center height-screen-helper">
         <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
-          <div className="flex justify-center pb-12 ">
-            <Logo />
-          </div>
-          <div className="flex flex-col space-y-4">
-            {message.content && (
-              <div
-                className={`${
-                  message.type === "error" ? "text-pink-500" : "text-green-500"
-                } border ${
-                  message.type === "error"
-                    ? "border-pink-500"
-                    : "border-green-500"
-                } p-3`}
-              >
-                {message.content}
-              </div>
-            )}
+          {message.content && (
+            <Text color="red.500" fontSize="sm">
+              {message.content}
+            </Text>
+          )}
 
-            {!showPasswordInput && (
-              <form onSubmit={handleSignin} className="flex flex-col space-y-4">
+          {!showPasswordInput && (
+            <form onSubmit={(e) => handleSignin}>
+              <Box display="flex" gap={3}>
                 <Input
                   type="email"
                   placeholder="Email"
@@ -90,18 +78,24 @@ const SignIn = () => {
                   required
                 />
                 <Button
-                  variant="slim"
                   type="submit"
                   isLoading={loading}
                   disabled={!email.length}
                 >
                   Send magic link
                 </Button>
-              </form>
-            )}
+              </Box>
+            </form>
+          )}
 
-            {showPasswordInput && (
-              <form onSubmit={handleSignin} className="flex flex-col space-y-4">
+          {showPasswordInput && (
+            <form onSubmit={handleSignin}>
+              <Box
+                display="flex"
+                flexDir="column"
+                alignItems="flex-start"
+                gap={3}
+              >
                 <Input
                   type="email"
                   placeholder="Email"
@@ -118,64 +112,62 @@ const SignIn = () => {
                 />
                 <Button
                   className="mt-1"
-                  variant="slim"
                   type="submit"
                   isLoading={loading}
                   disabled={!password.length || !email.length}
                 >
                   Sign in
                 </Button>
-              </form>
-            )}
+              </Box>
+            </form>
+          )}
 
-            <span className="pt-1 text-center text-sm">
-              <a
-                href="#"
-                className="text-zinc-200 text-accent-9 hover:underline cursor-pointer"
-                onClick={() => {
-                  if (showPasswordInput) setPassword("");
-                  setShowPasswordInput(!showPasswordInput);
-                  setMessage({});
-                }}
-              >
-                {`Or sign in with ${
-                  showPasswordInput ? "magic link" : "password"
-                }.`}
-              </a>
-            </span>
+          <Box mt={3}>
+            <Link
+              href="#"
+              onClick={() => {
+                if (showPasswordInput) setPassword("");
+                setShowPasswordInput(!showPasswordInput);
+                setMessage({});
+              }}
+              textDecor="underline"
+            >
+              {`Or sign in with ${
+                showPasswordInput ? "magic link" : "password"
+              }`}
+            </Link>
+            .
+          </Box>
 
-            <span className="pt-1 text-center text-sm">
-              <span className="text-zinc-200">Don&apos;t have an account?</span>
-              {` `}
-              <Link href="/signup">
-                <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-                  Sign up.
-                </a>
-              </Link>
-            </span>
-          </div>
-
-          <div className="flex items-center my-6">
-            <div
-              className="border-t border-zinc-600 flex-grow mr-3"
-              aria-hidden="true"
-            ></div>
-            <div className="text-zinc-400">Or</div>
-            <div
-              className="border-t border-zinc-600 flex-grow ml-3"
-              aria-hidden="true"
-            ></div>
-          </div>
-
-          <Button
-            variant="slim"
-            type="submit"
-            disabled={loading}
-            onClick={() => handleOAuthSignIn("github")}
-          >
-            <span className="ml-2">Continue with GitHub</span>
-          </Button>
+          <span className="pt-1 text-center text-sm">
+            <span className="text-zinc-200">Don&apos;t have an account?</span>
+            {` `}
+            <NextLink href="/signup">
+              <Link textDecor="underline">Sign up</Link>
+            </NextLink>
+            .
+          </span>
         </div>
+
+        <div className="flex items-center my-6">
+          <div
+            className="border-t border-zinc-600 flex-grow mr-3"
+            aria-hidden="true"
+          ></div>
+          <div className="text-zinc-400">Or</div>
+          <div
+            className="border-t border-zinc-600 flex-grow ml-3"
+            aria-hidden="true"
+          ></div>
+        </div>
+
+        <Button
+          type="submit"
+          disabled={loading}
+          onClick={() => handleOAuthSignIn("github")}
+        >
+          Continue with GitHub
+        </Button>
       </div>
     );
 

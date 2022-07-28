@@ -1,8 +1,17 @@
-import Link from "next/link";
+import NextLink from "next/link";
 import { useState, ReactNode } from "react";
 
 import { withAuthRequired, User } from "@supabase/supabase-auth-helpers/nextjs";
-import { Button } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Link,
+  SimpleGrid,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { postData } from "../utils/helpers";
 import { useUser } from "../utils/useUser";
 
@@ -13,20 +22,18 @@ interface Props {
   children: ReactNode;
 }
 
-function Card({ title, description, footer, children }: Props) {
-  return (
-    <div className="border border-zinc-700	max-w-3xl w-full p rounded-md m-auto my-8">
-      <div className="px-5 py-4">
-        <h3 className="text-2xl mb-1 font-medium">{title}</h3>
-        <p className="text-zinc-300">{description}</p>
-        {children}
-      </div>
-      <div className="border-t border-zinc-700 bg-zinc-900 p-4 text-zinc-500 rounded-b-md">
-        {footer}
-      </div>
-    </div>
-  );
-}
+const Card = ({ title, description, footer, children }: Props) => (
+  <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+    <Box p={5}>
+      <Heading size="md" mb={3}>
+        {title}
+      </Heading>
+      <Text>{description}</Text>
+      {children}
+    </Box>
+    <Box p={5}>{footer}</Box>
+  </Box>
+);
 
 export const getServerSideProps = withAuthRequired({ redirectTo: "/signin" });
 
@@ -56,18 +63,11 @@ export default function Account({ user }: { user: User }) {
     }).format((subscription?.prices?.unit_amount || 0) / 100);
 
   return (
-    <section className="bg-black mb-32">
-      <div className="max-w-6xl mx-auto pt-8 sm:pt-24 pb-8 px-4 sm:px-6 lg:px-8">
-        <div className="sm:flex sm:flex-col sm:align-center">
-          <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
-            Account
-          </h1>
-          <p className="mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl max-w-2xl m-auto">
-            We partnered with Stripe for a simplified billing.
-          </p>
-        </div>
-      </div>
-      <div className="p-4">
+    <Box as="section">
+      <Heading as="h1" size="lg" mb={4}>
+        Account
+      </Heading>
+      <SimpleGrid gap={3} minChildWidth="15rem">
         <Card
           title="Your Plan"
           description={
@@ -93,21 +93,17 @@ export default function Account({ user }: { user: User }) {
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {isLoading ? (
-              <div className="h-12 mb-6">...</div>
+              <Spinner />
             ) : subscription ? (
               `${subscriptionPrice}/${subscription?.prices?.interval}`
             ) : (
-              <Link href="/">
-                <a>Choose your plan</a>
-              </Link>
+              <NextLink href="/pricing" passHref>
+                <Button as="a">Choose your plan</Button>
+              </NextLink>
             )}
           </div>
         </Card>
-        <Card
-          title="Your Name"
-          description="Please enter your full name, or a display name you are comfortable with."
-          footer={<p>Please use 64 characters at maximum.</p>}
-        >
+        <Card title="Your Name">
           <div className="text-xl mt-8 mb-4 font-semibold">
             {userDetails ? (
               `${
@@ -119,16 +115,10 @@ export default function Account({ user }: { user: User }) {
             )}
           </div>
         </Card>
-        <Card
-          title="Your Email"
-          description="Please enter the email address you want to use to login."
-          footer={<p>We will email you to verify the change.</p>}
-        >
-          <p className="text-xl mt-8 mb-4 font-semibold">
-            {user ? user.email : undefined}
-          </p>
+        <Card title="Your Email">
+          <Text as="i">{user ? user.email : undefined}</Text>
         </Card>
-      </div>
-    </section>
+      </SimpleGrid>
+    </Box>
   );
 }
