@@ -25,21 +25,18 @@ export const FreeProduct: React.FunctionComponent<
   }).format(0);
 
   return (
-    <Box key={product.id} borderWidth="1px" borderRadius="xl" p={6} shadow="sm">
+    <Box key={product.id} shadow="md" border="2px" borderRadius="lg" p={6}>
       <Box>
         <Heading size="lg" as="h2">
           Chordpic Free
         </Heading>
-        <Text>Basic Chordpic features</Text>
+        <Text mt={3}>Basic Chordpic features</Text>
         <Text my={6}>
           <Box as="span" fontSize="5xl">
             {priceString}
           </Box>
           <Box as="span">/{billingInterval}</Box>
         </Text>
-        <Button disabled={true} size="lg" width="100%">
-          Subscribe
-        </Button>
       </Box>
     </Box>
   );

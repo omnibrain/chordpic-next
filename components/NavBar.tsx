@@ -96,8 +96,6 @@ const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
   const highlightButtonBgHover = useColorModeValue("gray.700", "gray.300");
   const highlightButtonColor = useColorModeValue("white", "black");
 
-  console.log(user);
-
   return (
     <Box
       display={{ base: isOpen ? "block" : "none", md: "block" }}
@@ -166,6 +164,7 @@ const NavBarContainer: React.FunctionComponent<PropsWithChildren<{}>> = ({
 
   return (
     <Flex
+      minHeight="2.5rem"
       as="nav"
       align="center"
       justify="space-between"
@@ -174,6 +173,8 @@ const NavBarContainer: React.FunctionComponent<PropsWithChildren<{}>> = ({
       p={4}
       bg={bg}
       color={textColor}
+      borderBottom="2px"
+      shadow="lg"
       {...props}
     >
       {children}

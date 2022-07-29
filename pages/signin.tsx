@@ -4,9 +4,24 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
-import { Box, Button, Input, Text, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Input,
+  Text,
+  Link,
+  Spinner,
+  Center,
+  SimpleGrid,
+  Wrap,
+  WrapItem,
+  Flex,
+  Heading,
+  Divider,
+} from "@chakra-ui/react";
 import { Provider } from "@supabase/supabase-js";
 import { getURL } from "../utils/helpers";
+import { Logo } from "../components/Logo";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -21,25 +36,30 @@ const SignIn = () => {
   const { user } = useUser();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    setLoading(true);
-    setMessage({});
+      setLoading(true);
+      setMessage({});
 
-    const { error } = await supabaseClient.auth.signIn(
-      { email, password },
-      { redirectTo: getURL() }
-    );
-    if (error) {
-      setMessage({ type: "error", content: error.message });
+      const { error } = await supabaseClient.auth.signIn(
+        { email, password },
+        { redirectTo: getURL() }
+      );
+      if (error) {
+        setMessage({ type: "error", content: error.message });
+      }
+      if (!password) {
+        setMessage({
+          type: "note",
+          content: "Check your email for the magic link.",
+        });
+      }
+      setLoading(false);
+    } catch (err) {
+      console.error("Failed to log in", err);
+      throw err;
     }
-    if (!password) {
-      setMessage({
-        type: "note",
-        content: "Check your email for the magic link.",
-      });
-    }
-    setLoading(false);
   };
 
   const handleOAuthSignIn = async (provider: Provider) => {
@@ -59,8 +79,15 @@ const SignIn = () => {
 
   if (!user)
     return (
-      <div className="flex justify-center height-screen-helper">
-        <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
+      <Flex justify="center">
+        <Box flexBasis="22rem" p={4} shadow="md" border="2px" borderRadius="lg">
+          <Center my={8} flexDir="column">
+            <Logo width={12} height={12} />
+            <Heading as="h1" size="md" mt={8} mb={4}>
+              Sign in to Chordpic
+            </Heading>
+          </Center>
+
           {message.content && (
             <Text color="red.500" fontSize="sm">
               {message.content}
@@ -68,19 +95,23 @@ const SignIn = () => {
           )}
 
           {!showPasswordInput && (
-            <form onSubmit={(e) => handleSignin}>
-              <Box display="flex" gap={3}>
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+            <form onSubmit={handleSignin}>
+              <Box>
+                <Box>
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </Box>
                 <Button
+                  mt={4}
                   type="submit"
                   isLoading={loading}
                   disabled={!email.length}
+                  width="100%"
                 >
                   Send magic link
                 </Button>
@@ -115,6 +146,7 @@ const SignIn = () => {
                   type="submit"
                   isLoading={loading}
                   disabled={!password.length || !email.length}
+                  width="100%"
                 >
                   Sign in
                 </Button>
@@ -122,7 +154,7 @@ const SignIn = () => {
             </form>
           )}
 
-          <Box mt={3}>
+          <Box mt={4} textAlign="center">
             <Link
               href="#"
               onClick={() => {
@@ -130,7 +162,6 @@ const SignIn = () => {
                 setShowPasswordInput(!showPasswordInput);
                 setMessage({});
               }}
-              textDecor="underline"
             >
               {`Or sign in with ${
                 showPasswordInput ? "magic link" : "password"
@@ -139,39 +170,38 @@ const SignIn = () => {
             .
           </Box>
 
-          <span className="pt-1 text-center text-sm">
-            <span className="text-zinc-200">Don&apos;t have an account?</span>
+          <Box textAlign="center" my={2}>
+            <Box as="span">Don&apos;t have an account?</Box>
             {` `}
             <NextLink href="/signup">
-              <Link textDecor="underline">Sign up</Link>
+              <Link>Sign up</Link>
             </NextLink>
             .
-          </span>
-        </div>
+          </Box>
 
-        <div className="flex items-center my-6">
-          <div
-            className="border-t border-zinc-600 flex-grow mr-3"
-            aria-hidden="true"
-          ></div>
-          <div className="text-zinc-400">Or</div>
-          <div
-            className="border-t border-zinc-600 flex-grow ml-3"
-            aria-hidden="true"
-          ></div>
-        </div>
+          <Divider />
 
-        <Button
-          type="submit"
-          disabled={loading}
-          onClick={() => handleOAuthSignIn("github")}
-        >
-          Continue with GitHub
-        </Button>
-      </div>
+          <Box textAlign="center" my={4}>
+            Or
+          </Box>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            onClick={() => handleOAuthSignIn("github")}
+            width="100%"
+          >
+            Continue with GitHub
+          </Button>
+        </Box>
+      </Flex>
     );
 
-  return <div className="m-6">...</div>;
+  return (
+    <Center mt={8}>
+      <Spinner />
+    </Center>
+  );
 };
 
 export default SignIn;

@@ -60,21 +60,24 @@ export const Product: React.FunctionComponent<
   return (
     <Box
       key={product.id}
-      borderWidth="1px"
+      borderWidth={colorMode === "dark" ? undefined : "2px"}
       borderRadius="xl"
       p={6}
       shadow="lg"
+      borderColor="black"
       bgGradient={
         colorMode === "dark"
           ? "linear(to-b, teal.300, purple.600)"
           : "linear(to-b, teal.100, purple.300)"
       }
+      onClick={() => handleCheckout(price)}
+      cursor="pointer"
     >
       <Box>
         <Heading size="lg" as="h2">
           {product.name}
         </Heading>
-        <Text>{product.description}</Text>
+        <Text mt={3}>{product.description}</Text>
         <Text my={6}>
           <Box as="span" fontSize="5xl">
             {priceString}

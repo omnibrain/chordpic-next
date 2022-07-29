@@ -23,7 +23,15 @@ interface Props {
 }
 
 const Card = ({ title, description, footer, children }: Props) => (
-  <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+  <Box
+    maxW="sm"
+    borderRadius="lg"
+    overflow="hidden"
+    flexBasis="22rem"
+    p={4}
+    shadow="md"
+    border="2px"
+  >
     <Box p={5}>
       <Heading size="md" mb={3}>
         {title}
@@ -64,7 +72,7 @@ export default function Account({ user }: { user: User }) {
 
   return (
     <Box as="section">
-      <Heading as="h1" size="lg" mb={4}>
+      <Heading as="h1" size="xl" mb={12}>
         Account
       </Heading>
       <SimpleGrid gap={3} minChildWidth="15rem">
