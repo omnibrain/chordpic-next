@@ -36,6 +36,8 @@ const relevantEvents = new Set([
 
 const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
+    console.log("### Stripe webhook ###");
+
     const buf = await buffer(req);
     const sig = req.headers["stripe-signature"];
     const webhookSecret =
@@ -50,6 +52,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       console.log(`❌ Error message: ${err.message}`);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
+
+    console.log("Stripe event:", event.type);
 
     if (relevantEvents.has(event.type)) {
       try {
