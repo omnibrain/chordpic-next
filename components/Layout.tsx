@@ -67,7 +67,7 @@ export const Layout: React.FunctionComponent<
       </Head>
       <SimpleGrid row={["100px", null]} spacing="40px">
         <NavBar />
-        <Container maxW="container.lg" as="main">
+        <Container maxW="container.lg" as="main" mb={12}>
           {children}
         </Container>
       </SimpleGrid>

@@ -1,23 +1,22 @@
 import NextLink from "next/link";
-import { useState, ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
-import { withAuthRequired, User } from "@supabase/supabase-auth-helpers/nextjs";
 import {
+  Badge,
   Box,
   Button,
   Heading,
-  Link,
   SimpleGrid,
   Spinner,
-  Stack,
   Text,
 } from "@chakra-ui/react";
+import { User, withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { postData } from "../utils/helpers";
 import { useUser } from "../utils/useUser";
 
 interface Props {
   title: string;
-  description?: string;
+  description?: string | React.ReactNode;
   footer?: ReactNode;
   children: ReactNode;
 }
@@ -31,6 +30,7 @@ const Card = ({ title, description, footer, children }: Props) => (
     p={4}
     shadow="md"
     border="2px"
+    borderColor="primary"
   >
     <Box p={5}>
       <Heading size="md" mb={3}>
@@ -47,7 +47,7 @@ export const getServerSideProps = withAuthRequired({ redirectTo: "/signin" });
 
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
-  const { isLoading, subscription, userDetails } = useUser();
+  const { isLoading, subscription } = useUser();
 
   const redirectToCustomerPortal = async () => {
     setLoading(true);
@@ -79,27 +79,29 @@ export default function Account({ user }: { user: User }) {
         <Card
           title="Your Plan"
           description={
-            subscription
-              ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
-              : ""
+            subscription ? (
+              <>
+                You are currently on the{" "}
+                <Badge>{subscription?.prices?.products?.name}</Badge> plan.
+              </>
+            ) : (
+              ""
+            )
           }
           footer={
-            <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">
-                Manage your subscription on Stripe.
-              </p>
+            <Box>
+              <Text mb={4}>Manage your subscription</Text>
               <Button
-                variant="solid"
                 isLoading={loading}
-                disabled={loading || !subscription}
+                // disabled={loading || !subscription}
                 onClick={redirectToCustomerPortal}
               >
                 Open customer portal
               </Button>
-            </div>
+            </Box>
           }
         >
-          <div className="text-xl mt-8 mb-4 font-semibold">
+          <Box>
             {isLoading ? (
               <Spinner />
             ) : subscription ? (
@@ -109,19 +111,7 @@ export default function Account({ user }: { user: User }) {
                 <Button as="a">Choose your plan</Button>
               </NextLink>
             )}
-          </div>
-        </Card>
-        <Card title="Your Name">
-          <div className="text-xl mt-8 mb-4 font-semibold">
-            {userDetails ? (
-              `${
-                userDetails.full_name ??
-                `${userDetails.first_name} ${userDetails.last_name}`
-              }`
-            ) : (
-              <div className="h-8 mb-6">...</div>
-            )}
-          </div>
+          </Box>
         </Card>
         <Card title="Your Email">
           <Text as="i">{user ? user.email : undefined}</Text>

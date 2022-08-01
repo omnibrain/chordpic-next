@@ -17,12 +17,14 @@ import React, { PropsWithChildren } from "react";
 import { Switch } from "@chakra-ui/react";
 import { MoonIcon } from "@chakra-ui/icons";
 import { useUser } from "../utils/useUser";
+import { useSubscription } from "../utils/useSubscription";
+import { SubscriptionType } from "../types";
 
 const Logo: React.FunctionComponent = () => {
   const bg = useColorModeValue("black", "white");
 
   return (
-    <Box>
+    <Box height="3rem" display="flex" alignItems="center">
       <NextLink href="/" passHref>
         <Link display="flex" alignItems="center" gap={3} fontSize={20}>
           <chakra.svg viewBox="0 0 100 100" height={7} width={7}>
@@ -76,25 +78,25 @@ const MenuToggle: React.FunctionComponent<{
 };
 
 const MenuItem: React.FunctionComponent<
-  PropsWithChildren<{ isLast?: boolean; to: string }>
-> = ({ children, to = "/" }) => {
+  PropsWithChildren<{ isLast?: boolean; to: string; onNavigate(): void }>
+> = ({ children, onNavigate, to = "/" }) => {
   return (
     <NextLink href={to} passHref>
-      <Link whiteSpace="nowrap">{children}</Link>
+      <Link whiteSpace="nowrap" onClick={onNavigate}>
+        {children}
+      </Link>
     </NextLink>
   );
 };
 
-const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
-  isOpen,
-}) => {
+const MenuLinks: React.FunctionComponent<{
+  isOpen: boolean;
+  onCloseMenu(): void;
+}> = ({ isOpen, onCloseMenu }) => {
   const { user } = useUser();
   const { asPath } = useRouter();
   const { colorMode, toggleColorMode } = useColorMode();
-
-  const highlightButtonBg = useColorModeValue("black", "white");
-  const highlightButtonBgHover = useColorModeValue("gray.700", "gray.300");
-  const highlightButtonColor = useColorModeValue("white", "black");
+  const subscription = useSubscription();
 
   return (
     <Box
@@ -109,20 +111,13 @@ const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
         pt={[4, 4, 0, 0]}
       >
         {asPath !== "/" && (
-          <MenuItem to="/signup" isLast={true}>
-            <Button
-              as="span"
-              size="md"
-              rounded="md"
-              color={highlightButtonColor}
-              bg={highlightButtonBg}
-              _hover={{
-                bg: highlightButtonBgHover,
-              }}
-            >
-              Create chord diagram
-            </Button>
-          </MenuItem>
+          <Box>
+            <NextLink href="/" passHref>
+              <Button as="a" size="md" onClick={onCloseMenu}>
+                Create chord diagram
+              </Button>
+            </NextLink>
+          </Box>
         )}
         <FormControl
           display="flex"
@@ -143,12 +138,25 @@ const MenuLinks: React.FunctionComponent<{ isOpen: boolean }> = ({
             isChecked={colorMode === "dark"}
           />
         </FormControl>
-        <MenuItem to="/pricing">Pricing</MenuItem>
-        <MenuItem to="/account">Account</MenuItem>
+        {subscription === SubscriptionType.FREE && (
+          <MenuItem onNavigate={onCloseMenu} to="/pricing">
+            Pricing
+          </MenuItem>
+        )}
+
         {user ? (
-          <MenuItem to="/api/auth/logout">Sign out</MenuItem>
+          <>
+            <MenuItem onNavigate={onCloseMenu} to="/account">
+              Account
+            </MenuItem>
+            <MenuItem onNavigate={onCloseMenu} to="/api/auth/logout">
+              Sign out
+            </MenuItem>
+          </>
         ) : (
-          <MenuItem to="/signin">Sign in</MenuItem>
+          <MenuItem to="/signin" onNavigate={onCloseMenu}>
+            Sign in
+          </MenuItem>
         )}
       </Stack>
     </Box>
@@ -164,7 +172,6 @@ const NavBarContainer: React.FunctionComponent<PropsWithChildren<{}>> = ({
 
   return (
     <Flex
-      minHeight="2.5rem"
       as="nav"
       align="center"
       justify="space-between"
@@ -174,6 +181,7 @@ const NavBarContainer: React.FunctionComponent<PropsWithChildren<{}>> = ({
       bg={bg}
       color={textColor}
       borderBottom="2px"
+      borderBottomColor="primary"
       shadow="lg"
       {...props}
     >
@@ -191,7 +199,7 @@ export const NavBar = () => {
     <NavBarContainer>
       <Logo />
       <MenuToggle toggle={toggle} isOpen={isOpen} />
-      <MenuLinks isOpen={isOpen} />
+      <MenuLinks isOpen={isOpen} onCloseMenu={() => setIsOpen(false)} />
     </NavBarContainer>
   );
 };

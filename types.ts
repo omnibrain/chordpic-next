@@ -68,3 +68,8 @@ export interface Subscription {
   trial_end?: string;
   prices?: Price;
 }
+
+export enum SubscriptionType {
+  FREE = 'FREE',
+  PRO = 'PRO',
+}

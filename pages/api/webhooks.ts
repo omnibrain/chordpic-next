@@ -46,7 +46,13 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     let event: Stripe.Event;
 
     try {
-      if (!sig || !webhookSecret) return;
+      if (!sig) {
+        return res.status(400).send(`Webhook Error: Signature is missing`);
+      }
+      if (!webhookSecret) {
+        return res.status(400).send(`Webhook Error: Webhook secret is missing`);
+      }
+
       event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
     } catch (err: any) {
       console.log(`❌ Error message: ${err.message}`);

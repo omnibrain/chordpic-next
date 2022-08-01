@@ -90,6 +90,7 @@ export const Product: React.FunctionComponent<
           onClick={() => handleCheckout(price)}
           size="lg"
           width="100%"
+          colorScheme="gray"
         >
           {product.name === subscription?.prices?.products?.name
             ? "Manage"
