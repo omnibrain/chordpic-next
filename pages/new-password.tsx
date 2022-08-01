@@ -9,14 +9,13 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { AuthBox } from "../components/AuthBox";
-import { getURL } from "../utils/helpers";
-import { supabase } from "../utils/supabase-client";
 import { useMutation } from "@tanstack/react-query";
-import { useUser } from "../utils/useUser";
 import { useRouter } from "next/router";
+import { AuthBox } from "../components/AuthBox";
+import { supabase } from "../utils/supabase-client";
+import { useUser } from "../utils/useUser";
 
-const updatePasswordMutation = () => {
+const useUpdatePasswordMutation = () => {
   const { accessToken } = useUser();
 
   return useMutation((newPassword: string) => {
@@ -34,7 +33,7 @@ const NewPassword = () => {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const mutation = updatePasswordMutation();
+  const mutation = useUpdatePasswordMutation();
   const [message, setMessage] = useState<{ type?: string; content?: string }>({
     type: "",
     content: "",

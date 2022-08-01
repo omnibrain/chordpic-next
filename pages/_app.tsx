@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         router.replace("/new-password");
       }
     });
-  }, []);
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>
