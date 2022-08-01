@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   chakra,
@@ -22,6 +23,7 @@ import { SubscriptionType } from "../types";
 
 const Logo: React.FunctionComponent = () => {
   const bg = useColorModeValue("black", "white");
+  const subscription = useSubscription();
 
   return (
     <Box height="3rem" display="flex" alignItems="center">
@@ -39,6 +41,7 @@ const Logo: React.FunctionComponent = () => {
             <chakra.circle r={50} fill={bg} cx={50} cy={50} />
           </chakra.svg>
           Chordpic
+          {subscription === SubscriptionType.PRO && <Badge>PRO</Badge>}
         </Link>
       </NextLink>
     </Box>

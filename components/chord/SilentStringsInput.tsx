@@ -1,8 +1,6 @@
-import * as React from "react";
 import styled from "@emotion/styled";
-import { IChordInputSettings } from "./ChordEditor";
 import { ChordMatrix, EmptyStringState } from "../../services/chord-matrix";
-import { Box, Flex } from "@chakra-ui/react";
+import { IChordInputSettings } from "./ChordEditor";
 
 interface IProps {
   settings: IChordInputSettings;
@@ -70,7 +68,11 @@ const StyledSilentStringsInput = styled.div<
 `
 );
 
-export default ({ matrix, settings, onMatrixChange }: IProps) => (
+export const SilentStringsInput = ({
+  matrix,
+  settings,
+  onMatrixChange,
+}: IProps) => (
   <StyledSilentStringsInput {...settings} numStrings={matrix.numStrings}>
     {matrix.getEmptyStringStates().map((state, i) => (
       <div

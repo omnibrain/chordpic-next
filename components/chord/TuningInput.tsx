@@ -50,7 +50,7 @@ const Input = styled.input`
   padding: 0;
 `;
 
-export default (props: IProps) => (
+export const TuningInput = (props: IProps) => (
   <StyledTuningInput {...props.settings} numStrings={props.numStrings}>
     {props.tunings.map((tuning, i) => {
       const stringLabel = Math.abs(i - props.numStrings);

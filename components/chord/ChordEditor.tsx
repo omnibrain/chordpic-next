@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import TuningInput from "./TuningInput";
-import ChordInput from "./chord-input/ChordInput";
-import SilentStringsInput from "./SilentStringsInput";
+import { TuningInput } from "./TuningInput";
+import { ChordInput } from "./chord-input/ChordInput";
+import { SilentStringsInput } from "./SilentStringsInput";
 import { Chord, ChordSettings } from "svguitar";
-import EditModeInput from "./EditModeInput";
+import { EditModeInput } from "./EditModeInput";
 import { Chart } from "../../domain/chart";
 import { EditMode } from "../../domain/edit-mode";
 import { ChordMatrix } from "../../services/chord-matrix";
@@ -72,7 +72,8 @@ export const ChordEditor = (props: IProps) => {
         tuning,
       },
     });
-  }, [props.numFrets, props.numStrings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.numFrets, props.numStrings, matrix]);
 
   if (!mounted) return null;
 

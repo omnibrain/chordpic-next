@@ -89,7 +89,7 @@ function getTargetStringIndex(e: TouchEvent<HTMLDivElement>): number | null {
   return Number(touchCellDomEl.getAttribute(stringIndexDataAttr));
 }
 
-export default (props: IProps) => {
+export const ChordInput = (props: IProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [startFrom, setStartFrom] = useState<{
     stringIndex: number;

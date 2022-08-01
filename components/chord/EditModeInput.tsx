@@ -7,7 +7,7 @@ interface IProps {
   editMode: EditMode;
 }
 
-export default ({ onEditModeChange, editMode }: IProps) => {
+export const EditModeInput = ({ onEditModeChange, editMode }: IProps) => {
   const onChange = (mode: EditMode) => () => onEditModeChange(mode);
 
   return (
