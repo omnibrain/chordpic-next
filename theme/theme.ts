@@ -25,8 +25,19 @@ const Input = {
   },
 };
 
+const Button = {
+  variants: {
+    outline: {
+      border: "2px solid",
+    },
+  },
+  sizes: {},
+  defaultProps: {
+    variant: null,
+  },
+};
+
 const Divider: ComponentStyleConfig = {
-  // The styles all button have in common
   baseStyle: {
     borderColor: "primary",
     borderWidth: "2px",
@@ -47,15 +58,20 @@ export const theme = extendTheme(
     components: {
       Input,
       Divider,
-      Button: {
-        defaultProps: {
-          colorScheme: "teal",
+      Button,
+    },
+    styles: {
+      global: () => ({
+        html: {
+          fontSize: "16px",
         },
-      },
+        body: {
+          fontFamily: "Inter",
+        },
+      }),
     },
   },
   withDefaultColorScheme({
     colorScheme: "teal",
-    components: ["Button", "Divider", "Badge"],
   })
 );

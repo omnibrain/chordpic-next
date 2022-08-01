@@ -26,7 +26,15 @@ const Logo: React.FunctionComponent = () => {
   return (
     <Box height="3rem" display="flex" alignItems="center">
       <NextLink href="/" passHref>
-        <Link display="flex" alignItems="center" gap={3} fontSize={20}>
+        <Link
+          display="flex"
+          alignItems="center"
+          gap={3}
+          fontSize="1.25rem"
+          _hover={{
+            textDecor: "none",
+          }}
+        >
           <chakra.svg viewBox="0 0 100 100" height={7} width={7}>
             <chakra.circle r={50} fill={bg} cx={50} cy={50} />
           </chakra.svg>
@@ -113,7 +121,7 @@ const MenuLinks: React.FunctionComponent<{
         {asPath !== "/" && (
           <Box>
             <NextLink href="/" passHref>
-              <Button as="a" size="md" onClick={onCloseMenu}>
+              <Button as="a" size="md" onClick={onCloseMenu} variant="solid">
                 Create chord diagram
               </Button>
             </NextLink>

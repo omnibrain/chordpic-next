@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { supabase } from "../utils/supabase-client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { ChartProvider } from "../components/chord/useChart";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -16,9 +17,7 @@ const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
-    console.log(window.location.hash);
     supabase.auth.onAuthStateChange((event) => {
-      console.log("Supabase auth event", event);
       if (event === "PASSWORD_RECOVERY") {
         router.replace("/new-password");
       }
@@ -30,9 +29,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ChakraProvider theme={theme}>
         <UserProvider supabaseClient={supabaseClient}>
           <MyUserContextProvider supabaseClient={supabaseClient}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <ChartProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ChartProvider>
           </MyUserContextProvider>
         </UserProvider>
       </ChakraProvider>
