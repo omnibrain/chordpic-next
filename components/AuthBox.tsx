@@ -14,10 +14,10 @@ export const AuthBox: React.FunctionComponent<
       <Box
         flexBasis="22rem"
         p={4}
-        shadow="md"
-        border="2px"
-        borderRadius="lg"
+        shadow="lg"
         borderColor="primary"
+        borderRadius="lg"
+        borderWidth="1px"
       >
         <Center my={8} flexDir="column">
           <Logo width={12} height={12} />

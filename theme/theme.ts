@@ -56,9 +56,16 @@ export const theme = extendTheme(
       },
     },
     components: {
-      Input,
+      // Input,
+      NumberInput: Input,
       Divider,
       Button,
+      Link: {
+        baseStyle: ({ colorMode }: { colorMode: ColorMode }) => ({
+          color: colorMode === "dark" ? "teal.400" : "teal.600",
+          fontWeight: "bold",
+        }),
+      },
     },
     styles: {
       global: () => ({

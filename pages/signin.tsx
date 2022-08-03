@@ -107,6 +107,7 @@ const SignIn = () => {
                 />
               </Box>
               <Button
+                variant="solid"
                 mt={4}
                 type="submit"
                 isLoading={loading}

@@ -5,11 +5,14 @@ import {
   GridItem,
   Heading,
   useColorModeValue,
+  Text,
+  Link,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { ChordEditor } from "../components/chord/ChordEditor";
 import { ChordResult } from "../components/chord/ChordResult";
 import { useChart } from "../components/chord/useChart";
+import { ChordForm } from "../components/ChordForm";
 import { useResizeHandler } from "../hooks/use-resize-handler";
 
 const Home: NextPage = () => {
@@ -23,6 +26,30 @@ const Home: NextPage = () => {
   return (
     <>
       <Heading as="h1">Guitar Chord Diagram Creator</Heading>
+      <Text mt={4} fontSize="lg">
+        It's never been easier to create guitar chord diagrams! Start by
+        clicking anywhere on the{" "}
+        <Link href="#editor">
+          <i>editor</i>
+        </Link>{" "}
+        fret board and immediately see the result on the{" "}
+        <Link href="#result">
+          <i>result</i>
+        </Link>{" "}
+        fret board. Then <Link href="#download">download</Link> and{" "}
+        <Link color="teal.500" href="#share">
+          share
+        </Link>{" "}
+        your chord diagram.
+      </Text>
+      <ChordForm
+        onSettings={(settings) =>
+          setChart((chart) => ({
+            ...chart,
+            settings,
+          }))
+        }
+      />
       <Grid
         templateColumns={[
           "repeat(1, 1fr)",
@@ -40,14 +67,22 @@ const Home: NextPage = () => {
           borderWidth="2px"
           display="block"
         >
-          <Box p={3}>
-            <Heading as="h2" size="md">
+          <Box p={3} id="editor">
+            <Heading
+              as="h2"
+              size="md"
+              transform={[null, null, null, "rotate(-45deg)"]}
+              transformOrigin="0 0"
+              position={[null, null, null, "relative"]}
+              top={8}
+              left={-2}
+            >
               Editor
             </Heading>
             <Center>
               <ChordEditor
-                numFrets={5}
-                numStrings={6}
+                numFrets={settings.frets ?? 5}
+                numStrings={settings.strings ?? 6}
                 chord={chord}
                 settings={settings}
                 onChart={setChart}
@@ -64,8 +99,16 @@ const Home: NextPage = () => {
           borderWidth="2px"
           display="block"
         >
-          <Box p={3}>
-            <Heading as="h2" size="md">
+          <Box p={3} id="result" height="100%">
+            <Heading
+              as="h2"
+              size="md"
+              transform={[null, null, null, "rotate(-45deg)"]}
+              transformOrigin="0 0"
+              position={[null, null, null, "relative"]}
+              top={8}
+              left={-2}
+            >
               Result
             </Heading>
             <ChordResult />

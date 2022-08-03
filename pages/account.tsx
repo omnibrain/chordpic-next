@@ -92,6 +92,7 @@ export default function Account({ user }: { user: User }) {
             <Box>
               <Text mb={4}>Manage your subscription</Text>
               <Button
+                variant="solid"
                 isLoading={loading}
                 // disabled={loading || !subscription}
                 onClick={redirectToCustomerPortal}
@@ -108,7 +109,9 @@ export default function Account({ user }: { user: User }) {
               `${subscriptionPrice}/${subscription?.prices?.interval}`
             ) : (
               <NextLink href="/pricing" passHref>
-                <Button as="a">Choose your plan</Button>
+                <Button as="a" variant="solid">
+                  Choose your plan
+                </Button>
               </NextLink>
             )}
           </Box>

@@ -41,14 +41,6 @@ function resize<T>(arr: T[], newSize: number, defaultValue: T) {
 }
 
 export const ChordEditor = (props: IProps) => {
-  // For some reason styled components sometimes does not reflect the actual state when the
-  // application is loaded offline with workbox. Seems to be this problem:
-  // https://github.com/styled-components/styled-components/issues/2629
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const [matrix, setMatrix] = useState(
     ChordMatrix.fromChart({
       chord: props.chord,
@@ -74,8 +66,6 @@ export const ChordEditor = (props: IProps) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.numFrets, props.numStrings, matrix]);
-
-  if (!mounted) return null;
 
   const { settings, numStrings, width, height } = props;
 

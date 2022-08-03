@@ -33,17 +33,24 @@ export const ChordResult: React.FunctionComponent = () => {
 
   return (
     <Box
-      id="chord-result"
-      ref={ref}
+      height="100%"
       display="flex"
-      justifyContent="center"
-      maxHeight="40rem"
-      sx={{
-        svg: {
-          height: "100%",
-          width: "100%",
-        },
-      }}
-    />
+      flexDir="column"
+      alignItems="stretch"
+      justifyContent="flex-start"
+    >
+      <Box
+        id="chord-result"
+        flex="1"
+        maxHeight="40rem"
+        ref={ref}
+        sx={{
+          svg: {
+            height: "100%",
+            width: "100%",
+          },
+        }}
+      ></Box>
+    </Box>
   );
 };
