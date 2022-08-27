@@ -59,7 +59,7 @@ export const theme = extendTheme(
       // Input,
       NumberInput: Input,
       Divider,
-      Button,
+      // Button,
       Link: {
         baseStyle: ({ colorMode }: { colorMode: ColorMode }) => ({
           color: colorMode === "dark" ? "teal.400" : "teal.600",

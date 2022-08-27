@@ -10,10 +10,13 @@ import {
 } from "react";
 import { ChordSettings } from "svguitar";
 import { Chart } from "../../domain/chart";
+import { usePersistedState } from "../../hooks/use-persisted-state";
+
+const LOCALSTORAGE_KEY = "chord_v1";
 
 interface ChartContextType {
   chart: Chart;
-  setChart: Dispatch<SetStateAction<Chart>>;
+  setChart: (chart: Chart) => void;
   size: { width: number; height: number };
   setSize(size: { width: number; height: number }): void;
   ref: MutableRefObject<HTMLDivElement | null>;
@@ -32,14 +35,26 @@ export const ChartProvider: React.FunctionComponent<PropsWithChildren<{}>> = ({
   children,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [chart, setChart] = useState<Chart>({
+  // const [chart, setChart] = useState<Chart>({
+  //   chord: {
+  //     fingers: [],
+  //     barres: [],
+  //   },
+  //   settings: defaultSVGuitarSettings,
+  // });
+
+  const [chart, setChart] = usePersistedState<Chart>(LOCALSTORAGE_KEY, {
     chord: {
       fingers: [],
       barres: [],
     },
     settings: defaultSVGuitarSettings,
   });
-  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  const [size, setSize] = useState({
+    width: 0,
+    height: 0,
+  });
 
   return (
     <ChartContext.Provider value={{ chart, setChart, size, setSize, ref }}>
@@ -51,7 +66,7 @@ export const ChartProvider: React.FunctionComponent<PropsWithChildren<{}>> = ({
 export const useChart = () => {
   const context = useContext(ChartContext);
   if (context === undefined) {
-    throw new Error(`useUser must be used within a ChartProvider.`);
+    throw new Error(`useChart must be used within a ChartProvider.`);
   }
   return context;
 };

@@ -13,6 +13,7 @@ import { ChordEditor } from "../components/chord/ChordEditor";
 import { ChordResult } from "../components/chord/ChordResult";
 import { useChart } from "../components/chord/useChart";
 import { ChordForm } from "../components/ChordForm";
+import { useIsClient } from "../hooks/use-is-client";
 import { useResizeHandler } from "../hooks/use-resize-handler";
 
 const Home: NextPage = () => {
@@ -22,6 +23,8 @@ const Home: NextPage = () => {
     setChart,
     chart: { chord, settings },
   } = useChart();
+
+  const isClient = useIsClient();
 
   return (
     <>
@@ -42,79 +45,87 @@ const Home: NextPage = () => {
         </Link>{" "}
         your chord diagram.
       </Text>
-      <ChordForm
-        onSettings={(settings) =>
-          setChart((chart) => ({
-            ...chart,
-            settings,
-          }))
-        }
-      />
-      <Grid
-        templateColumns={[
-          "repeat(1, 1fr)",
-          "repeat(1, 1fr)",
-          "repeat(2, 1fr)",
-          "repeat(2, 1fr)",
-        ]}
-        gap={6}
-        mt={8}
-      >
-        <GridItem
-          borderRadius="xl"
-          borderColor="primary"
-          borderStyle="solid"
-          borderWidth="2px"
-          display="block"
-        >
-          <Box p={3} id="editor">
-            <Heading
-              as="h2"
-              size="md"
-              transform={[null, null, null, "rotate(-45deg)"]}
-              transformOrigin="0 0"
-              position={[null, null, null, "relative"]}
-              top={8}
-              left={-2}
+      {isClient && (
+        <>
+          <ChordForm
+            settings={settings}
+            onSettings={(newSettings) =>
+              setChart({
+                chord,
+                settings: {
+                  ...settings,
+                  ...newSettings,
+                },
+              })
+            }
+          />
+          <Grid
+            templateColumns={[
+              "repeat(1, 1fr)",
+              "repeat(1, 1fr)",
+              "repeat(2, 1fr)",
+              "repeat(2, 1fr)",
+            ]}
+            gap={6}
+            mt={8}
+          >
+            <GridItem
+              borderRadius="xl"
+              borderColor="primary"
+              borderStyle="solid"
+              borderWidth="2px"
+              display="block"
             >
-              Editor
-            </Heading>
-            <Center>
-              <ChordEditor
-                numFrets={settings.frets ?? 5}
-                numStrings={settings.strings ?? 6}
-                chord={chord}
-                settings={settings}
-                onChart={setChart}
-                width={width * 0.9}
-                height={height * 0.6}
-              />
-            </Center>
-          </Box>
-        </GridItem>
-        <GridItem
-          borderRadius="xl"
-          borderColor={borderColor}
-          borderStyle="solid"
-          borderWidth="2px"
-          display="block"
-        >
-          <Box p={3} id="result" height="100%">
-            <Heading
-              as="h2"
-              size="md"
-              transform={[null, null, null, "rotate(-45deg)"]}
-              transformOrigin="0 0"
-              position={[null, null, null, "relative"]}
-              top={8}
-              left={-2}
+              <Box p={3} id="editor">
+                <Heading
+                  as="h2"
+                  size="md"
+                  transform={[null, null, null, "rotate(-45deg)"]}
+                  transformOrigin="0 0"
+                  position={[null, null, null, "relative"]}
+                  top={8}
+                  left={-2}
+                >
+                  Editor
+                </Heading>
+                <Center>
+                  <ChordEditor
+                    numFrets={settings.frets ?? 5}
+                    numStrings={settings.strings ?? 6}
+                    chord={chord}
+                    settings={settings}
+                    onChart={setChart}
+                    width={width * 0.9}
+                    height={height * 0.6}
+                  />
+                </Center>
+              </Box>
+            </GridItem>
+            <GridItem
+              borderRadius="xl"
+              borderColor={borderColor}
+              borderStyle="solid"
+              borderWidth="2px"
+              display="block"
             >
-              Result
-            </Heading>
-            <ChordResult />
-          </Box>
-        </GridItem>
-      </Grid>
+              <Box p={3} id="result" height="100%">
+                <Heading
+                  as="h2"
+                  size="md"
+                  transform={[null, null, null, "rotate(-45deg)"]}
+                  transformOrigin="0 0"
+                  position={[null, null, null, "relative"]}
+                  top={8}
+                  left={-2}
+                >
+                  Result
+                </Heading>
+                <ChordResult />
+              </Box>
+            </GridItem>
+          </Grid>
+        </>
+      )}
     </>
   );
 };

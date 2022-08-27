@@ -52,7 +52,7 @@ const StyledSilentStringsInput = styled.div<
   .cell.silent:before, .cell.silent:after {
     position: absolute;
     left: ${settings.circleSize / 2}px;
-    top: 8px;
+    top: 25%;
     content: ' ';
     height: ${settings.circleSize * 1.25}px;
     width: 3px;
