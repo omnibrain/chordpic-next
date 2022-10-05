@@ -4,6 +4,7 @@ import {
   MutableRefObject,
   PropsWithChildren,
   SetStateAction,
+  useCallback,
   useContext,
   useRef,
   useState,
@@ -17,6 +18,7 @@ const LOCALSTORAGE_KEY = "chord_v1";
 interface ChartContextType {
   chart: Chart;
   setChart: (chart: Chart) => void;
+  resetSettings: () => void;
   size: { width: number; height: number };
   setSize(size: { width: number; height: number }): void;
   ref: MutableRefObject<HTMLDivElement | null>;
@@ -35,13 +37,6 @@ export const ChartProvider: React.FunctionComponent<PropsWithChildren<{}>> = ({
   children,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
-  // const [chart, setChart] = useState<Chart>({
-  //   chord: {
-  //     fingers: [],
-  //     barres: [],
-  //   },
-  //   settings: defaultSVGuitarSettings,
-  // });
 
   const [chart, setChart] = usePersistedState<Chart>(LOCALSTORAGE_KEY, {
     chord: {
@@ -56,8 +51,17 @@ export const ChartProvider: React.FunctionComponent<PropsWithChildren<{}>> = ({
     height: 0,
   });
 
+  const resetSettings = useCallback(() => {
+    setChart({
+      chord: chart.chord,
+      settings: defaultSVGuitarSettings,
+    });
+  }, [setChart, chart.chord]);
+
   return (
-    <ChartContext.Provider value={{ chart, setChart, size, setSize, ref }}>
+    <ChartContext.Provider
+      value={{ chart, setChart, size, setSize, ref, resetSettings }}
+    >
       {children}
     </ChartContext.Provider>
   );

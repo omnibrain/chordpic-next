@@ -1,8 +1,9 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Collapse,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -45,12 +46,16 @@ const defaultValues: AdjustableChordSettings = {
   fretSize: 1.5,
   nutSize: 0.65,
   strokeWidth: 2,
+  backgroundColor: undefined,
+  color: undefined,
 };
 
 export const ChordForm: React.FunctionComponent<{
   onSettings(settings: AdjustableChordSettings): void;
   settings: AdjustableChordSettings;
 }> = ({ onSettings, settings }) => {
+  console.log({ settings });
+
   const { isOpen, onToggle } = useDisclosure();
 
   const {
@@ -58,6 +63,7 @@ export const ChordForm: React.FunctionComponent<{
     watch,
     control,
     formState: { errors },
+    reset,
   } = useForm<AdjustableChordSettings>({
     mode: "onChange",
     defaultValues: settings,
@@ -86,6 +92,8 @@ export const ChordForm: React.FunctionComponent<{
 
     onSettings(validData);
   }, [deferredValue, errors]);
+
+  useEffect(() => {}, [settings]);
 
   return (
     <>
@@ -328,6 +336,20 @@ export const ChordForm: React.FunctionComponent<{
               </FormLabel>
             </FormControl>
           </Box>
+          <Box></Box>
+          <Flex alignItems="flex-end" justify="flex-end">
+            <FormLabel as="div">
+              <Button
+                variant="outline"
+                display="flex"
+                gap={2}
+                onClick={() => reset(defaultValues)}
+              >
+                <DeleteIcon />
+                Reset settings
+              </Button>
+            </FormLabel>
+          </Flex>
         </SimpleGrid>
       </Collapse>
       <Button variant="ghost" onClick={onToggle}>

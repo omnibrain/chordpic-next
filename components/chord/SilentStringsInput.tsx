@@ -8,6 +8,8 @@ interface IProps {
   onMatrixChange: (newMatrix: ChordMatrix) => void;
 }
 
+const strokeWidth = 3;
+
 const StyledSilentStringsInput = styled.div<
   IChordInputSettings & { numStrings: number }
 >(
@@ -40,7 +42,7 @@ const StyledSilentStringsInput = styled.div<
   .cell.open::before {
     content: '';
     border-radius: ${settings.circleSize / 2}px;
-    border: 3px solid var(--chakra-colors-chakra-body-text);
+    border: ${strokeWidth}px solid var(--chakra-colors-chakra-body-text);
   }
 
   .cell.silent {
@@ -51,17 +53,22 @@ const StyledSilentStringsInput = styled.div<
 
   .cell.silent:before, .cell.silent:after {
     position: absolute;
-    left: ${settings.circleSize / 2}px;
-    top: 25%;
     content: ' ';
-    height: ${settings.circleSize * 1.25}px;
-    width: 3px;
+    width: ${strokeWidth}px;
     background-color: var(--chakra-colors-chakra-body-text);
   }
   .cell.silent:before {
+    top: calc(50% - ${settings.circleSize / 2 + strokeWidth}px);
+    height: ${settings.circleSize + 6}px;
+    left: ${settings.circleSize / 2}px;
+    transform-origin: center;
     transform: rotate(45deg);
   }
   .cell.silent:after {
+    top: calc(50% - ${settings.circleSize / 2 + strokeWidth}px);
+    height: ${settings.circleSize + strokeWidth * 2}px;
+    left: ${settings.circleSize / 2}px;
+    transform-origin: center;
     transform: rotate(-45deg);
   }
   

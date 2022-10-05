@@ -22,6 +22,7 @@ const Home: NextPage = () => {
   const {
     setChart,
     chart: { chord, settings },
+    resetSettings,
   } = useChart();
 
   const isClient = useIsClient();
@@ -40,15 +41,13 @@ const Home: NextPage = () => {
           <i>result</i>
         </Link>{" "}
         fret board. Then <Link href="#download">download</Link> and{" "}
-        <Link color="teal.500" href="#share">
-          share
-        </Link>{" "}
-        your chord diagram.
+        <Link href="#share">share</Link> your chord diagram.
       </Text>
       {isClient && (
         <>
           <ChordForm
             settings={settings}
+            onResetSettings={resetSettings}
             onSettings={(newSettings) =>
               setChart({
                 chord,

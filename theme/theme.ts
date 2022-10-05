@@ -25,18 +25,6 @@ const Input = {
   },
 };
 
-const Button = {
-  variants: {
-    outline: {
-      border: "2px solid",
-    },
-  },
-  sizes: {},
-  defaultProps: {
-    variant: null,
-  },
-};
-
 const Divider: ComponentStyleConfig = {
   baseStyle: {
     borderColor: "primary",
@@ -62,7 +50,7 @@ export const theme = extendTheme(
       // Button,
       Link: {
         baseStyle: ({ colorMode }: { colorMode: ColorMode }) => ({
-          color: colorMode === "dark" ? "teal.400" : "teal.600",
+          color: colorMode === "dark" ? "blue.400" : "blue.600",
           fontWeight: "bold",
         }),
       },
@@ -79,6 +67,6 @@ export const theme = extendTheme(
     },
   },
   withDefaultColorScheme({
-    colorScheme: "teal",
+    colorScheme: "blue",
   })
 );
