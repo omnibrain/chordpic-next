@@ -1,3 +1,4 @@
+import { DeleteIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Box,
   Center,
@@ -7,8 +8,11 @@ import {
   useColorModeValue,
   Text,
   Link,
+  IconButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
+import { Orientation } from "svguitar";
 import { ChordEditor } from "../components/chord/ChordEditor";
 import { ChordResult } from "../components/chord/ChordResult";
 import { useChart } from "../components/chord/useChart";
@@ -27,13 +31,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Heading
-        as="h1"
-        bgGradient="linear(to-l, blue.400, blue.900)"
-        bgClip="text"
-      >
-        Guitar Chord Diagram Creator
-      </Heading>
+      <Heading as="h1">Guitar Chord Diagram Creator</Heading>
       <Text mt={4} fontSize="lg">
         It's never been easier to create guitar chord diagrams! Start by
         clicking anywhere on the{" "}
@@ -78,7 +76,7 @@ const Home: NextPage = () => {
               borderWidth="2px"
               display="block"
             >
-              <Box p={3} id="editor">
+              <Box p={3} id="editor" position="relative">
                 <Heading
                   as="h2"
                   size="md"
@@ -110,7 +108,7 @@ const Home: NextPage = () => {
               borderWidth="2px"
               display="block"
             >
-              <Box p={3} id="result" height="100%">
+              <Box p={3} id="result" height="100%" position="relative">
                 <Heading
                   as="h2"
                   size="md"
@@ -122,6 +120,34 @@ const Home: NextPage = () => {
                 >
                   Result
                 </Heading>
+                <Tooltip
+                  placement="top"
+                  label="Rotate chord diagram"
+                  aria-label="Rotate chord diagram"
+                  hasArrow={true}
+                >
+                  <IconButton
+                    position="absolute"
+                    right={3}
+                    top={3}
+                    aria-label="Rotate chord diagram"
+                    variant="outline"
+                    icon={<RepeatIcon />}
+                    onClick={() => {
+                      setChart({
+                        ...chart,
+                        settings: {
+                          ...chart.settings,
+                          orientation:
+                            chart.settings.orientation ===
+                            Orientation.horizontal
+                              ? Orientation.vertical
+                              : Orientation.horizontal,
+                        },
+                      });
+                    }}
+                  />
+                </Tooltip>
                 <ChordResult />
               </Box>
             </GridItem>

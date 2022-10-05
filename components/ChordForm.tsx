@@ -54,8 +54,6 @@ export const ChordForm: React.FunctionComponent<{
   onSettings(settings: AdjustableChordSettings): void;
   settings: AdjustableChordSettings;
 }> = ({ onSettings, settings }) => {
-  console.log({ settings });
-
   const { isOpen, onToggle } = useDisclosure();
 
   const {
@@ -64,6 +62,7 @@ export const ChordForm: React.FunctionComponent<{
     control,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<AdjustableChordSettings>({
     mode: "onChange",
     defaultValues: settings,
@@ -93,7 +92,9 @@ export const ChordForm: React.FunctionComponent<{
     onSettings(validData);
   }, [deferredValue, errors]);
 
-  useEffect(() => {}, [settings]);
+  useEffect(() => {
+    setValue("orientation", settings.orientation);
+  }, [settings.orientation]);
 
   return (
     <>

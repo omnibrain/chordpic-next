@@ -36,6 +36,7 @@ const Logo: React.FunctionComponent = () => {
           _hover={{
             textDecor: "none",
           }}
+          color={bg}
         >
           <chakra.svg viewBox="0 0 100 100" height={7} width={7}>
             <chakra.circle r={50} fill={bg} cx={50} cy={50} />

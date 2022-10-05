@@ -8,7 +8,8 @@ import { EditModeInput } from "./EditModeInput";
 import { Chart } from "../../domain/chart";
 import { EditMode } from "../../domain/edit-mode";
 import { ChordMatrix } from "../../services/chord-matrix";
-import { Box } from "@chakra-ui/react";
+import { Box, IconButton, Tooltip } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const lineWidth = 3;
 
@@ -106,6 +107,22 @@ export const ChordEditor = (props: IProps) => {
 
   return (
     <Box>
+      <Tooltip
+        placement="top"
+        label="Reset chord"
+        aria-label="Reset chord"
+        hasArrow={true}
+      >
+        <IconButton
+          onClick={onResetChord}
+          position="absolute"
+          right={3}
+          top={3}
+          aria-label="Reset chord"
+          variant="outline"
+          icon={<DeleteIcon />}
+        />
+      </Tooltip>
       <SilentStringsInput
         settings={displaySettings}
         matrix={matrix}

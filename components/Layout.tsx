@@ -15,7 +15,7 @@ export const Layout: React.FunctionComponent<
   const router = useRouter();
 
   const meta = {
-    title: "Chordpic | Easily create guitar chord diagrams",
+    title: "ChordPic | Easily create guitar chord diagrams",
     description: "It has never been easier to create beautiful chord diagrams.",
     cardImage: "/logo.png",
     ...pageMeta,

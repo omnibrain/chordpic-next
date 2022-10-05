@@ -52,7 +52,7 @@ export const DownloadButtons = ({ title }: IProps) => {
   const { ref, size } = useChart();
 
   return (
-    <Box mt={8}>
+    <Box mt={8} id="download">
       <Heading as="h2" size="lg" mb={3}>
         Download
       </Heading>
