@@ -13,23 +13,27 @@ import { ChordEditor } from "../components/chord/ChordEditor";
 import { ChordResult } from "../components/chord/ChordResult";
 import { useChart } from "../components/chord/useChart";
 import { ChordForm } from "../components/ChordForm";
+import { DownloadButtons } from "../components/DownloadButtons";
+import { ShareButtons } from "../components/ShareButtons";
 import { useIsClient } from "../hooks/use-is-client";
 import { useResizeHandler } from "../hooks/use-resize-handler";
 
 const Home: NextPage = () => {
   const { width, height } = useResizeHandler();
   const borderColor = useColorModeValue("black", "white");
-  const {
-    setChart,
-    chart: { chord, settings },
-    resetSettings,
-  } = useChart();
+  const { setChart, chart } = useChart();
 
   const isClient = useIsClient();
 
   return (
     <>
-      <Heading as="h1">Guitar Chord Diagram Creator</Heading>
+      <Heading
+        as="h1"
+        bgGradient="linear(to-l, blue.400, blue.900)"
+        bgClip="text"
+      >
+        Guitar Chord Diagram Creator
+      </Heading>
       <Text mt={4} fontSize="lg">
         It's never been easier to create guitar chord diagrams! Start by
         clicking anywhere on the{" "}
@@ -46,13 +50,12 @@ const Home: NextPage = () => {
       {isClient && (
         <>
           <ChordForm
-            settings={settings}
-            onResetSettings={resetSettings}
+            settings={chart.settings}
             onSettings={(newSettings) =>
               setChart({
-                chord,
+                chord: chart.chord,
                 settings: {
-                  ...settings,
+                  ...chart.settings,
                   ...newSettings,
                 },
               })
@@ -89,10 +92,10 @@ const Home: NextPage = () => {
                 </Heading>
                 <Center>
                   <ChordEditor
-                    numFrets={settings.frets ?? 5}
-                    numStrings={settings.strings ?? 6}
-                    chord={chord}
-                    settings={settings}
+                    numFrets={chart.settings.frets ?? 5}
+                    numStrings={chart.settings.strings ?? 6}
+                    chord={chart.chord}
+                    settings={chart.settings}
                     onChart={setChart}
                     width={width * 0.9}
                     height={height * 0.6}
@@ -125,6 +128,22 @@ const Home: NextPage = () => {
           </Grid>
         </>
       )}
+      <Grid
+        templateColumns={[
+          "repeat(1, 1fr)",
+          "repeat(1, 1fr)",
+          "repeat(2, 1fr)",
+          "repeat(2, 1fr)",
+        ]}
+        gap={6}
+      >
+        <GridItem>
+          <DownloadButtons title={chart.settings.title} />
+        </GridItem>
+        <GridItem>
+          <ShareButtons chart={chart} />
+        </GridItem>
+      </Grid>
     </>
   );
 };
