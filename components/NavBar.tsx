@@ -150,6 +150,9 @@ const MenuLinks: React.FunctionComponent<{
             isChecked={colorMode === "dark"}
           />
         </FormControl>
+        <MenuItem onNavigate={onCloseMenu} to="/help">
+          Help
+        </MenuItem>
         {subscription === SubscriptionType.FREE && (
           <MenuItem onNavigate={onCloseMenu} to="/pricing">
             Pricing
