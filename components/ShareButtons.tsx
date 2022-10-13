@@ -8,7 +8,7 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaTelegram, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { MdFacebook, MdShare, MdEmail } from "react-icons/md";
 import {
@@ -28,9 +28,11 @@ interface IProps {
 export const ShareButtons = ({ chart }: IProps) => {
   const [link, setLink] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const chartJson = useMemo(() => JSON.stringify(chart), [chart]);
+
   useEffect(() => {
     setLink(null);
-  }, [JSON.stringify(chart)]);
+  }, [chartJson]);
 
   function share() {
     const url = getLink(chart, "/chord");

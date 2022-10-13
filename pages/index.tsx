@@ -12,11 +12,12 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
+import { useCallback } from "react";
 import { Orientation } from "svguitar";
 import { ChordEditor } from "../components/chord/ChordEditor";
 import { ChordResult } from "../components/chord/ChordResult";
 import { useChart } from "../components/chord/useChart";
-import { ChordForm } from "../components/ChordForm";
+import { AdjustableChordSettings, ChordForm } from "../components/ChordForm";
 import { DownloadButtons } from "../components/DownloadButtons";
 import { ShareButtons } from "../components/ShareButtons";
 import { useIsClient } from "../hooks/use-is-client";
@@ -29,11 +30,23 @@ const Home: NextPage = () => {
 
   const isClient = useIsClient();
 
+  const onSettings = useCallback(
+    (newSettings: AdjustableChordSettings) =>
+      setChart({
+        chord: chart.chord,
+        settings: {
+          ...chart.settings,
+          ...newSettings,
+        },
+      }),
+    [chart.chord, chart.settings, setChart]
+  );
+
   return (
     <>
       <Heading as="h1">Guitar Chord Diagram Creator</Heading>
       <Text mt={4} fontSize="lg">
-        It's never been easier to create guitar chord diagrams! Start by
+        It&apos;s never been easier to create guitar chord diagrams! Start by
         clicking anywhere on the{" "}
         <Link href="#editor">
           <i>editor</i>
@@ -47,18 +60,7 @@ const Home: NextPage = () => {
       </Text>
       {isClient && (
         <>
-          <ChordForm
-            settings={chart.settings}
-            onSettings={(newSettings) =>
-              setChart({
-                chord: chart.chord,
-                settings: {
-                  ...chart.settings,
-                  ...newSettings,
-                },
-              })
-            }
-          />
+          <ChordForm settings={chart.settings} onSettings={onSettings} />
           <Grid
             templateColumns={[
               "repeat(1, 1fr)",

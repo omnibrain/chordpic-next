@@ -16,7 +16,7 @@ import { ShareButtons } from "../../components/ShareButtons";
 import { Chart } from "../../domain/chart";
 import { decompress } from "../../hooks/compressed-state";
 
-export default () => {
+const ChordPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { data } = router.query;
@@ -39,6 +39,7 @@ export default () => {
 
     setChart(loadedChart);
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   if (!isLoading) {
@@ -90,3 +91,5 @@ export default () => {
     </Grid>
   );
 };
+
+export default ChordPage;

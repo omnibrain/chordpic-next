@@ -23,6 +23,9 @@ export const ChordResult: React.FunctionComponent = () => {
         .configure({
           ...defaultSVGuitarSettings,
           ...chart.settings,
+          watermark: "created with chordpic.com",
+          watermarkFontSize: 16,
+          watermarkColor: "rgba(0, 0, 0, 0.5)",
         })
         .chord(chart.chord)
         .draw();

@@ -90,11 +90,12 @@ export const ChordForm: React.FunctionComponent<{
     ) as AdjustableChordSettings;
 
     onSettings(validData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deferredValue, errors]);
 
   useEffect(() => {
     setValue("orientation", settings.orientation);
-  }, [settings.orientation]);
+  }, [setValue, settings.orientation]);
 
   return (
     <>

@@ -5325,10 +5325,10 @@ svgdom@^0.1.9:
     image-size "^1.0.0"
     sax "^1.2.4"
 
-svguitar@^1.15.1:
-  version "1.15.1"
-  resolved "https://registry.yarnpkg.com/svguitar/-/svguitar-1.15.1.tgz#e75b29974978a4753bda92ab51583e1d070d1f7c"
-  integrity sha512-b3ghzqxswsBL3OqkGWBzvQVUXfFpcffqLZ3k+zYAHCv6s0eXtpXYlndRIrnmlJ880rqc/KI4au2E9ATki53LsA==
+svguitar@^1.16.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/svguitar/-/svguitar-1.16.0.tgz#30725a560ac49a0d1f63c57270fe81db5d389174"
+  integrity sha512-sEwLWlB06Xl4yJNkdxrp20CBb9fJG3FvaC2S7v+rO3raitGDAsrn+lYxNXBf3LoGaA2/E+nUFzVn/2Tw76WAsQ==
   dependencies:
     "@svgdotjs/svg.js" "3.0.16"
     roughjs "^4.5.2"

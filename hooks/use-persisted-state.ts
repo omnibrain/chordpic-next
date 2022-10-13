@@ -4,7 +4,6 @@ function setAndPersistValue<T>(key: string, setter: (v: T) => void) {
   return function (value: T) {
     // persist if window is defined
     if (typeof window !== "undefined" && value) {
-      console.log("Setting state", value);
       window.localStorage.setItem(key, JSON.stringify(value));
     }
 
