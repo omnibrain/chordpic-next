@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { ColorResult } from "react-color";
 import SketchPicker from "react-color/lib/components/sketch/Sketch";
 import { useEscHandler } from "../../hooks/use-esc-handler";
@@ -53,7 +53,9 @@ export const ColorInput = (props: Props) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
   useOutsideHandler(ref, () => setVisible(false));
-  useEscHandler(() => setVisible(false));
+
+  const escHandler = useCallback(() => setVisible(false), []);
+  useEscHandler(escHandler);
 
   const onColorChange = ({ rgb }: ColorResult) => {
     const rgba = rgb.a

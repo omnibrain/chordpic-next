@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { ColorResult } from "react-color";
 import styled from "@emotion/styled";
 import { useOutsideHandler } from "../hooks/use-outside-click";
@@ -53,7 +53,8 @@ export const ColorInput = (props: Props) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
   useOutsideHandler(ref, () => setVisible(false));
-  useEscHandler(() => setVisible(false));
+  const escHandler = useCallback(() => setVisible(false), []);
+  useEscHandler(escHandler);
 
   const onColorChange = ({ rgb }: ColorResult) => {
     const rgba = rgb.a
