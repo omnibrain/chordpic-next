@@ -17,7 +17,7 @@ export const AuthBox: React.FunctionComponent<
         shadow="lg"
         borderColor="primary"
         borderRadius="lg"
-        borderWidth="1px"
+        borderWidth="2px"
       >
         <Center my={8} flexDir="column">
           <Logo width={12} height={12} />
