@@ -2,14 +2,13 @@ import { Price } from "../types";
 
 export const getURL = () => {
   const url =
-    process?.env?.URL && process.env.URL !== ""
-      ? process.env.URL
-      : process?.env?.VERCEL_URL && process.env.VERCEL_URL !== ""
-      ? process.env.VERCEL_URL
-      : process.env.NEXT_PUBLIC_VERCEL_URL &&
-        process.env.NEXT_PUBLIC_VERCEL_URL !== ""
-      ? process.env.NEXT_PUBLIC_VERCEL_URL
-      : "http://localhost:3000";
+    [
+      process?.env?.URL,
+      process?.env?.NEXT_PUBLIC_URL,
+      process.env.VERCEL_URL,
+      process.env.NEXT_PUBLIC_VERCEL_URL,
+    ].find((u) => !!u) ?? "http://localhost:3000";
+
   const finalUrl = url.includes("http") ? url : `https://${url}`;
 
   console.debug("URL:", finalUrl);
