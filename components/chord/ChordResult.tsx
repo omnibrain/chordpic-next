@@ -2,6 +2,8 @@ import { Box } from "@chakra-ui/react";
 import * as React from "react";
 import { useEffect, useRef } from "react";
 import { ChordSettings, SVGuitarChord } from "svguitar";
+import { SubscriptionType } from "../../types";
+import { useSubscription } from "../../utils/useSubscription";
 import { useChart } from "./useChart";
 
 const defaultSVGuitarSettings: Partial<ChordSettings> = {
@@ -12,6 +14,13 @@ const defaultSVGuitarSettings: Partial<ChordSettings> = {
 export const ChordResult: React.FunctionComponent = () => {
   const { chart, ref, setSize } = useChart();
   const svguitarRef = useRef<SVGuitarChord>();
+  const subscription = useSubscription();
+
+  const watermark = React.useMemo(
+    () =>
+      subscription === SubscriptionType.PRO ? "" : "created with chordpic.com",
+    [subscription]
+  );
 
   useEffect(() => {
     if (ref.current && !svguitarRef.current) {
@@ -23,7 +32,7 @@ export const ChordResult: React.FunctionComponent = () => {
         .configure({
           ...defaultSVGuitarSettings,
           ...chart.settings,
-          watermark: "created with chordpic.com",
+          watermark,
           watermarkFontSize: 16,
           watermarkColor: "rgba(0, 0, 0, 0.5)",
         })
@@ -32,7 +41,7 @@ export const ChordResult: React.FunctionComponent = () => {
 
       setSize(size);
     }
-  }, [chart, ref, setSize]);
+  }, [chart, ref, setSize, watermark]);
 
   return (
     <Box

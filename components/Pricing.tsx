@@ -25,7 +25,7 @@ export default function Pricing({ products }: Props) {
         Pricing Plans
       </Heading>
       <Text fontSize="xl" textAlign="center" mb={12}>
-        Start building for free. Go pro to unlock all features
+        Start for free. Go pro to unlock all features
       </Text>
 
       <Tabs variant="soft-rounded" colorScheme="green" align="center">

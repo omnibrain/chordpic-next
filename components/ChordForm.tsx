@@ -19,7 +19,9 @@ import {
 import React, { useDeferredValue, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ChordSettings, ChordStyle, Orientation } from "svguitar";
+import { useSubscription } from "../utils/useSubscription";
 import { ColorInput } from "./ColorInput";
+import { SubscriptionType } from "../types";
 
 export type AdjustableChordSettings = Pick<
   ChordSettings,
@@ -55,6 +57,7 @@ export const ChordForm: React.FunctionComponent<{
   settings: AdjustableChordSettings;
 }> = ({ onSettings, settings }) => {
   const { isOpen, onToggle } = useDisclosure();
+  const subscription = useSubscription();
 
   const {
     register,
@@ -205,7 +208,15 @@ export const ChordForm: React.FunctionComponent<{
                 Style
                 <Select {...register("style")}>
                   <option value={ChordStyle.normal}>Normal</option>
-                  <option value={ChordStyle.handdrawn}>Handdrawn</option>
+
+                  {subscription === SubscriptionType.PRO && (
+                    <option value={ChordStyle.handdrawn}>Handdrawn</option>
+                  )}
+                  {subscription !== SubscriptionType.PRO && (
+                    <option value={Orientation.vertical} disabled>
+                      Handdrawn (Pro only)
+                    </option>
+                  )}
                 </Select>
               </FormLabel>
               {errors.style?.message && (
