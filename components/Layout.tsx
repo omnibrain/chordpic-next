@@ -1,6 +1,7 @@
 import { Container, SimpleGrid } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Script from "next/script";
 import React, { PropsWithChildren } from "react";
 import { PageMeta } from "../types";
 import { NavBar } from "./NavBar";
@@ -43,6 +44,7 @@ export const Layout: React.FunctionComponent<
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
+      <Script src="https://consent.cookiefirst.com/sites/chordpic.com-70134054-a394-4798-90cf-4e7711074745/consent.js" />
       <SimpleGrid row={["100px", null]} spacing="40px">
         <NavBar />
         <Container maxW="container.lg" as="main" mb={12}>
