@@ -10,7 +10,11 @@ export const getURL = () => {
         process.env.NEXT_PUBLIC_VERCEL_URL !== ""
       ? process.env.NEXT_PUBLIC_VERCEL_URL
       : "http://localhost:3000";
-  return url.includes("http") ? url : `https://${url}`;
+  const finalUrl = url.includes("http") ? url : `https://${url}`;
+
+  console.debug("URL:", finalUrl);
+
+  return finalUrl;
 };
 
 export const postData = async ({
