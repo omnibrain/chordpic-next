@@ -41,7 +41,9 @@ const Logo: React.FunctionComponent = () => {
           <chakra.svg viewBox="0 0 100 100" height={7} width={7}>
             <chakra.circle r={50} fill={bg} cx={50} cy={50} />
           </chakra.svg>
-          Chordpic
+          <Box as="span" fontFamily="heading">
+            Chordpic
+          </Box>
           {subscription === SubscriptionType.PRO && <Badge>PRO</Badge>}
         </Link>
       </NextLink>

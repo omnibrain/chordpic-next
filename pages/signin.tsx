@@ -47,7 +47,7 @@ const SignIn = () => {
       if (error) {
         setMessage({ type: "error", content: error.message });
       }
-      if (!password) {
+      if (!password && !error) {
         toast({
           title: "Magic link sent!",
           description: "Check your email for the magic link.",
