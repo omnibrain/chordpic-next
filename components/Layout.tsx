@@ -44,7 +44,12 @@ export const Layout: React.FunctionComponent<
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
-      <Script src="https://consent.cookiefirst.com/sites/chordpic.com-70134054-a394-4798-90cf-4e7711074745/consent.js" />
+      <Script
+        data-ad-client="ca-pub-5764824207547220"
+        async
+        strategy="afterInteractive"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+      />
       <SimpleGrid row={["100px", null]} spacing="40px">
         <NavBar />
         <Container maxW="container.lg" as="main" mb={12}>

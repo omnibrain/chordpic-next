@@ -10,6 +10,7 @@ import {
   Center,
   Divider,
   FormLabel,
+  Icon,
   Input,
   Link,
   Spinner,
@@ -19,6 +20,7 @@ import {
 import { Provider } from "@supabase/supabase-js";
 import { AuthBox } from "../components/AuthBox";
 import { getURL } from "../utils/helpers";
+import { FaGoogle } from "react-icons/fa";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -177,7 +179,7 @@ const SignIn = () => {
           .
         </Box>
 
-        <Box display="flex" alignItems="center" my={8}>
+        {/* <Box display="flex" alignItems="center" my={8}>
           <Divider />
           <Box textAlign="center" px={8}>
             Or
@@ -188,11 +190,12 @@ const SignIn = () => {
         <Button
           type="submit"
           disabled={loading}
-          onClick={() => handleOAuthSignIn("github")}
+          onClick={() => handleOAuthSignIn("google")}
           width="100%"
         >
-          Continue with GitHub
-        </Button>
+          <Icon as={FaGoogle} mr={3} />
+          Continue with Google
+        </Button> */}
 
         <Box textAlign="center" mb={2} mt={6} fontSize="sm">
           <Box as="span">Don&apos;t have an account?</Box>

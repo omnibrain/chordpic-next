@@ -89,17 +89,21 @@ export default function Account({ user }: { user: User }) {
             )
           }
           footer={
-            <Box>
-              <Text mb={4}>Manage your subscription</Text>
-              <Button
-                variant="solid"
-                isLoading={loading}
-                // disabled={loading || !subscription}
-                onClick={redirectToCustomerPortal}
-              >
-                Open customer portal
-              </Button>
-            </Box>
+            <>
+              {subscription && (
+                <Box>
+                  <Text mb={4}>Manage your subscription</Text>
+                  <Button
+                    variant="solid"
+                    isLoading={loading}
+                    // disabled={loading || !subscription}
+                    onClick={redirectToCustomerPortal}
+                  >
+                    Open customer portal
+                  </Button>
+                </Box>
+              )}
+            </>
           }
         >
           <Box>
