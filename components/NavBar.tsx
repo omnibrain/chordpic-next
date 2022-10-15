@@ -153,6 +153,9 @@ const MenuLinks: React.FunctionComponent<{
         <MenuItem onNavigate={onCloseMenu} to="/help">
           Help
         </MenuItem>
+        <MenuItem onNavigate={onCloseMenu} to="/news">
+          News
+        </MenuItem>
         {subscription === SubscriptionType.FREE && (
           <MenuItem onNavigate={onCloseMenu} to="/pricing">
             Pricing
