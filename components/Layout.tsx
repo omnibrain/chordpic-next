@@ -3,7 +3,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import React, { PropsWithChildren } from "react";
-import { PageMeta } from "../types";
+import { PageMeta, SubscriptionType } from "../types";
+import { useSubscription } from "../utils/useSubscription";
 import { NavBar } from "./NavBar";
 
 export interface LayoutProps {
@@ -14,6 +15,7 @@ export const Layout: React.FunctionComponent<
   PropsWithChildren<LayoutProps>
 > = ({ children, meta: pageMeta }) => {
   const router = useRouter();
+  const subscription = useSubscription();
 
   const meta = {
     title: "ChordPic | Easily create guitar chord diagrams",
@@ -44,12 +46,14 @@ export const Layout: React.FunctionComponent<
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
-      <Script
-        data-ad-client="ca-pub-5764824207547220"
-        async
-        strategy="afterInteractive"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-      />
+      {subscription === SubscriptionType.FREE && (
+        <Script
+          data-ad-client="ca-pub-5764824207547220"
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        />
+      )}
       <SimpleGrid row={["100px", null]} spacing="40px">
         <NavBar />
         <Container maxW="container.lg" as="main" mb={12}>

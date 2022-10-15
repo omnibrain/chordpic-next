@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Center,
   Heading,
@@ -21,11 +22,13 @@ interface Props {
 export default function Pricing({ products }: Props) {
   return (
     <Box as="section">
-      <Heading as="h1" size="3xl" mb={4} textAlign="center">
+      <Heading as="h1" size="3xl" mb={6} textAlign="center">
         Pricing Plans
       </Heading>
       <Text fontSize="xl" textAlign="center" mb={12}>
-        Start for free. Go pro to unlock all features
+        Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
+        <strong> without watermark</strong>, <strong>handdrawn style</strong>{" "}
+        and <strong>no ads</strong>.
       </Text>
 
       <Tabs variant="soft-rounded" colorScheme="green" align="center">
