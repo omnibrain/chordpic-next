@@ -59,7 +59,7 @@ export const ShareButtons = ({ chart }: IProps) => {
         Share
       </Heading>
       <Button variant="outline" onClick={share}>
-        <Icon as={MdShare} />
+        <Icon as={MdShare} mr={1} />
         Generate Sharing Link
       </Button>
 
@@ -84,14 +84,14 @@ export const ShareButtons = ({ chart }: IProps) => {
           <Flex wrap="wrap" gap={1} mt={3}>
             <FacebookShareButton url={link}>
               <Button size="sm" variant="outline">
-                <Icon as={MdFacebook} />
+                <Icon as={MdFacebook} mr={1} />
                 Facebook
               </Button>
             </FacebookShareButton>
 
             <TelegramShareButton url={link} title={title}>
               <Button size="sm" variant="outline">
-                <Icon as={FaTelegram} />
+                <Icon as={FaTelegram} mr={1} />
                 Telegram
               </Button>
             </TelegramShareButton>
@@ -103,14 +103,14 @@ export const ShareButtons = ({ chart }: IProps) => {
               hashtags={["guitar", "chord"]}
             >
               <Button size="sm" variant="outline">
-                <Icon as={FaTwitter} />
+                <Icon as={FaTwitter} mr={1} />
                 Twitter
               </Button>
             </TwitterShareButton>
 
             <WhatsappShareButton url={link} title={title}>
               <Button size="sm" variant="outline">
-                <Icon as={FaWhatsapp} />
+                <Icon as={FaWhatsapp} mr={1} />
                 WhatsApp
               </Button>
             </WhatsappShareButton>
@@ -121,7 +121,7 @@ export const ShareButtons = ({ chart }: IProps) => {
               body="Here's a chord chart I created on ChordPic.com"
             >
               <Button size="sm" variant="outline">
-                <Icon as={MdEmail} />
+                <Icon as={MdEmail} mr={1} />
                 Email
               </Button>
             </EmailShareButton>

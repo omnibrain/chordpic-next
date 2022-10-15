@@ -55,14 +55,18 @@ export const theme = extendTheme(
         }),
       },
     },
+    fonts: {
+      heading: `'Besley', sans-serif`,
+      body: `'Inter', sans-serif`,
+    },
     styles: {
       global: () => ({
         html: {
           fontSize: "16px",
         },
-        body: {
-          fontFamily: "Inter",
-        },
+        // body: {
+        //   fontFamily: "Quicksand",
+        // },
       }),
     },
   },

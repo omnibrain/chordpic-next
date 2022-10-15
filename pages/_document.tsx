@@ -16,6 +16,10 @@ export default class Document extends NextDocument {
             href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
             rel="stylesheet"
           />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Besley&display=swap"
+            rel="stylesheet"
+          />
 
           <link
             rel="apple-touch-icon"

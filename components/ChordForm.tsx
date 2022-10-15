@@ -318,7 +318,7 @@ export const ChordForm: React.FunctionComponent<{
                   control={control}
                   name="color"
                   render={({ field }) => (
-                    <ColorInput onChange={field.onChange} />
+                    <ColorInput onChange={field.onChange} value={field.value} />
                   )}
                 ></Controller>
               </FormLabel>
@@ -332,7 +332,7 @@ export const ChordForm: React.FunctionComponent<{
                   control={control}
                   name="backgroundColor"
                   render={({ field }) => (
-                    <ColorInput onChange={field.onChange} />
+                    <ColorInput onChange={field.onChange} value={field.value} />
                   )}
                 ></Controller>
               </FormLabel>

@@ -87,6 +87,7 @@ const Home: NextPage = () => {
                   position={[null, null, null, "relative"]}
                   top={8}
                   left={-2}
+                  display="inline-block"
                 >
                   Editor
                 </Heading>
@@ -119,6 +120,7 @@ const Home: NextPage = () => {
                   position={[null, null, null, "relative"]}
                   top={8}
                   left={-2}
+                  display="inline-block"
                 >
                   Result
                 </Heading>

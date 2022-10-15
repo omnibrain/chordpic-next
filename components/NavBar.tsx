@@ -195,7 +195,6 @@ const NavBarContainer: React.FunctionComponent<PropsWithChildren<{}>> = ({
       p={4}
       bg={bg}
       color={textColor}
-      shadow="lg"
       {...props}
     >
       {children}
