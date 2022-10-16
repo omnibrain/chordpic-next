@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { ChartProvider } from "../components/chord/useChart";
 
 // unregister all previous service workers
-if (navigator) {
+if (typeof navigator !== "undefined") {
   navigator.serviceWorker.getRegistrations().then(function (registrations) {
     for (let registration of registrations) {
       registration.unregister();
