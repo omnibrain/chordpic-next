@@ -11,6 +11,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { ChartProvider } from "../components/chord/useChart";
 
+// unregister all previous service workers
+if (navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+    for (let registration of registrations) {
+      registration.unregister();
+    }
+  });
+}
+
 // Create a client
 const queryClient = new QueryClient();
 
