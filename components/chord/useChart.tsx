@@ -13,7 +13,7 @@ import { ChordSettings } from "svguitar";
 import { Chart } from "../../domain/chart";
 import { usePersistedState } from "../../hooks/use-persisted-state";
 
-const LOCALSTORAGE_KEY = "chord_v1";
+const LOCALSTORAGE_KEY = "chord_v2";
 
 interface ChartContextType {
   chart: Chart;
