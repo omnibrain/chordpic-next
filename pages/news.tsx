@@ -5,7 +5,7 @@ import exampleHorizontalChord from "../public/images/example-horizontal-chord.pn
 import sampleChordWithColors from "../public/images/sample-chord-with-colors.png";
 import orientationToggle from "../public/images/orientation-toggle.png";
 import sampleChordWithText from "../public/images/sample-chord-with-text.png";
-import { Heading, Link, Text } from "@chakra-ui/react";
+import { Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 
 const HelpPage = () => {
   return (
@@ -22,6 +22,60 @@ const HelpPage = () => {
         </Link>
         , we would love to hear your story and tell other people about it!
       </Text>
+
+      <Heading
+        size="lg"
+        mb={3}
+        mt={8}
+        id="you-can-now-create-horizontal-chord-diagrams-"
+      >
+        OMG, what&apos;s happening with ChordPic?
+      </Heading>
+      <Text mb={3}>
+        <em>October 16th, 2022</em>
+      </Text>
+      <Text mb={3}>
+        If you have used ChordPic before, you may have noticed that things have
+        changed a litlle around here. First of all, ChordPic has an all new
+        look! And second, there are a couple new links on top, and an all new{" "}
+        <strong>dark mode</strong> 😱 🤯
+      </Text>
+      <Text mb={3}>
+        The ChordPic that you know and love is still here and works almost
+        exactly the same as before, but now there&apos;s a way to create an
+        account and get a ChordPic Pro subscription. The ChordPic Pro
+        subscription gives you access to:
+      </Text>
+      <UnorderedList mb={3}>
+        <ListItem>A completely ad free experience</ListItem>
+        <ListItem>
+          Chord diagrams without the &quot;created with chordpic.com&quot;
+          watermark
+        </ListItem>
+        <ListItem>Chord diagrams in hand-drawn style</ListItem>
+      </UnorderedList>
+
+      <Text mb={3}>
+        The ChordPic Pro subscription is not a way for us to get rich, but our
+        hope is that at some point enough people have a Pro subscription so that
+        we can spend more time on this tool and introduce new cool features.
+      </Text>
+      <Text mb={3}>
+        The indroduction of a user login and an actual backend opens up a wide
+        range of new possibliities for ChordPic and we would love to spend time
+        to explore these possibilities.
+      </Text>
+
+      <Text mb={3}>
+        We hope you like this re-build of ChordPic. If you have any feature
+        suggestions, bug reports, or general feelings about the site, don&apos;t
+        hesitate to{" "}
+        <Link href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
+          write us an email
+        </Link>
+        .
+      </Text>
+
       <Heading
         size="lg"
         mb={3}
