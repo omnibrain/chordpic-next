@@ -24,6 +24,8 @@ export const Layout: React.FunctionComponent<
     ...pageMeta,
   };
 
+  console.log({ subscription });
+
   return (
     <>
       <Head>
