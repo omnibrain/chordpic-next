@@ -44,13 +44,14 @@ export default class Document extends NextDocument {
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
         </Head>
-        <Script
-          strategy="beforeInteractive"
-          src="https://consent.cookiefirst.com/banner.js"
-          data-cookiefirst-key="70134054-a394-4798-90cf-4e7711074745"
-        />
         <body>
-          <ColorModeScript initialColorMode="system" />
+          <Script
+            strategy="beforeInteractive"
+            src="https://consent.cookiefirst.com/banner.js"
+            data-cookiefirst-key="70134054-a394-4798-90cf-4e7711074745"
+          />
+
+          <ColorModeScript initialColorMode="light" />
           <Main />
           <NextScript />
         </body>
