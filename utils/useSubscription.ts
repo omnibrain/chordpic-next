@@ -4,8 +4,6 @@ import { useUser } from "./useUser";
 export function useSubscription(): SubscriptionType | null {
   const { subscription, isLoading } = useUser();
 
-  console.log({ isLoading });
-
   if (isLoading) {
     return null;
   }
