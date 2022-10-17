@@ -41,11 +41,10 @@ const HelpPage = () => {
         Cookie Policy
       </Heading>
       <Text mb={3}>
-        <NextLink href="/cookie-policy" passHref>
-          <Link>
-            Read ChordPic&apos;s cookie policy or adjust your settings here
-          </Link>
-        </NextLink>
+        {/* this is not a next link on purpose: The cookiefirst stuff will not load when routed with next */}
+        <Link href="/cookie-policy">
+          Read ChordPic&apos;s cookie policy or adjust your settings here
+        </Link>
         .
       </Text>
     </>
