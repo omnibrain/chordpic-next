@@ -29,7 +29,6 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.34.0",
     "react-icons": "^4.4.0",
-    "react-query": "^3.39.2",
     "react-share": "^4.4.0",
     "save-svg-as-png": "^1.4.17",
     "stripe": "^9.14.0",

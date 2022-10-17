@@ -28,7 +28,11 @@ export const MyUserContextProvider = (props: Props) => {
   const { supabaseClient: supabase } = props;
   const { user, accessToken, isLoading: isLoadingUser } = useSupaUser();
 
-  const { data: subscription, isLoading: subscriptionIsLoading } = useQuery(
+  const {
+    data: subscription,
+    isLoading: subscriptionIsLoading,
+    isFetching: subscriptionIsFetching,
+  } = useQuery(
     ["subscription"],
     () =>
       new Promise<Subscription>((resolve, reject) =>
@@ -50,7 +54,11 @@ export const MyUserContextProvider = (props: Props) => {
     }
   );
 
-  const { data: userDetails, isLoading: userDetailsIsLoading } = useQuery(
+  const {
+    data: userDetails,
+    isLoading: userDetailsIsLoading,
+    isFetching: userDetailsIsFetching,
+  } = useQuery(
     ["user"],
     () =>
       new Promise<UserDetails>((resolve, reject) =>
@@ -71,19 +79,13 @@ export const MyUserContextProvider = (props: Props) => {
     }
   );
 
-  console.log({
-    subscriptionIsLoading,
-    userDetailsIsLoading,
-    isLoadingUser,
-  });
-
   const value = {
     accessToken,
     user,
     isLoading:
-      (subscriptionIsLoading || userDetailsIsLoading || isLoadingUser) &&
-      !isLoadingUser &&
-      !!user,
+      (subscriptionIsLoading && subscriptionIsFetching) ||
+      (userDetailsIsLoading && userDetailsIsFetching) ||
+      isLoadingUser,
     userDetails: userDetails ?? null,
     subscription: subscription ?? null,
   };
