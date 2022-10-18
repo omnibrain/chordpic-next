@@ -4,7 +4,7 @@ import NextLink from "next/link";
 const HelpPage = () => {
   return (
     <>
-      <Heading size="2xl" mb={6}>
+      <Heading size="2xl" mb={6} as="h1">
         About
       </Heading>
       <Text mb={3}>

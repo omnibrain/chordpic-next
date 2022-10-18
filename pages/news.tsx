@@ -10,6 +10,9 @@ import { Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 const HelpPage = () => {
   return (
     <>
+      <Heading size="2xl" mb={6} as="h1">
+        News
+      </Heading>
       <Text mb={3} fontSize="lg">
         Read about new features, ideas, and success stories of guitar players
         around the world using ChordPic to create chord diagram images.
