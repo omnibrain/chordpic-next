@@ -11,7 +11,7 @@ export default class Document extends NextDocument {
           <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
-            crossOrigin="crossorigin"
+            crossOrigin=""
           />
           <link
             href="https://fonts.googleapis.com/css2?family=Besley:wght@400;600&family=Inter:wght@400;600&display=optional"
