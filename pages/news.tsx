@@ -32,6 +32,32 @@ const HelpPage = () => {
         mt={8}
         id="you-can-now-create-horizontal-chord-diagrams-"
       >
+        Font size of fingers can now be adjusted
+      </Heading>
+      <Text mb={3}>
+        <em>October 19th, 2022</em>
+      </Text>
+      <Text mb={3}>
+        Yet another way to customize your chord diagrams! Under the &quot;More
+        Settings&quot; toggle you will now find a slider to adjust the text size
+        of the text inside fingers and barres.
+      </Text>
+      <Text mb={3}>
+        This feature was requested by a user. What would <strong>you</strong>{" "}
+        like to adjust? We&apos;re always looking for feedback, so don&apos;t
+        hesitate to{" "}
+        <Link href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
+          write us an email
+        </Link>{" "}
+        with your feature request.
+      </Text>
+
+      <Heading
+        size="lg"
+        mb={3}
+        mt={8}
+        id="you-can-now-create-horizontal-chord-diagrams-"
+      >
         OMG, what&apos;s happening with ChordPic?
       </Heading>
       <Text mb={3}>
