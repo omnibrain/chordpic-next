@@ -2,7 +2,7 @@ import { Container, SimpleGrid } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { PageMeta, SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
 import { NavBar } from "./NavBar";
@@ -23,6 +23,19 @@ export const Layout: React.FunctionComponent<
     cardImage: "/logo.png",
     ...pageMeta,
   };
+
+  useEffect(() => {
+    // @ts-ignore
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      // @ts-ignore
+      dataLayer.push(arguments);
+    }
+    // @ts-ignore
+    gtag("js", new Date());
+    // @ts-ignore
+    gtag("config", "G-QLVKP7R6W7");
+  }, []);
 
   return (
     <>
@@ -46,6 +59,11 @@ export const Layout: React.FunctionComponent<
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
+      <Script
+        async
+        strategy="lazyOnload"
+        src="https://www.googletagmanager.com/gtag/js?id=G-QLVKP7R6W7"
+      />
       {subscription === SubscriptionType.FREE && (
         <Script
           data-ad-client="ca-pub-5764824207547220"
