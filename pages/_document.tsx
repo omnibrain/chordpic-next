@@ -11,17 +11,12 @@ export default class Document extends NextDocument {
           <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
-            crossOrigin="true"
+            crossOrigin="crossorigin"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Besley:wght@400;600&family=Inter:wght@400;600&display=optional"
             rel="stylesheet"
           />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Besley&display=swap"
-            rel="stylesheet"
-          />
-
           <link
             rel="apple-touch-icon"
             sizes="180x180"
