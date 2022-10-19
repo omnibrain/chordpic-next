@@ -32,7 +32,8 @@ export type AdjustableChordSettings = Pick<
   | "title"
   | "style"
   | "fretSize"
-  | "nutSize"
+  | "fingerSize"
+  | "fingerTextSize"
   | "strokeWidth"
   | "color"
   | "backgroundColor"
@@ -46,7 +47,8 @@ const defaultValues: AdjustableChordSettings = {
   position: 1,
   style: ChordStyle.normal,
   fretSize: 1.5,
-  nutSize: 0.65,
+  fingerSize: 0.65,
+  fingerTextSize: 24,
   strokeWidth: 2,
   backgroundColor: undefined,
   color: undefined,
@@ -255,7 +257,6 @@ export const ChordForm: React.FunctionComponent<{
                       min={0.7}
                       max={5}
                       step={0.1}
-                      defaultValue={1.5}
                       {...field}
                     >
                       <SliderTrack>
@@ -274,14 +275,38 @@ export const ChordForm: React.FunctionComponent<{
                 Finger size
                 <Controller
                   control={control}
-                  name="nutSize"
+                  name="fingerSize"
                   render={({ field }) => (
                     <Slider
                       aria-label="Chord chart finger size"
                       min={0.3}
                       max={1.5}
                       step={0.025}
-                      defaultValue={1.5}
+                      {...field}
+                    >
+                      <SliderTrack>
+                        <SliderFilledTrack />
+                      </SliderTrack>
+                      <SliderThumb boxSize={6} />
+                    </Slider>
+                  )}
+                ></Controller>
+              </FormLabel>
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel>
+                Finger font size
+                <Controller
+                  control={control}
+                  name="fingerTextSize"
+                  render={({ field }) => (
+                    <Slider
+                      aria-label="Chord chart finger text size"
+                      min={10}
+                      max={50}
+                      step={1}
                       {...field}
                     >
                       <SliderTrack>
@@ -320,7 +345,6 @@ export const ChordForm: React.FunctionComponent<{
               </FormLabel>
             </FormControl>
           </Box>
-          <Box></Box>
           <Box>
             <FormControl>
               <FormLabel>
