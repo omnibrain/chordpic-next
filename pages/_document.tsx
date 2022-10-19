@@ -41,9 +41,10 @@ export default class Document extends NextDocument {
         </Head>
         <body>
           <Script
+            id="cookieyes"
+            type="text/javascript"
             strategy="beforeInteractive"
-            src="https://consent.cookiefirst.com/banner.js"
-            data-cookiefirst-key="70134054-a394-4798-90cf-4e7711074745"
+            src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
           />
 
           <ColorModeScript initialColorMode="light" />
