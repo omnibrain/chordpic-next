@@ -10,7 +10,7 @@ export default class Document extends NextDocument {
           <Script
             id="cookieyes"
             type="text/javascript"
-            strategy="beforeInteractive"
+            strategy="lazyOnload"
             src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
           />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
