@@ -7,6 +7,12 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
+          <Script
+            id="cookieyes"
+            type="text/javascript"
+            strategy="beforeInteractive"
+            src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
+          />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
@@ -40,13 +46,6 @@ export default class Document extends NextDocument {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <body>
-          <Script
-            id="cookieyes"
-            type="text/javascript"
-            strategy="beforeInteractive"
-            src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
-          />
-
           <ColorModeScript initialColorMode="light" />
           <Main />
           <NextScript />
