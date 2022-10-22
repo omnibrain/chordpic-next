@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import React, { PropsWithChildren, useEffect } from "react";
+import { GA4_ID } from "../global";
 import { PageMeta, SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
 import { NavBar } from "./NavBar";
@@ -34,7 +35,7 @@ export const Layout: React.FunctionComponent<
     // @ts-ignore
     gtag("js", new Date());
     // @ts-ignore
-    gtag("config", "G-QLVKP7R6W7");
+    gtag("config", GA4_ID);
   }, []);
 
   return (
@@ -60,10 +61,19 @@ export const Layout: React.FunctionComponent<
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
       <Script
-        async
-        strategy="lazyOnload"
         src="https://www.googletagmanager.com/gtag/js?id=G-QLVKP7R6W7"
+        strategy="afterInteractive"
       />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '${GA4_ID}');
+        `}
+      </Script>
+
       {subscription === SubscriptionType.FREE && (
         <Script
           data-ad-client="ca-pub-5764824207547220"

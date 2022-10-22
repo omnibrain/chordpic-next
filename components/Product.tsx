@@ -1,6 +1,7 @@
 import { Box, Button, Heading, Text, useColorMode } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren, useState } from "react";
+import { GA4_ID } from "../global";
 import { Price, ProductWithPrice } from "../types";
 import { postData } from "../utils/helpers";
 import { getStripe } from "../utils/stripe-client";
@@ -21,6 +22,7 @@ export const Product: React.FunctionComponent<
 
   const handleCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
+
     if (!user) {
       return router.push("/signin");
     }
@@ -28,10 +30,28 @@ export const Product: React.FunctionComponent<
       return router.push("/account");
     }
 
+    let analyticsClientId: string | null = null;
+    if (gtag) {
+      await new Promise((resolve) =>
+        gtag("event", "begin_checkout", {
+          event_callback: resolve,
+        })
+      );
+
+      analyticsClientId = await new Promise<string | null>((resolve) =>
+        gtag("get", GA4_ID, "client_id", (cid) => {
+          if (typeof cid === "string") {
+            resolve(cid);
+          }
+          resolve(null);
+        })
+      );
+    }
+
     try {
       const { sessionId } = await postData({
         url: "/api/create-checkout-session",
-        data: { price },
+        data: { price, analyticsClientId },
       });
 
       const stripe = await getStripe();

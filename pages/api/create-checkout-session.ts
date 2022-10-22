@@ -40,6 +40,9 @@ const createCheckoutSession = async (
         },
         success_url: `${getURL()}/account`,
         cancel_url: `${getURL()}/`,
+        metadata: {
+          analyticsClientId: req.body.analyticsClientId,
+        },
       });
 
       return res.status(200).json({ sessionId: session.id });

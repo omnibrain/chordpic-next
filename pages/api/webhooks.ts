@@ -7,6 +7,8 @@ import {
   upsertPriceRecord,
   upsertProductRecord,
 } from "../../utils/supabase-admin";
+import axios from "axios";
+import { GA4_ID } from "../../global";
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -60,6 +62,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     console.log("Stripe event:", event.type);
+    console.log("Stripe event data object:", event.data.object);
 
     if (relevantEvents.has(event.type)) {
       try {
@@ -93,6 +96,21 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 true
               );
             }
+
+            // Record metrics using the Google Analytics Measurement Protocol
+            // See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+            const params = new URLSearchParams({
+              v: "1", // Version
+              tid: GA4_ID, // Tracking ID / Property ID.
+              cid: (event.data.object as any)?.metadata?.analyticsClientId, // Anonymous Client ID
+              t: "event", // Event hit type
+              ec: "ecommerce", // Event Category
+              ea: "purchase", // Event Action
+            });
+
+            await axios.post(
+              `https://www.google-analytics.com/batch?${params.toString()}`
+            );
             break;
           default:
             throw new Error("Unhandled relevant event!");
