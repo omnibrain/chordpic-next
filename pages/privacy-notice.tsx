@@ -1,4 +1,18 @@
-const CookiePolicy = () => (
+import { GetStaticPropsResult } from "next";
+
+interface Props {
+  title: string;
+}
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  return {
+    props: {
+      title: "News",
+    },
+  };
+}
+
+const Privacy = () => (
   <div>
     <h2>Consent to the use of cookies.</h2>
     <p>
@@ -61,4 +75,4 @@ const CookiePolicy = () => (
   </div>
 );
 
-export default CookiePolicy;
+export default Privacy;

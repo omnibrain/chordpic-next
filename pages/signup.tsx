@@ -4,16 +4,26 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  Link, useToast
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Link, useToast } from "@chakra-ui/react";
 import { User } from "@supabase/gotrue-js";
 import { AuthBox } from "../components/AuthBox";
 import { updateUserName } from "../utils/supabase-client";
+import { GetStaticPropsResult } from "next";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  return {
+    props: {
+      title: "Sign up",
+      description:
+        "Sign up for ChordPic to create beautiful guitar chord charts.",
+    },
+  };
+}
 
 const SignUp = () => {
   const [newUser, setNewUser] = useState<User | null>(null);

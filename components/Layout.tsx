@@ -9,8 +9,10 @@ import { useSubscription } from "../utils/useSubscription";
 import { NavBar } from "./NavBar";
 
 export interface LayoutProps {
-  meta?: PageMeta;
+  meta?: Partial<PageMeta>;
 }
+
+const TITLE_PREFIX = "ChordPic";
 
 export const Layout: React.FunctionComponent<
   PropsWithChildren<LayoutProps>
@@ -19,7 +21,7 @@ export const Layout: React.FunctionComponent<
   const subscription = useSubscription();
 
   const meta = {
-    title: "ChordPic | Easily create guitar chord diagrams",
+    title: `Free guitar chord diagram creator`,
     description: "It has never been easier to create beautiful chord diagrams.",
     cardImage: "/logo.png",
     ...pageMeta,
@@ -41,7 +43,7 @@ export const Layout: React.FunctionComponent<
   return (
     <>
       <Head>
-        <title>{meta.title}</title>
+        <title>{[TITLE_PREFIX, meta.title].join(" | ")}</title>
         <meta name="robots" content="follow, index" />
         <link href="/favicon.ico" rel="shortcut icon" />
         <meta content={meta.description} name="description" />

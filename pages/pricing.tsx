@@ -5,6 +5,8 @@ import { getActiveProductsWithPrices } from "../utils/supabase-client";
 
 interface Props {
   products: Product[];
+  title: string;
+  description: string;
 }
 
 export default function PricingPage({ products }: Props) {
@@ -17,6 +19,9 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
   return {
     props: {
       products,
+      title: "Pricing Plans",
+      description:
+        "ChordPic is a free guitar chord diagram creator. You can create beautiful chord diagrams for free. If you want to use ChordPic for commercial purposes, you can upgrade to a paid plan.",
     },
     revalidate: 60,
   };

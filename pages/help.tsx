@@ -1,4 +1,5 @@
 import { Flex, Heading, Text } from "@chakra-ui/react";
+import { GetStaticPropsResult } from "next";
 import Image from "next/image";
 
 import barreGif from "../public/images/barre.gif";
@@ -9,6 +10,21 @@ import labelsGif from "../public/images/labels.gif";
 import samplechordGif from "../public/images/samplechord.png";
 import silentstringsGif from "../public/images/silentstrings.gif";
 import toggleGif from "../public/images/toggle.gif";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  return {
+    props: {
+      title: "Help",
+      description:
+        "Learn how to create guitar chord diagrams with ChordPic. Don't worry, it's super easy!",
+    },
+  };
+}
 
 const HelpPage = () => {
   return (

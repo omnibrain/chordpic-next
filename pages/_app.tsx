@@ -23,7 +23,10 @@ if (typeof navigator !== "undefined") {
 // Create a client
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({
+  Component,
+  pageProps,
+}: AppProps<{ title?: string; description?: string }>) {
   const router = useRouter();
   useEffect(() => {
     supabase.auth.onAuthStateChange((event) => {
@@ -39,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <UserProvider supabaseClient={supabaseClient}>
           <MyUserContextProvider supabaseClient={supabaseClient}>
             <ChartProvider>
-              <Layout>
+              <Layout meta={pageProps}>
                 <Component {...pageProps} />
               </Layout>
             </ChartProvider>

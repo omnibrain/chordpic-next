@@ -6,6 +6,22 @@ import sampleChordWithColors from "../public/images/sample-chord-with-colors.png
 import orientationToggle from "../public/images/orientation-toggle.png";
 import sampleChordWithText from "../public/images/sample-chord-with-text.png";
 import { Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import { GetStaticPropsResult } from "next";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  return {
+    props: {
+      title: "News",
+      description:
+        "News about ChordPic, the free guitar chord diagram creator. Learn about new features and updates.",
+    },
+  };
+}
 
 const HelpPage = () => {
   return (

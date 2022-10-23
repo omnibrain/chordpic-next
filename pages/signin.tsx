@@ -8,9 +8,7 @@ import {
   Box,
   Button,
   Center,
-  Divider,
   FormLabel,
-  Icon,
   Input,
   Link,
   Spinner,
@@ -20,7 +18,21 @@ import {
 import { Provider } from "@supabase/supabase-js";
 import { AuthBox } from "../components/AuthBox";
 import { getURL } from "../utils/helpers";
-import { FaGoogle } from "react-icons/fa";
+import { GetStaticPropsResult } from "next";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  return {
+    props: {
+      title: "Sign in",
+      description: "Sign in to your ChordPic account.",
+    },
+  };
+}
 
 const SignIn = () => {
   const [email, setEmail] = useState("");

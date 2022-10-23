@@ -34,7 +34,7 @@ export default function Pricing({ products }: Props) {
       <Tabs variant="soft-rounded" colorScheme="green" align="center">
         <TabList>
           <Tab>Monthly billing</Tab>
-          <Tab>Yearly billing</Tab>
+        <Tab>Yearly billing</Tab>
         </TabList>
         <TabPanels>
           <TabPanel pt={12}>
