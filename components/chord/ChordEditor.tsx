@@ -114,6 +114,7 @@ export const ChordEditor = (props: IProps) => {
         hasArrow={true}
       >
         <IconButton
+          zIndex={1}
           onClick={onResetChord}
           position="absolute"
           right={3}
