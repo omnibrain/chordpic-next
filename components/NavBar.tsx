@@ -108,9 +108,11 @@ const MenuLinks: React.FunctionComponent<{
   onCloseMenu(): void;
 }> = ({ isOpen, onCloseMenu }) => {
   const { user } = useUser();
-  const { asPath } = useRouter();
+  const { pathname } = useRouter();
   const { colorMode, toggleColorMode } = useColorMode();
   const subscription = useSubscription();
+
+  console.log({ pathname });
 
   return (
     <Box
@@ -124,7 +126,7 @@ const MenuLinks: React.FunctionComponent<{
         direction={["column", "row", "row", "row"]}
         pt={[4, 4, 0, 0]}
       >
-        {asPath !== "/" && (
+        {pathname !== "/" && (
           <Box>
             <NextLink href="/" passHref>
               <Button as="a" size="md" onClick={onCloseMenu} variant="solid">

@@ -76,14 +76,15 @@ export const Layout: React.FunctionComponent<
         `}
       </Script>
 
-      {subscription === SubscriptionType.FREE && (
-        <Script
-          data-ad-client="ca-pub-5764824207547220"
-          async
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-        />
-      )}
+      {subscription === SubscriptionType.FREE &&
+        process.env.NODE_ENV === "production" && (
+          <Script
+            data-ad-client="ca-pub-5764824207547220"
+            async
+            strategy="afterInteractive"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          />
+        )}
       <SimpleGrid row={["100px", null]} spacing="40px">
         <NavBar />
         <Container maxW="container.lg" as="main" mb={12}>
