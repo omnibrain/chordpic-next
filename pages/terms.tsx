@@ -1,3 +1,17 @@
+import { GetStaticPropsResult } from "next";
+
+interface Props {
+  title: string;
+}
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  return {
+    props: {
+      title: "Terms of Use",
+    },
+  };
+}
+
 const Terms = () => (
   <div
     dangerouslySetInnerHTML={{

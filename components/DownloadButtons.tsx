@@ -1,15 +1,17 @@
 import { DownloadIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
-import { MutableRefObject } from "react";
 import { ImageService } from "../services/image-service";
 import { useChart } from "./chord/useChart";
 
 const downloadPng =
-  (chartDom: HTMLDivElement | null, width = 400, title?: string) =>
-  () => {
+  (chartDom: HTMLDivElement | null, width: number, title?: string) => () => {
     if (!chartDom || !chartDom.firstChild) {
       return;
     }
+
+    gtag("event", "image_download", {
+      value: width,
+    });
 
     const svg = chartDom.firstChild as SVGElement;
     ImageService.downloadPng(svg, width, title);

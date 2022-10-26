@@ -102,6 +102,17 @@ export const ChordForm: React.FunctionComponent<{
     setValue("orientation", settings.orientation);
   }, [setValue, settings.orientation]);
 
+  useEffect(() => {
+    if (isOpen) {
+      gtag("event", "toggled_more_settings");
+    }
+  }, [isOpen]);
+
+  const resetSettings = () => {
+    gtag("event", "reset_settings");
+    reset(defaultValues);
+  };
+
   return (
     <>
       <SimpleGrid columns={[1, 2, 4, 4]} mt={10} gap={4}>
@@ -380,7 +391,7 @@ export const ChordForm: React.FunctionComponent<{
                 variant="outline"
                 display="flex"
                 gap={2}
-                onClick={() => reset(defaultValues)}
+                onClick={resetSettings}
               >
                 <DeleteIcon />
                 Reset settings

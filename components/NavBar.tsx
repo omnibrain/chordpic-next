@@ -112,8 +112,6 @@ const MenuLinks: React.FunctionComponent<{
   const { colorMode, toggleColorMode } = useColorMode();
   const subscription = useSubscription();
 
-  console.log({ pathname });
-
   return (
     <Box
       display={{ base: isOpen ? "block" : "none", md: "block" }}

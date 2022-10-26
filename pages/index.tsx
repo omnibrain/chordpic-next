@@ -143,6 +143,7 @@ const Home: NextPage = () => {
                     variant="outline"
                     icon={<RepeatIcon />}
                     onClick={() => {
+                      gtag("event", "rotate_chord_diagram");
                       setChart({
                         ...chart,
                         settings: {

@@ -35,6 +35,7 @@ export const ShareButtons = ({ chart }: IProps) => {
   }, [chartJson]);
 
   function share() {
+    gtag("event", "generate_share_link");
     const url = getLink(chart, "/chord");
 
     setLink(url);
