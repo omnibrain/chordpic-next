@@ -27,7 +27,7 @@ const Logo: React.FunctionComponent = () => {
 
   return (
     <Box height="3rem" display="flex" alignItems="center">
-      <NextLink href="/" passHref>
+      <NextLink href="/" passHref legacyBehavior>
         <Link
           display="flex"
           alignItems="center"
@@ -95,7 +95,7 @@ const MenuItem: React.FunctionComponent<
   PropsWithChildren<{ isLast?: boolean; to: string; onNavigate(): void }>
 > = ({ children, onNavigate, to = "/" }) => {
   return (
-    <NextLink href={to} passHref>
+    <NextLink href={to} passHref legacyBehavior>
       <Link whiteSpace="nowrap" onClick={onNavigate}>
         {children}
       </Link>
@@ -128,7 +128,7 @@ const MenuLinks: React.FunctionComponent<{
       >
         {pathname !== "/" && (
           <Box>
-            <NextLink href="/" passHref>
+            <NextLink href="/" passHref legacyBehavior>
               <Button as="a" size="md" onClick={onCloseMenu} variant="solid">
                 Create chord diagram
               </Button>

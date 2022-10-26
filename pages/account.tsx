@@ -112,7 +112,7 @@ export default function Account({ user }: { user: User }) {
             ) : subscription ? (
               `${subscriptionPrice}/${subscription?.prices?.interval}`
             ) : (
-              <NextLink href="/pricing" passHref>
+              <NextLink href="/pricing" passHref legacyBehavior>
                 <Button as="a" variant="solid">
                   Choose your plan
                 </Button>

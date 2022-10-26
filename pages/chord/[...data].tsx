@@ -82,7 +82,7 @@ const ChordPage = () => {
         <Heading as="h2" size="lg" mb={3} mt={8}>
           Edit
         </Heading>
-        <Link href="/" passHref>
+        <Link href="/" passHref legacyBehavior>
           <Button as="a" size="md" variant="solid">
             Edit this chord diagram
           </Button>

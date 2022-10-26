@@ -212,7 +212,7 @@ const SignIn = () => {
         <Box textAlign="center" mb={2} mt={6} fontSize="sm">
           <Box as="span">Don&apos;t have an account?</Box>
           {` `}
-          <NextLink href="/signup">
+          <NextLink href="/signup" legacyBehavior>
             <Link>Sign up</Link>
           </NextLink>
           .
@@ -220,7 +220,7 @@ const SignIn = () => {
         <Box textAlign="center" my={2} fontSize="sm">
           <Box as="span">Forgot password?</Box>
           {` `}
-          <NextLink href="/reset-password">
+          <NextLink href="/reset-password" legacyBehavior>
             <Link>Reset password</Link>
           </NextLink>
           .

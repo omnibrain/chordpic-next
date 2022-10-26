@@ -111,7 +111,7 @@ const SignUp = () => {
         <Box textAlign="center">
           <Box as="span">Do you have an account?</Box>
           {` `}
-          <NextLink href="/signin" passHref>
+          <NextLink href="/signin" passHref legacyBehavior>
             <Link>Sign in.</Link>
           </NextLink>
         </Box>
