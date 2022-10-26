@@ -42,7 +42,7 @@ const Logo: React.FunctionComponent = () => {
             <chakra.circle r={50} fill={bg} cx={50} cy={50} />
           </chakra.svg>
           <Box as="span" fontFamily="heading">
-            Chordpic
+            ChordPic
           </Box>
           {subscription === SubscriptionType.PRO && <Badge>PRO</Badge>}
         </Link>
@@ -202,6 +202,7 @@ const NavBarContainer: React.FunctionComponent<PropsWithChildren<{}>> = ({
       justify="space-between"
       wrap="wrap"
       w="100%"
+      h="min-content"
       p={4}
       bg={bg}
       color={textColor}

@@ -1,4 +1,4 @@
-import { Container, SimpleGrid } from "@chakra-ui/react";
+import { Container, Grid } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
@@ -6,6 +6,7 @@ import React, { PropsWithChildren, useEffect } from "react";
 import { GA4_ID } from "../global";
 import { PageMeta, SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
+import { Footer } from "./Footer";
 import { NavBar } from "./NavBar";
 
 export interface LayoutProps {
@@ -85,12 +86,20 @@ export const Layout: React.FunctionComponent<
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
           />
         )}
-      <SimpleGrid row={["100px", null]} spacing="40px">
+      <Grid
+        templateAreas={`"header"
+                        "content"
+                        "footer"`}
+        gridTemplateRows={"auto 1fr auto"}
+        gap="2.5rem"
+        h="100vh"
+      >
         <NavBar />
         <Container maxW="container.lg" as="main" mb={12}>
           {children}
         </Container>
-      </SimpleGrid>
+        <Footer />
+      </Grid>
     </>
   );
 };
