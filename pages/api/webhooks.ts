@@ -108,9 +108,15 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               ea: "purchase", // Event Action
             });
 
-            await axios.post(
-              `https://www.google-analytics.com/batch?${params.toString()}`
-            );
+            console.log("Stripe event tracking url:", event.data.object);
+            const trackingUrl = `https://www.google-analytics.com/batch?${params.toString()}`;
+
+            try {
+              await axios.post(trackingUrl);
+            } catch (err) {
+              console.error("Failed to track purchase", err);
+            }
+
             break;
           default:
             throw new Error("Unhandled relevant event!");
