@@ -1,14 +1,14 @@
+import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import Stripe from "stripe";
 import { Readable } from "node:stream";
+import Stripe from "stripe";
+import { GA4_ID } from "../../global";
 import { stripe } from "../../utils/stripe";
 import {
   manageSubscriptionStatusChange,
   upsertPriceRecord,
   upsertProductRecord,
 } from "../../utils/supabase-admin";
-import axios from "axios";
-import { GA4_ID } from "../../global";
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -97,24 +97,33 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               );
             }
 
-            // Record metrics using the Google Analytics Measurement Protocol
-            // See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
-            const params = new URLSearchParams({
-              v: "1", // Version
-              tid: GA4_ID, // Tracking ID / Property ID.
-              cid: (event.data.object as any)?.metadata?.analyticsClientId, // Anonymous Client ID
-              t: "event", // Event hit type
-              ec: "ecommerce", // Event Category
-              ea: "purchase", // Event Action
-            });
+            if (process.env.GA4_API_SECRET) {
+              const params = new URLSearchParams({
+                measurement_id: GA4_ID,
+                api_secret: process.env.GA4_API_SECRET,
+              });
 
-            console.log("Stripe event tracking url:", event.data.object);
-            const trackingUrl = `https://www.google-analytics.com/batch?${params.toString()}`;
+              const trackingUrl = `https://www.google-analytics.com/mp/collect?${params.toString()}`;
 
-            try {
-              await axios.post(trackingUrl);
-            } catch (err) {
-              console.error("Failed to track purchase", err);
+              try {
+                await axios.post(trackingUrl, {
+                  client_id: (event.data.object as any)?.metadata
+                    ?.analyticsClientId,
+                  timestamp_micros: String(new Date().getTime() * 1000),
+                  events: [
+                    {
+                      name: "purchase",
+                      params: {
+                        currency: checkoutSession.currency ?? "USD",
+                        value: checkoutSession.amount_total ?? 0,
+                      },
+                    },
+                  ],
+                });
+                console.log("Stripe event tracked successfully");
+              } catch (err) {
+                console.error("Failed to track purchase", err);
+              }
             }
 
             break;
