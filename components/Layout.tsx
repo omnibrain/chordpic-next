@@ -63,29 +63,36 @@ export const Layout: React.FunctionComponent<
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-QLVKP7R6W7"
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
+
+      {subscription === SubscriptionType.FREE && (
+        <Script
+          data-ad-client="ca-pub-5764824207547220"
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        />
+      )}
+
+      {subscription && (
+        <>
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-QLVKP7R6W7"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', '${GA4_ID}');
+          gtag('config', '${GA4_ID}', {debug: ${String(
+              process.env.NODE_ENV !== "production"
+            )}});
         `}
-      </Script>
+          </Script>
+        </>
+      )}
 
-      {subscription === SubscriptionType.FREE &&
-        process.env.NODE_ENV === "production" && (
-          <Script
-            data-ad-client="ca-pub-5764824207547220"
-            async
-            strategy="afterInteractive"
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-          />
-        )}
       <Grid
         templateAreas={`"header"
                         "content"

@@ -1,18 +1,13 @@
-import { DeleteIcon, RepeatIcon } from "@chakra-ui/icons";
+import { RepeatIcon } from "@chakra-ui/icons";
 import {
   Box,
   Center,
   Grid,
   GridItem,
-  Heading,
-  useColorModeValue,
-  Text,
-  Link,
-  IconButton,
-  Tooltip,
+  Heading, IconButton, Link, Text, Tooltip, useColorModeValue
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { Orientation } from "svguitar";
 import { ChordEditor } from "../components/chord/ChordEditor";
 import { ChordResult } from "../components/chord/ChordResult";
@@ -20,7 +15,6 @@ import { useChart } from "../components/chord/useChart";
 import { AdjustableChordSettings, ChordForm } from "../components/ChordForm";
 import { DownloadButtons } from "../components/DownloadButtons";
 import { ShareButtons } from "../components/ShareButtons";
-import { GA4_ID } from "../global";
 import { useIsClient } from "../hooks/use-is-client";
 import { useResizeHandler } from "../hooks/use-resize-handler";
 
@@ -42,10 +36,6 @@ const Home: NextPage = () => {
       }),
     [chart.chord, chart.settings, setChart]
   );
-
-  useEffect(() => {
-    console.log(gtag("get", GA4_ID, "client_id", (x) => console.log(x)));
-  }, []);
 
   return (
     <>
