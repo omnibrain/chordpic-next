@@ -34,7 +34,7 @@
     "react-share": "^4.4.0",
     "save-svg-as-png": "^1.4.17",
     "stripe": "^9.14.0",
-    "svguitar": "^2.0.0"
+    "svguitar": "^2.1.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",

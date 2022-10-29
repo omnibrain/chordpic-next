@@ -1,7 +1,13 @@
-import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from "@chakra-ui/icons";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  DeleteIcon,
+  QuestionIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Checkbox,
   Collapse,
   Flex,
   FormControl,
@@ -14,6 +20,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useDeferredValue, useEffect, useState } from "react";
@@ -37,6 +44,8 @@ export type AdjustableChordSettings = Pick<
   | "strokeWidth"
   | "color"
   | "backgroundColor"
+  | "fixedDiagramPosition"
+  | "noPosition"
 >;
 
 const defaultValues: AdjustableChordSettings = {
@@ -52,6 +61,7 @@ const defaultValues: AdjustableChordSettings = {
   strokeWidth: 2,
   backgroundColor: undefined,
   color: undefined,
+  fixedDiagramPosition: false,
 };
 
 export const ChordForm: React.FunctionComponent<{
@@ -226,9 +236,7 @@ export const ChordForm: React.FunctionComponent<{
                     <option value={ChordStyle.handdrawn}>Handdrawn</option>
                   )}
                   {subscription !== SubscriptionType.PRO && (
-                    <option value={Orientation.vertical} disabled>
-                      Handdrawn (Pro only)
-                    </option>
+                    <option disabled>Handdrawn (Pro only)</option>
                   )}
                 </Select>
               </FormLabel>
@@ -253,8 +261,25 @@ export const ChordForm: React.FunctionComponent<{
               )}
             </FormControl>
           </Box>
-          <Box></Box>
-          <Box></Box>
+          <Box display="flex" alignItems="center">
+            <Checkbox {...register("fixedDiagramPosition")}>
+              Fixed diagram position
+              <Tooltip
+                placement="top"
+                label="If enabled, the space between the diagram and the title will always be the same."
+                aria-label="If enabled, the space between the diagram and the title will always be the same."
+                hasArrow={true}
+              >
+                <QuestionIcon ml={2} />
+              </Tooltip>
+            </Checkbox>
+          </Box>
+          <Box display="flex" alignItems="center">
+            <Checkbox {...register("noPosition")}>
+              Hide position
+              <QuestionIcon ml={2} />
+            </Checkbox>
+          </Box>
           <Box>
             <FormControl>
               <FormLabel>

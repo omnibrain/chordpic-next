@@ -48,6 +48,29 @@ const HelpPage = () => {
         mt={8}
         id="you-can-now-create-horizontal-chord-diagrams-"
       >
+        Position can now be hidden
+      </Heading>
+      <Text mb={3}>
+        <em>October 29th, 2022</em>
+      </Text>
+      <Text mb={3}>
+        Another user request has been implemented: You can now hide the position
+        of a chord. Just check the &apos;Hide position&apos; checkmark.
+      </Text>
+      <Text mb={3}>
+        What feature would you like to see?{" "}
+        <Link href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
+          Write us an email
+        </Link>{" "}
+        with your feature request!
+      </Text>
+
+      <Heading
+        size="lg"
+        mb={3}
+        mt={8}
+        id="you-can-now-create-horizontal-chord-diagrams-"
+      >
         Font size of fingers can now be adjusted
       </Heading>
       <Text mb={3}>
