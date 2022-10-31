@@ -31,7 +31,7 @@ export const Product: React.FunctionComponent<
     }
 
     let analyticsClientId: string | null = null;
-    if (gtag) {
+    if (typeof gtag !== "undefined") {
       await new Promise((resolve) =>
         gtag("event", "begin_checkout", {
           event_callback: resolve,
