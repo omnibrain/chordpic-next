@@ -115,7 +115,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                       name: "purchase",
                       params: {
                         currency: checkoutSession.currency ?? "USD",
-                        value: checkoutSession.amount_total ?? 0,
+                        value: (checkoutSession.amount_total ?? 0) / 100,
                       },
                     },
                   ],
