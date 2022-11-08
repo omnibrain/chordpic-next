@@ -6,10 +6,19 @@ import { Price, ProductWithPrice } from "../types";
 import { postData } from "../utils/helpers";
 import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
+import * as Sentry from "@sentry/nextjs";
 
 export interface ProductProps {
   billingInterval: "year" | "month";
   product: ProductWithPrice;
+}
+
+// const wait = <T>(ms: number, returnValue?: T) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function wait<T>(ms: number, returnValue: T): Promise<T> {
+  return new Promise<T>((resolve) =>
+    setTimeout(() => resolve(returnValue), ms)
+  );
 }
 
 export const Product: React.FunctionComponent<
@@ -30,22 +39,35 @@ export const Product: React.FunctionComponent<
       return router.push("/account");
     }
 
+    const gaTimeout = 2000; // 2 seconds
     let analyticsClientId: string | null = null;
-    if (typeof gtag !== "undefined") {
-      await new Promise((resolve) =>
-        gtag("event", "begin_checkout", {
-          event_callback: resolve,
-        })
-      );
 
-      analyticsClientId = await new Promise<string | null>((resolve) =>
-        gtag("get", GA4_ID, "client_id", (cid) => {
-          if (typeof cid === "string") {
-            resolve(cid);
-          }
-          resolve(null);
-        })
-      );
+    try {
+      if (typeof gtag !== "undefined") {
+        await Promise.race([
+          await new Promise((resolve) =>
+            gtag("event", "begin_checkout", {
+              event_callback: resolve,
+            })
+          ),
+          wait(gaTimeout, null),
+        ]);
+
+        analyticsClientId = await Promise.race([
+          new Promise<string | null>((resolve) =>
+            gtag("get", GA4_ID, "client_id", (cid) => {
+              if (typeof cid === "string") {
+                resolve(cid);
+              }
+              resolve(null);
+            })
+          ),
+          wait(gaTimeout, null),
+        ]);
+      }
+    } catch (err) {
+      Sentry.captureException(err);
+      // Ignore
     }
 
     try {
