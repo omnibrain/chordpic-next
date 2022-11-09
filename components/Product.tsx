@@ -79,7 +79,7 @@ export const Product: React.FunctionComponent<
       const stripe = await getStripe();
       stripe?.redirectToCheckout({ sessionId });
     } catch (error) {
-      return alert((error as Error)?.message);
+      Sentry.captureException(error);
     } finally {
       setPriceIdLoading(undefined);
     }
@@ -129,7 +129,6 @@ export const Product: React.FunctionComponent<
         <Button
           disabled={isLoading}
           isLoading={priceIdLoading === price.id}
-          onClick={() => handleCheckout(price)}
           size="lg"
           width="100%"
           colorScheme="gray"

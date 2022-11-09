@@ -10,6 +10,7 @@ import { supabase } from "../utils/supabase-client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { ChartProvider } from "../components/chord/useChart";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // unregister all previous service workers
 if (typeof navigator !== "undefined") {
@@ -38,6 +39,9 @@ function MyApp({
 
   return (
     <QueryClientProvider client={queryClient}>
+      {process.env.NODE_ENV !== "production" && (
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      )}
       <ChakraProvider theme={theme}>
         <UserProvider supabaseClient={supabaseClient}>
           <MyUserContextProvider supabaseClient={supabaseClient}>

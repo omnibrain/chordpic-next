@@ -51,6 +51,7 @@ export const MyUserContextProvider = (props: Props) => {
       ),
     {
       enabled: !isLoadingUser && !!user,
+      retry: 0,
     }
   );
 
@@ -76,6 +77,7 @@ export const MyUserContextProvider = (props: Props) => {
       ),
     {
       enabled: !isLoadingUser && !!user,
+      retry: 0,
     }
   );
 
