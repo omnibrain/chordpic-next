@@ -13,8 +13,6 @@ export interface ProductProps {
   product: ProductWithPrice;
 }
 
-// const wait = <T>(ms: number, returnValue?: T) => new Promise((resolve) => setTimeout(resolve, ms));
-
 function wait<T>(ms: number, returnValue: T): Promise<T> {
   return new Promise<T>((resolve) =>
     setTimeout(() => resolve(returnValue), ms)

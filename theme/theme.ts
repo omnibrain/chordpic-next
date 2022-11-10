@@ -38,8 +38,12 @@ export const theme = extendTheme(
       colors: {
         error: "red.500",
         primary: {
-          default: "gray.800",
-          _dark: "gray.200",
+          default: "black",
+          _dark: "white",
+        },
+        inverse: {
+          default: "white",
+          _dark: "black",
         },
       },
     },

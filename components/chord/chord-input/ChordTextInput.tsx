@@ -5,6 +5,8 @@ import { IChordInputSettings } from "../ChordEditor";
 import styled from "@emotion/styled";
 import { ChordMatrix } from "../../../services/chord-matrix";
 import { EditMode } from "../../../domain/edit-mode";
+import { Input, useColorModeValue } from "@chakra-ui/react";
+import { InputWithKeys } from "./InputWithKeys";
 
 export interface IChordTextInputProps {
   settings: IChordInputSettings;
@@ -68,16 +70,16 @@ export const ChordTextInput = (props: IChordTextInputProps) => {
               }
             >
               {!empty && props.editMode === EditMode.EDIT_TEXT && (
-                <StyledInput
-                  type="text"
+                <InputWithKeys
+                  placement={stringIndex < 2 ? "right" : "left"}
+                  textAlign="center"
+                  p={0}
+                  height="40%"
+                  width="100%"
                   value={matrix.get(fretIndex, stringIndex).text ?? ""}
-                  onChange={(e: FormEvent<HTMLInputElement>) =>
+                  onChange={(value) =>
                     props.onMatrixChange(
-                      matrix.text(
-                        stringIndex,
-                        fretIndex,
-                        (e.target as HTMLInputElement).value
-                      )
+                      matrix.text(stringIndex, fretIndex, value)
                     )
                   }
                 />
