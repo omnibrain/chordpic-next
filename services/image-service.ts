@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 // @ts-ignore
 import { saveSvgAsPng } from "save-svg-as-png";
+import sanitize from "sanitize-filename";
 
 const FILENAME_DATE_FORMAT = "YYYY-MM-DD-mm-ss";
 
@@ -38,8 +39,10 @@ export class ImageService {
   }
 
   static fileName(name: string | undefined, extension: string) {
+    console.log({ name, sanitized: sanitize(name ?? "XXX") });
+
     return name
-      ? name.replace(/[^0-9a-z\s]/gi, "").replace(" ", "-")
+      ? sanitize(name)
       : `chart-${dayjs().format(FILENAME_DATE_FORMAT)}.${extension}`;
   }
 }
