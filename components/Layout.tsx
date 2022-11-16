@@ -82,10 +82,10 @@ export const Layout: React.FunctionComponent<
           <Script id="google-analytics" strategy="afterInteractive">
             {`
           window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
+          function gtag?.(){window.dataLayer.push(arguments);}
+          gtag?.('js', new Date());
 
-          gtag('config', '${GA4_ID}', {debug: ${String(
+          gtag?.('config', '${GA4_ID}', {debug: ${String(
               process.env.NODE_ENV !== "production"
             )}});
         `}

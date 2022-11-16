@@ -46,7 +46,7 @@ export const Product: React.FunctionComponent<
       if (typeof gtag !== "undefined") {
         await Promise.race([
           await new Promise((resolve) =>
-            gtag("event", "begin_checkout", {
+            gtag?.("event", "begin_checkout", {
               event_callback: resolve,
             })
           ),
@@ -55,7 +55,7 @@ export const Product: React.FunctionComponent<
 
         analyticsClientId = await Promise.race([
           new Promise<string | null>((resolve) =>
-            gtag("get", GA4_ID, "client_id", (cid) => {
+            gtag?.("get", GA4_ID, "client_id", (cid) => {
               if (typeof cid === "string") {
                 resolve(cid);
               }

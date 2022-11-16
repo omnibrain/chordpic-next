@@ -9,7 +9,7 @@ const downloadPng =
       return;
     }
 
-    gtag("event", "image_download", {
+    gtag?.("event", "image_download", {
       value: width,
     });
 

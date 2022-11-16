@@ -90,7 +90,7 @@ export const ChordEditor = (props: IProps) => {
     });
 
   const onResetChord = () => {
-    gtag("event", "reset_chord");
+    gtag?.("event", "reset_chord");
     const newMatrix = new ChordMatrix(props.numFrets, props.numStrings);
     props.onChart({
       chord: newMatrix.toVexchord(),

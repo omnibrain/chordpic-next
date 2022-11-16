@@ -114,12 +114,12 @@ export const ChordForm: React.FunctionComponent<{
 
   useEffect(() => {
     if (isOpen) {
-      gtag("event", "toggled_more_settings");
+      gtag?.("event", "toggled_more_settings");
     }
   }, [isOpen]);
 
   const resetSettings = () => {
-    gtag("event", "reset_settings");
+    gtag?.("event", "reset_settings");
     reset(defaultValues);
   };
 
