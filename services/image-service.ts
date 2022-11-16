@@ -39,8 +39,6 @@ export class ImageService {
   }
 
   static fileName(name: string | undefined, extension: string) {
-    console.log({ name, sanitized: sanitize(name ?? "XXX") });
-
     return name
       ? sanitize(name)
       : `chart-${dayjs().format(FILENAME_DATE_FORMAT)}.${extension}`;
