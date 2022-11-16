@@ -1,68 +1,53 @@
-import { Box } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Link } from "@chakra-ui/react";
 import * as React from "react";
-import { useEffect, useRef } from "react";
-import { ChordSettings, SVGuitarChord } from "svguitar";
-import { SubscriptionType } from "../../types";
-import { useSubscription } from "../../utils/useSubscription";
+import { useCallback } from "react";
+import { SUPPORT_EMAIL } from "../../global";
+import { defaultValues } from "../ChordForm";
+import { ChordChart } from "./ChordChart";
 import { useChart } from "./useChart";
+import * as Sentry from "@sentry/react";
 
-const defaultSVGuitarSettings: Partial<ChordSettings> = {
-  fretSize: 1.75,
-  barreChordRadius: 0.5,
-};
-
-export const ChordResult: React.FunctionComponent = () => {
-  const { chart, ref, setSize } = useChart();
-  const svguitarRef = useRef<SVGuitarChord>();
-  const subscription = useSubscription();
-
-  const watermark = React.useMemo(
-    () =>
-      subscription === SubscriptionType.PRO ? "" : "created with chordpic.com",
-    [subscription]
-  );
-
-  useEffect(() => {
-    if (ref.current && !svguitarRef.current) {
-      svguitarRef.current = new SVGuitarChord(ref.current);
-    }
-
-    if (svguitarRef.current) {
-      const size = svguitarRef.current
-        .configure({
-          ...defaultSVGuitarSettings,
-          ...chart.settings,
-          watermark,
-          watermarkFontSize: 16,
-          watermarkColor: "rgba(0, 0, 0, 0.5)",
-        })
-        .chord(chart.chord)
-        .draw();
-
-      setSize(size);
-    }
-  }, [chart, ref, setSize, watermark]);
-
+const ErrorFallback: React.FunctionComponent<{
+  onReset(): void;
+}> = ({ onReset }) => {
   return (
     <Box
       height="100%"
       display="flex"
       flexDir="column"
-      alignItems="stretch"
-      justifyContent="flex-start"
+      alignItems="center"
+      justifyContent="center"
+      flex="1"
+      gap={4}
     >
-      <Box
-        id="chord-result"
-        flex="1"
-        maxHeight="40rem"
-        ref={ref}
-        sx={{
-          svg: {
-            height: "100%",
-            width: "100%",
-          },
-        }}
-      ></Box>
+      <Alert status="error">
+        <AlertIcon />
+        <Box>
+          Oops, something went wrong with the chord diagram. If this keeps
+          happening, please{" "}
+          <Link href={`mailto:${SUPPORT_EMAIL}`}>contact support</Link>. To
+          resolve the problem for now, please reset the settings.
+        </Box>
+      </Alert>
+      <Button onClick={onReset}>Reset settings</Button>
     </Box>
+  );
+};
+
+export const ChordResult: React.FunctionComponent = () => {
+  const { setChart, chart } = useChart();
+
+  const resetSettings = useCallback(() => {
+    setChart({
+      chord: chart.chord,
+      settings: defaultValues,
+    });
+    window.location.reload();
+  }, [chart.chord, setChart]);
+
+  return (
+    <Sentry.ErrorBoundary fallback={<ErrorFallback onReset={resetSettings} />}>
+      <ChordChart />;
+    </Sentry.ErrorBoundary>
   );
 };

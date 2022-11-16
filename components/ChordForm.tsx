@@ -48,7 +48,7 @@ export type AdjustableChordSettings = Pick<
   | "noPosition"
 >;
 
-const defaultValues: AdjustableChordSettings = {
+export const defaultValues: AdjustableChordSettings = {
   orientation: Orientation.vertical,
   title: "",
   frets: 5,

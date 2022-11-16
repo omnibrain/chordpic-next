@@ -4,7 +4,12 @@ import {
   Center,
   Grid,
   GridItem,
-  Heading, IconButton, Link, Text, Tooltip, useColorModeValue
+  Heading,
+  IconButton,
+  Link,
+  Text,
+  Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useCallback } from "react";
