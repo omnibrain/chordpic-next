@@ -43,10 +43,7 @@ export const ChordChart: React.FunctionComponent = () => {
 
         setSize(size);
       } catch (err) {
-        Sentry.captureException(err);
-        Sentry.captureMessage(
-          `Error drawing chord with chart: ${JSON.stringify(chart)}`
-        );
+        Sentry.captureException(err, { extra: { chart } });
 
         throw err;
       }
