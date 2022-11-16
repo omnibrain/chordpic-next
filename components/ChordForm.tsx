@@ -16,19 +16,15 @@ import {
   Input,
   Select,
   SimpleGrid,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useDeferredValue, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ChordSettings, ChordStyle, Orientation } from "svguitar";
+import { SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
 import { ColorInput } from "./ColorInput";
-import { SubscriptionType } from "../types";
 import { SliderWithTooltip } from "./SliderWithTooltip";
 
 export type AdjustableChordSettings = Pick<

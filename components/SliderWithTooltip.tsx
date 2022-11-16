@@ -1,5 +1,6 @@
 import {
   ComponentWithAs,
+  forwardRef,
   Slider,
   SliderFilledTrack,
   SliderProps,
@@ -7,7 +8,7 @@ import {
   SliderTrack,
   Tooltip,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React from "react";
 
 export interface SliderWithTooltipProps {
   min: number;
@@ -20,7 +21,7 @@ const DISPLAY_SCALE = 100;
 export const SliderWithTooltip: ComponentWithAs<
   "div",
   SliderProps & SliderWithTooltipProps
-> = ({ min, max, step, value, ...field }) => {
+> = forwardRef(({ min, max, step, value, ...field }, ref) => {
   const [showTooltip, setShowTooltip] = React.useState(false);
 
   const displayValue = Math.round(
@@ -29,6 +30,7 @@ export const SliderWithTooltip: ComponentWithAs<
 
   return (
     <Slider
+      ref={ref}
       aria-label="Chord chart finger size"
       min={min}
       max={max}
@@ -51,4 +53,4 @@ export const SliderWithTooltip: ComponentWithAs<
       </Tooltip>
     </Slider>
   );
-};
+});
