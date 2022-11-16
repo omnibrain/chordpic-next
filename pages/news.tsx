@@ -5,8 +5,17 @@ import exampleHorizontalChord from "../public/images/example-horizontal-chord.pn
 import sampleChordWithColors from "../public/images/sample-chord-with-colors.png";
 import orientationToggle from "../public/images/orientation-toggle.png";
 import sampleChordWithText from "../public/images/sample-chord-with-text.png";
-import { Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import {
+  Center,
+  Heading,
+  Link,
+  ListItem,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { GetStaticPropsResult } from "next";
+
+import sliders from "../assets/images/sliders.jpg";
 
 interface Props {
   title: string;
@@ -40,6 +49,31 @@ const HelpPage = () => {
           write us an email
         </Link>
         , we would love to hear your story and tell other people about it!
+      </Text>
+
+      <Heading
+        size="lg"
+        mb={3}
+        mt={8}
+        id="you-can-now-create-horizontal-chord-diagrams-"
+      >
+        Sliders now show numerical values
+      </Heading>
+      <Text mb={3}>
+        <em>November 16th, 2022</em>
+      </Text>
+      <Text mb={3}>
+        A small improvement that makes it easier to see the exact values of the
+        sliders in the chord settings: Now the sliders show the numerical value
+        of the setting they control.
+      </Text>
+      <Text mb={3}>Here&apos;s what this looks like in action:</Text>
+      <Center>
+        <Image src={sliders} alt="Sliders with numerical values" />
+      </Center>
+      <Text mb={3}>
+        This makes it much easier to rember your settings so you can create
+        chord diagrams with the exact same settings on a different machine.
       </Text>
 
       <Heading
@@ -159,18 +193,18 @@ const HelpPage = () => {
         There is now a new setting hidden under the &quot;More Settings&quot;
         toggle that allows you to create horizontal chord diagrams.
       </Text>
-      <Text mb={3}>
+      <Center mb={3}>
         <Image src={orientationToggle} alt="Example horizontal chord" />
-      </Text>
+      </Center>
       <Text mb={3}>
         The setting is called &quot;Orientation&quot; and you can chose between
         &quot;Horizontal&quot; and &quot;Vertical&quot;. Give it a try and see
         which orientation suit your needs best!
       </Text>
       <Text mb={3}>Here&apos;s an example of a horizontal chord diagram:</Text>
-      <Text mb={3}>
+      <Center mb={3}>
         <Image src={exampleHorizontalChord} alt="Example horizontal chord" />
-      </Text>
+      </Center>
       <Heading
         size="lg"
         mb={3}
@@ -188,9 +222,9 @@ const HelpPage = () => {
         offers from Fender Play and ChordPic gets a small cut of the
         subscription fees. If you want to learn how to play the guitar with the
         #1 guitar learing app AND support ChordPic, you should definitely get a{" "}
-        <a href="https://prf.hn/click/camref:1101lfvVp/creativeref:1011l22176">
+        <Link href="https://prf.hn/click/camref:1101lfvVp/creativeref:1011l22176">
           Fender Play subscription here
-        </a>
+        </Link>
         . Includes 2 weeks of trying for free 🤩
       </Text>
       <Heading size="lg" mb={3} mt={8} id="barre-chords-on-firefox-fixed-">
@@ -246,13 +280,13 @@ const HelpPage = () => {
       <Text mb={3}>
         ChordPic has been featured in a video by the fantastic YouTuber{" "}
         <em>Cesar All Guitar</em>.
-        <a href="https://youtu.be/_pu4vOEdpwM">
+        <Link href="https://youtu.be/_pu4vOEdpwM">
           Check out the video on YouTube
-        </a>{" "}
+        </Link>{" "}
         and also{" "}
-        <a href="https://www.youtube.com/channel/UCBocQ9yt6k7NdFD1yaHF_ZQ">
+        <Link href="https://www.youtube.com/channel/UCBocQ9yt6k7NdFD1yaHF_ZQ">
           check out Cesar&apos;s YouTube channel
-        </a>{" "}
+        </Link>{" "}
         for more great guitar related content!
       </Text>
       <Heading
@@ -274,15 +308,15 @@ const HelpPage = () => {
         finger or barre chord that you selected. As easy as that! Here&apos;s an
         example:
       </Text>
-      <Text mb={3}>
+      <Center mb={3}>
         <Image src={sampleChordWithColors} alt="Example chord with colors" />
-      </Text>
+      </Center>
       <Text mb={3}>
         Have you found a bug or do you have an idea how to make this feature
         even better? Don&apos;t hesitate to
-        <a href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
+        <Link href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
           write us an email
-        </a>
+        </Link>
         !
       </Text>
       <Heading
@@ -301,9 +335,9 @@ const HelpPage = () => {
         barre chord can now be labelled! You can now add arbitrary text to each
         nut and each barre chord. Here&apos;s an example:
       </Text>
-      <Text mb={3}>
+      <Center mb={3}>
         <Image src={sampleChordWithText} alt="Example chord with text" />
-      </Text>
+      </Center>
       <Text mb={3}>
         It&apos;s really easy too. Just click on the &quot;Edit Text&quot;
         button at the bottom of the chord editor and start labelling your
@@ -312,9 +346,9 @@ const HelpPage = () => {
       <Text mb={3}>
         As always, if you have any suggestion how to make this feature even
         better or if you experience any problems with this new feature please{" "}
-        <a href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
+        <Link href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
           write us an email
-        </a>
+        </Link>
         !
       </Text>
       <Heading size="lg" mb={3} mt={8} id="improved-chord-logic">
@@ -328,16 +362,16 @@ const HelpPage = () => {
         create a chord diagram with a barre chart and a finger on the same fret.
         This is now fixed! You can now create chord diagrams like this:
       </Text>
-      <Text mb={3}>
+      <Center mb={3}>
         <Image src={barreAndFingerSameFret} alt="Example chord chart" />
-      </Text>
+      </Center>
       <Text mb={3}>Special thanks to everyone that reported this issue.</Text>
       <Text mb={3}>
         Have you found a bug or do you have a feature request? Don&apos;t
         hesitate to
-        <a href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
+        <Link href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com">
           write us an email
-        </a>
+        </Link>
         . Together we will improve ChordPic to make it the best chord diagram
         creator out there!
       </Text>
@@ -358,10 +392,10 @@ const HelpPage = () => {
       <Text mb={3}>
         Since the very early days of ChordPic, Jonathan Eli has been using the
         generated chord chart images for his unique educational YouTube channel.
-        You should definitely
-        <a href="https://www.youtube.com/channel/UChgJio8vi7Yn3UWZBOaCzWQ">
+        You should definitely{" "}
+        <Link href="https://www.youtube.com/channel/UChgJio8vi7Yn3UWZBOaCzWQ">
           check out Jonathan Eli&apos;s YouTube channel
-        </a>
+        </Link>
         !
       </Text>
     </>

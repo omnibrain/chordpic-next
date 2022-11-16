@@ -29,6 +29,7 @@ import { ChordSettings, ChordStyle, Orientation } from "svguitar";
 import { useSubscription } from "../utils/useSubscription";
 import { ColorInput } from "./ColorInput";
 import { SubscriptionType } from "../types";
+import { SliderWithTooltip } from "./SliderWithTooltip";
 
 export type AdjustableChordSettings = Pick<
   ChordSettings,
@@ -288,18 +289,13 @@ export const ChordForm: React.FunctionComponent<{
                   control={control}
                   name="fretSize"
                   render={({ field }) => (
-                    <Slider
+                    <SliderWithTooltip
                       aria-label="Chord chart height"
                       min={0.7}
                       max={5}
-                      step={0.1}
+                      step={0.05}
                       {...field}
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <SliderThumb boxSize={6} />
-                    </Slider>
+                    />
                   )}
                 ></Controller>
               </FormLabel>
@@ -313,18 +309,13 @@ export const ChordForm: React.FunctionComponent<{
                   control={control}
                   name="fingerSize"
                   render={({ field }) => (
-                    <Slider
+                    <SliderWithTooltip
                       aria-label="Chord chart finger size"
-                      min={0.3}
-                      max={1.5}
-                      step={0.025}
+                      min={0.5}
+                      max={2}
+                      step={0.01}
                       {...field}
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <SliderThumb boxSize={6} />
-                    </Slider>
+                    />
                   )}
                 ></Controller>
               </FormLabel>
@@ -338,18 +329,13 @@ export const ChordForm: React.FunctionComponent<{
                   control={control}
                   name="fingerTextSize"
                   render={({ field }) => (
-                    <Slider
+                    <SliderWithTooltip
                       aria-label="Chord chart finger text size"
                       min={10}
                       max={50}
                       step={1}
                       {...field}
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <SliderThumb boxSize={6} />
-                    </Slider>
+                    />
                   )}
                 ></Controller>
               </FormLabel>
@@ -363,19 +349,13 @@ export const ChordForm: React.FunctionComponent<{
                   control={control}
                   name="strokeWidth"
                   render={({ field }) => (
-                    <Slider
+                    <SliderWithTooltip
                       aria-label="Stroke width"
                       min={1}
                       max={10}
-                      step={1}
-                      defaultValue={1.5}
+                      step={0.1}
                       {...field}
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <SliderThumb boxSize={6} />
-                    </Slider>
+                    />
                   )}
                 ></Controller>
               </FormLabel>
