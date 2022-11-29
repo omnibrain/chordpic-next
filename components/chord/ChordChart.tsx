@@ -34,6 +34,7 @@ export const ChordChart: React.FunctionComponent = () => {
           .configure({
             ...defaultSVGuitarSettings,
             ...chart.settings,
+            svgTitle: "Chord diagram created with chordpic.com",
             watermark,
             watermarkFontSize: 16,
             watermarkColor: "rgba(0, 0, 0, 0.5)",
