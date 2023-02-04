@@ -7,6 +7,7 @@ import { postData } from "../utils/helpers";
 import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
 import * as Sentry from "@sentry/nextjs";
+import { GA } from '../services/google-analytics'
 
 export interface ProductProps {
   billingInterval: "year" | "month";
@@ -45,28 +46,26 @@ export const Product: React.FunctionComponent<
     let analyticsClientId: string | null = null;
 
     try {
-      if (typeof gtag !== "undefined") {
-        await Promise.race([
-          await new Promise((resolve) =>
-            gtag?.("event", "begin_checkout", {
-              event_callback: resolve,
-            })
-          ),
-          wait(gaTimeout, null),
-        ]);
+      await Promise.race([
+        await new Promise((resolve) =>
+          GA()?.("event", "begin_checkout", {
+            event_callback: resolve,
+          })
+        ),
+        wait(gaTimeout, null),
+      ]);
 
-        analyticsClientId = await Promise.race([
-          new Promise<string | null>((resolve) =>
-            gtag?.("get", GA4_ID, "client_id", (cid) => {
-              if (typeof cid === "string") {
-                resolve(cid);
-              }
-              resolve(null);
-            })
-          ),
-          wait(gaTimeout, null),
-        ]);
-      }
+      analyticsClientId = await Promise.race([
+        new Promise<string | null>((resolve) =>
+          GA()?.("get", GA4_ID, "client_id", (cid) => {
+            if (typeof cid === "string") {
+              resolve(cid);
+            }
+            resolve(null);
+          })
+        ),
+        wait(gaTimeout, null),
+      ]);
     } catch (err) {
       Sentry.captureException(err, {
         extra: {

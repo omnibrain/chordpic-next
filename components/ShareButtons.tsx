@@ -20,6 +20,7 @@ import {
 } from "react-share";
 import { Chart } from "../domain/chart";
 import { getLink } from "../hooks/url-state";
+import { GA } from '../services/google-analytics'
 
 interface IProps {
   chart: Chart;
@@ -35,7 +36,7 @@ export const ShareButtons = ({ chart }: IProps) => {
   }, [chartJson]);
 
   function share() {
-    gtag?.("event", "generate_share_link");
+    GA()?.("event", "generate_share_link");
     const url = getLink(chart, "/chord");
 
     setLink(url);

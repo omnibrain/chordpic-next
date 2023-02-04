@@ -2,6 +2,7 @@ import { DownloadIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { ImageService } from "../services/image-service";
 import { useChart } from "./chord/useChart";
+import { GA } from '../services/google-analytics'
 
 const downloadPng =
   (chartDom: HTMLDivElement | null, width: number, title?: string) => () => {
@@ -9,7 +10,7 @@ const downloadPng =
       return;
     }
 
-    gtag?.("event", "image_download", {
+    GA()?.("event", "image_download", {
       value: width,
     });
 

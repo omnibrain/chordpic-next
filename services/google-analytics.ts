@@ -1,0 +1,1 @@
+export const GA = () => typeof gtag !== "undefined" ? gtag : null

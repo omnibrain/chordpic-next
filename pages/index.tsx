@@ -22,6 +22,7 @@ import { DownloadButtons } from "../components/DownloadButtons";
 import { ShareButtons } from "../components/ShareButtons";
 import { useIsClient } from "../hooks/use-is-client";
 import { useResizeHandler } from "../hooks/use-resize-handler";
+import { GA } from "../services/google-analytics";
 
 const Home: NextPage = () => {
   const { width, height } = useResizeHandler();
@@ -138,7 +139,7 @@ const Home: NextPage = () => {
                     variant="outline"
                     icon={<RepeatIcon />}
                     onClick={() => {
-                      gtag?.("event", "rotate_chord_diagram");
+                      GA()?.("event", "rotate_chord_diagram");
                       setChart({
                         ...chart,
                         settings: {

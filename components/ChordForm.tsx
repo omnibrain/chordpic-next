@@ -26,6 +26,7 @@ import { SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
 import { ColorInput } from "./ColorInput";
 import { SliderWithTooltip } from "./SliderWithTooltip";
+import { GA } from '../services/google-analytics'
 
 export type AdjustableChordSettings = Pick<
   ChordSettings,
@@ -111,12 +112,12 @@ export const ChordForm: React.FunctionComponent<{
 
   useEffect(() => {
     if (isOpen) {
-      gtag?.("event", "toggled_more_settings");
+      GA()?.("event", "toggled_more_settings");
     }
   }, [isOpen]);
 
   const resetSettings = () => {
-    gtag?.("event", "reset_settings");
+    GA()?.("event", "reset_settings");
     reset(defaultValues);
   };
 

@@ -10,6 +10,7 @@ import { EditMode } from "../../domain/edit-mode";
 import { ChordMatrix } from "../../services/chord-matrix";
 import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { GA } from '../../services/google-analytics'
 
 const lineWidth = 3;
 
@@ -90,7 +91,7 @@ export const ChordEditor = (props: IProps) => {
     });
 
   const onResetChord = () => {
-    gtag?.("event", "reset_chord");
+    GA()?.("event", "reset_chord");
     const newMatrix = new ChordMatrix(props.numFrets, props.numStrings);
     props.onChart({
       chord: newMatrix.toVexchord(),
