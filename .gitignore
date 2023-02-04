@@ -36,3 +36,7 @@ yarn-error.log*
 
 # Sentry
 .sentryclirc
+
+# Idea
+.idea
+*.iml

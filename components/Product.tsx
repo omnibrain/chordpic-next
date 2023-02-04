@@ -30,6 +30,8 @@ export const Product: React.FunctionComponent<
   const { colorMode } = useColorMode();
 
   const handleCheckout = async (price: Price) => {
+    const scope = new Sentry.Scope();
+
     setPriceIdLoading(price.id);
 
     if (!user) {
@@ -66,8 +68,15 @@ export const Product: React.FunctionComponent<
         ]);
       }
     } catch (err) {
-      Sentry.captureException(err);
-      // Ignore
+      Sentry.captureException(err, {
+        extra: {
+          gaDefined: typeof gtag !== "undefined",
+          analyticsClientId
+        }
+      });
+      Sentry.captureMessage(`Failed to track checkout: ${
+        err instanceof Error ? err.message : err
+      }`)
     }
 
     try {
@@ -77,9 +86,23 @@ export const Product: React.FunctionComponent<
       });
 
       const stripe = await getStripe();
-      stripe?.redirectToCheckout({ sessionId });
+
+      if (!stripe) {
+        Sentry.captureMessage("Stripe was not defined during checkout");
+        return;
+      }
+
+      stripe.redirectToCheckout({ sessionId });
     } catch (error) {
-      Sentry.captureException(error);
+      Sentry.captureException(error, {
+        extra: {
+          gaDefined: typeof gtag !== "undefined",
+          analyticsClientId,
+        }
+      });
+      Sentry.captureMessage(`Error creating Stripe checkout session: ${
+        error instanceof Error ? error.message : error
+      }`)
     } finally {
       setPriceIdLoading(undefined);
     }
