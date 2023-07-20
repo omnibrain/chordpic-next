@@ -9,6 +9,7 @@ import { User } from "@supabase/gotrue-js";
 import { AuthBox } from "../components/AuthBox";
 import { updateUserName } from "../utils/supabase-client";
 import { GetStaticPropsResult } from "next";
+import { T, useT } from "@magic-translate/react";
 
 interface Props {
   title: string;
@@ -38,6 +39,7 @@ const SignUp = () => {
   const router = useRouter();
   const { user } = useUser();
   const toast = useToast();
+  const t = useT();
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,7 +73,7 @@ const SignUp = () => {
   }, [newUser, user, router]);
 
   return (
-    <AuthBox title="Sign up for Chordpic">
+    <AuthBox title={t("Sign up for Chordpic")}>
       <form onSubmit={handleSignup} className="flex flex-col space-y-4">
         {message.content && (
           <div
@@ -81,20 +83,23 @@ const SignUp = () => {
               message.type === "error" ? "border-pink-500" : "border-green-500"
             } p-3`}
           >
-            {message.content}
+            <T>{message.content}</T>
           </div>
         )}
         <Flex direction="column" gap={2}>
-          <Input placeholder="Name" onChange={(e) => setName(e.target.value)} />
+          <Input
+            placeholder={t("Name")}
+            onChange={(e) => setName(e.target.value)}
+          />
           <Input
             type="email"
-            placeholder="Email"
+            placeholder={t("Email")}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <Input
             type="password"
-            placeholder="Password"
+            placeholder={t("Password")}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Flex>
@@ -109,10 +114,14 @@ const SignUp = () => {
         </Button>
 
         <Box textAlign="center">
-          <Box as="span">Do you have an account?</Box>
+          <Box as="span">
+            <T>Do you have an account?</T>
+          </Box>
           {` `}
           <NextLink href="/signin" passHref legacyBehavior>
-            <Link>Sign in.</Link>
+            <Link>
+              <T>Sign in</T>
+            </Link>
           </NextLink>
         </Box>
       </form>

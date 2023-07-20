@@ -8,6 +8,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FacebookIcon, RedditIcon } from "react-share";
+import { T } from '@magic-translate/react'
 
 export const Footer = () => {
   const bg = useColorModeValue("gray.100", "gray.900");
@@ -41,9 +42,9 @@ export const Footer = () => {
           <FacebookIcon borderRadius={100} size="1.5em" /> Facebook
         </Link>
         <Spacer />
-        <Link href="/about">About</Link>
-        <Link href="/terms">Terms of Use</Link>
-        <Link href="/privacy-notice">Privacy</Link>
+        <Link href="/about"><T>About</T></Link>
+        <Link href="/terms"><T>Terms of Use</T></Link>
+        <Link href="/privacy-notice"><T>Privacy</T></Link>
       </Container>
     </GridItem>
   );

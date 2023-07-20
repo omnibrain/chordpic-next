@@ -2,7 +2,8 @@ import { DownloadIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { ImageService } from "../services/image-service";
 import { useChart } from "./chord/useChart";
-import { GA } from '../services/google-analytics'
+import { GA } from "../services/google-analytics";
+import { T } from "@magic-translate/react";
 
 const downloadPng =
   (chartDom: HTMLDivElement | null, width: number, title?: string) => () => {
@@ -57,7 +58,7 @@ export const DownloadButtons = ({ title }: IProps) => {
   return (
     <Box mt={8} id="download">
       <Heading as="h2" size="lg" mb={3}>
-        Download
+        <T>Download</T>
       </Heading>
       <Flex gap={3} wrap="wrap">
         <Button
@@ -83,7 +84,7 @@ export const DownloadButtons = ({ title }: IProps) => {
               onClick={downloadPng(ref.current, width, title)}
             >
               <DownloadIcon />
-              {name} PNG ({width} x {height})
+              <T>{name} PNG</T> ({width} x {height})
             </Button>
           );
         })}

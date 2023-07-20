@@ -13,6 +13,7 @@ import {
 import { User, withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { postData } from "../utils/helpers";
 import { useUser } from "../utils/useUser";
+import { T, useT } from "@magic-translate/react";
 
 interface Props {
   title: string;
@@ -34,9 +35,11 @@ const Card = ({ title, description, footer, children }: Props) => (
   >
     <Box p={5}>
       <Heading size="md" mb={3}>
-        {title}
+        <T>{title}</T>
       </Heading>
-      <Text>{description}</Text>
+      <Text>
+        <T>{description}</T>
+      </Text>
       {children}
     </Box>
     <Box p={5}>{footer}</Box>
@@ -48,6 +51,7 @@ export const getServerSideProps = withAuthRequired({ redirectTo: "/signin" });
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription } = useUser();
+  const t = useT();
 
   const redirectToCustomerPortal = async () => {
     setLoading(true);
@@ -73,17 +77,17 @@ export default function Account({ user }: { user: User }) {
   return (
     <Box as="section">
       <Heading as="h1" size="xl" mb={12}>
-        Account
+        <T>Account</T>
       </Heading>
       <SimpleGrid gap={3} minChildWidth="15rem">
         <Card
-          title="Your Plan"
+          title={t("Your Plan")}
           description={
             subscription ? (
-              <>
+              <T>
                 You are currently on the{" "}
-                <Badge>{subscription?.prices?.products?.name}</Badge> plan.
-              </>
+                <strong>{subscription?.prices?.products?.name}</strong> plan.
+              </T>
             ) : (
               ""
             )
@@ -92,14 +96,16 @@ export default function Account({ user }: { user: User }) {
             <>
               {subscription && (
                 <Box>
-                  <Text mb={4}>Manage your subscription</Text>
+                  <Text mb={4}>
+                    <T>Manage your subscription</T>
+                  </Text>
                   <Button
                     variant="solid"
                     isLoading={loading}
                     // disabled={loading || !subscription}
                     onClick={redirectToCustomerPortal}
                   >
-                    Open customer portal
+                    <T>Open customer portal</T>
                   </Button>
                 </Box>
               )}
@@ -114,13 +120,13 @@ export default function Account({ user }: { user: User }) {
             ) : (
               <NextLink href="/pricing" passHref legacyBehavior>
                 <Button as="a" variant="solid">
-                  Choose your plan
+                  <T>Choose your plan</T>
                 </Button>
               </NextLink>
             )}
           </Box>
         </Card>
-        <Card title="Your Email">
+        <Card title={t("Your Email")}>
           <Text as="i">{user ? user.email : undefined}</Text>
         </Card>
       </SimpleGrid>

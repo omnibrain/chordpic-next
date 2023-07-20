@@ -26,7 +26,8 @@ import { SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
 import { ColorInput } from "./ColorInput";
 import { SliderWithTooltip } from "./SliderWithTooltip";
-import { GA } from '../services/google-analytics'
+import { GA } from "../services/google-analytics";
+import { T, useT } from "@magic-translate/react";
 
 export type AdjustableChordSettings = Pick<
   ChordSettings,
@@ -68,6 +69,7 @@ export const ChordForm: React.FunctionComponent<{
 }> = ({ onSettings, settings }) => {
   const { isOpen, onToggle } = useDisclosure();
   const subscription = useSubscription();
+  const t = useT();
 
   const {
     register,
@@ -99,7 +101,7 @@ export const ChordForm: React.FunctionComponent<{
               : value,
         };
       },
-      {}
+      {},
     ) as AdjustableChordSettings;
 
     onSettings(validData);
@@ -146,7 +148,7 @@ export const ChordForm: React.FunctionComponent<{
         <Box>
           <FormControl isInvalid={!!errors.position}>
             <FormLabel>
-              Starting fret
+              <T>Starting fret</T>
               <Input
                 placeholder="Enter starting fret..."
                 {...register("position", {
@@ -168,7 +170,7 @@ export const ChordForm: React.FunctionComponent<{
         <Box>
           <FormControl isInvalid={!!errors.frets}>
             <FormLabel>
-              Number of frets
+              <T>Number of frets</T>
               <Input
                 placeholder="Number of frets..."
                 {...register("frets", {
@@ -193,7 +195,7 @@ export const ChordForm: React.FunctionComponent<{
         <Box>
           <FormControl isInvalid={!!errors.strings}>
             <FormLabel>
-              Number of strings
+              <T>Number of strings</T>
               <Input
                 placeholder="Number of string..."
                 {...register("strings", {
@@ -226,15 +228,21 @@ export const ChordForm: React.FunctionComponent<{
           <Box>
             <FormControl isInvalid={!!errors.style}>
               <FormLabel>
-                Style
+                <T>Style</T>
                 <Select {...register("style")}>
-                  <option value={ChordStyle.normal}>Normal</option>
+                  <option value={ChordStyle.normal}>
+                    <T>Normal</T>
+                  </option>
 
                   {subscription === SubscriptionType.PRO && (
-                    <option value={ChordStyle.handdrawn}>Handdrawn</option>
+                    <option value={ChordStyle.handdrawn}>
+                      <T>Handdrawn</T>
+                    </option>
                   )}
                   {subscription !== SubscriptionType.PRO && (
-                    <option disabled>Handdrawn (Pro only)</option>
+                    <option disabled>
+                      <T>Handdrawn (Pro only)</T>
+                    </option>
                   )}
                 </Select>
               </FormLabel>
@@ -248,8 +256,12 @@ export const ChordForm: React.FunctionComponent<{
               <FormLabel>
                 Orientation
                 <Select {...register("orientation")}>
-                  <option value={Orientation.vertical}>Vertical</option>
-                  <option value={Orientation.horizontal}>Horizontal</option>
+                  <option value={Orientation.vertical}>
+                    <T>Vertical</T>
+                  </option>
+                  <option value={Orientation.horizontal}>
+                    <T>Horizontal</T>
+                  </option>
                 </Select>
               </FormLabel>
               {errors.orientation?.message && (
@@ -261,10 +273,13 @@ export const ChordForm: React.FunctionComponent<{
           </Box>
           <Box display="flex" alignItems="center">
             <Checkbox {...register("fixedDiagramPosition")}>
-              Fixed diagram position
+              <T>Fixed diagram position</T>
               <Tooltip
+                key="fixed-position"
                 placement="top"
-                label="If enabled, the space between the diagram and the title will always be the same."
+                label={t(
+                  "If enabled, the space between the diagram and the title will always be the same.",
+                )}
                 aria-label="If enabled, the space between the diagram and the title will always be the same."
                 hasArrow={true}
               >
@@ -274,14 +289,13 @@ export const ChordForm: React.FunctionComponent<{
           </Box>
           <Box display="flex" alignItems="center">
             <Checkbox {...register("noPosition")}>
-              Hide position
-              <QuestionIcon ml={2} />
+              <T>Hide position</T>
             </Checkbox>
           </Box>
           <Box>
             <FormControl>
               <FormLabel>
-                Height
+                <T>Height</T>
                 <Controller
                   control={control}
                   name="fretSize"
@@ -301,7 +315,7 @@ export const ChordForm: React.FunctionComponent<{
           <Box>
             <FormControl>
               <FormLabel>
-                Finger size
+                <T>Finger size</T>
                 <Controller
                   control={control}
                   name="fingerSize"
@@ -321,7 +335,7 @@ export const ChordForm: React.FunctionComponent<{
           <Box>
             <FormControl>
               <FormLabel>
-                Finger font size
+                <T>Finger font size</T>
                 <Controller
                   control={control}
                   name="fingerTextSize"
@@ -341,7 +355,7 @@ export const ChordForm: React.FunctionComponent<{
           <Box>
             <FormControl>
               <FormLabel>
-                Stroke width
+                <T>Stroke width</T>
                 <Controller
                   control={control}
                   name="strokeWidth"
@@ -361,7 +375,7 @@ export const ChordForm: React.FunctionComponent<{
           <Box>
             <FormControl>
               <FormLabel>
-                Color
+                <T>Color</T>
                 <Controller
                   control={control}
                   name="color"
@@ -375,7 +389,7 @@ export const ChordForm: React.FunctionComponent<{
           <Box>
             <FormControl>
               <FormLabel>
-                Background color
+                <T>Background color</T>
                 <Controller
                   control={control}
                   name="backgroundColor"
@@ -396,7 +410,7 @@ export const ChordForm: React.FunctionComponent<{
                 onClick={resetSettings}
               >
                 <DeleteIcon />
-                Reset settings
+                <T>Reset settings</T>
               </Button>
             </FormLabel>
           </Flex>
@@ -408,7 +422,7 @@ export const ChordForm: React.FunctionComponent<{
         ) : (
           <ChevronDownIcon boxSize={6} />
         )}
-        {isOpen ? "Hide" : "Show more"} settings...
+        <T>{isOpen ? "Hide" : "Show more"} settings...</T>
       </Button>
     </>
   );

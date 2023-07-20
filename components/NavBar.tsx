@@ -7,6 +7,10 @@ import {
   FormControl,
   FormLabel,
   Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   Text,
   useColorMode,
@@ -16,10 +20,13 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
 import { Switch } from "@chakra-ui/react";
-import { MoonIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, MoonIcon } from "@chakra-ui/icons";
 import { useUser } from "../utils/useUser";
 import { useSubscription } from "../utils/useSubscription";
 import { SubscriptionType } from "../types";
+import { T, utsLocaleToLanguage } from "@magic-translate/react";
+import { useLanguage } from "../utils/use-language";
+import { languageMap } from "../utils/translate";
 
 const Logo: React.FunctionComponent = () => {
   const bg = useColorModeValue("black", "white");
@@ -74,7 +81,9 @@ const MenuIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       fill={fill}
     >
-      <title>Menu</title>
+      <title>
+        <T>Menu</T>
+      </title>
       <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
     </svg>
   );
@@ -91,7 +100,7 @@ const MenuToggle: React.FunctionComponent<{
   );
 };
 
-const MenuItem: React.FunctionComponent<
+const NavbarMenuItem: React.FunctionComponent<
   PropsWithChildren<{ isLast?: boolean; to: string; onNavigate(): void }>
 > = ({ children, onNavigate, to = "/" }) => {
   return (
@@ -112,6 +121,8 @@ const MenuLinks: React.FunctionComponent<{
   const { colorMode, toggleColorMode } = useColorMode();
   const subscription = useSubscription();
 
+  const language = useLanguage();
+
   return (
     <Box
       display={{ base: isOpen ? "block" : "none", md: "block" }}
@@ -120,15 +131,15 @@ const MenuLinks: React.FunctionComponent<{
       <Stack
         spacing={8}
         align="center"
-        justify={["center", "space-between", "flex-end", "flex-end"]}
-        direction={["column", "row", "row", "row"]}
+        justify={["center", "center", "flex-end", "flex-end"]}
+        direction={["column", "column", "row", "row"]}
         pt={[4, 4, 0, 0]}
       >
         {pathname !== "/" && (
           <Box>
             <NextLink href="/" passHref legacyBehavior>
               <Button as="a" size="md" onClick={onCloseMenu} variant="solid">
-                Create chord diagram
+                <T>Create chord diagram</T>
               </Button>
             </NextLink>
           </Box>
@@ -136,7 +147,7 @@ const MenuLinks: React.FunctionComponent<{
         <FormControl
           display="flex"
           alignItems="center"
-          justifyContent={["center", "flex-end", "center", "center"]}
+          justifyContent={["center", "center", "center", "center"]}
         >
           <FormLabel
             htmlFor="dark-mode"
@@ -152,31 +163,35 @@ const MenuLinks: React.FunctionComponent<{
             isChecked={colorMode === "dark"}
           />
         </FormControl>
-        <MenuItem onNavigate={onCloseMenu} to="/help">
-          Help
-        </MenuItem>
-        <MenuItem onNavigate={onCloseMenu} to="/news">
-          News
-        </MenuItem>
+
+        <NavbarMenuItem onNavigate={onCloseMenu} to="/languages">
+          <T>Language</T> {languageMap[language]?.icon}
+        </NavbarMenuItem>
+        <NavbarMenuItem onNavigate={onCloseMenu} to="/help">
+          <T>Help</T>
+        </NavbarMenuItem>
+        <NavbarMenuItem onNavigate={onCloseMenu} to="/news">
+          <T>News</T>
+        </NavbarMenuItem>
         {subscription === SubscriptionType.FREE && (
-          <MenuItem onNavigate={onCloseMenu} to="/pricing">
-            Pricing
-          </MenuItem>
+          <NavbarMenuItem onNavigate={onCloseMenu} to="/pricing">
+            <T>Pricing</T>
+          </NavbarMenuItem>
         )}
 
         {user ? (
           <>
-            <MenuItem onNavigate={onCloseMenu} to="/account">
-              Account
-            </MenuItem>
-            <MenuItem onNavigate={onCloseMenu} to="/api/auth/logout">
-              Sign out
-            </MenuItem>
+            <NavbarMenuItem onNavigate={onCloseMenu} to="/account">
+              <T>Account</T>
+            </NavbarMenuItem>
+            <NavbarMenuItem onNavigate={onCloseMenu} to="/api/auth/logout">
+              <T>Sign out</T>
+            </NavbarMenuItem>
           </>
         ) : (
-          <MenuItem to="/signin" onNavigate={onCloseMenu}>
-            Sign in
-          </MenuItem>
+          <NavbarMenuItem to="/signin" onNavigate={onCloseMenu}>
+            <T>Sign in</T>
+          </NavbarMenuItem>
         )}
       </Stack>
     </Box>

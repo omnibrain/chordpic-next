@@ -11,6 +11,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { ChartProvider } from "../components/chord/useChart";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import {
+  MagicTranslateProvider,
+  utsLocaleToLanguage,
+} from "@magic-translate/react";
+import { useLanguage } from "../utils/use-language";
 
 // unregister all previous service workers
 if (typeof navigator !== "undefined") {
@@ -36,23 +41,29 @@ function MyApp({
       }
     });
   }, [router]);
+  const language = useLanguage();
 
   return (
     <QueryClientProvider client={queryClient}>
       {process.env.NODE_ENV !== "production" && (
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       )}
-      <ChakraProvider theme={theme}>
-        <UserProvider supabaseClient={supabaseClient}>
-          <MyUserContextProvider supabaseClient={supabaseClient}>
-            <ChartProvider>
-              <Layout meta={pageProps}>
-                <Component {...pageProps} />
-              </Layout>
-            </ChartProvider>
-          </MyUserContextProvider>
-        </UserProvider>
-      </ChakraProvider>
+      <MagicTranslateProvider
+        language={language}
+        apiKey={process.env.NEXT_PUBLIC_MAGIC_TRANSLATE_API_KEY!!}
+      >
+        <ChakraProvider theme={theme}>
+          <UserProvider supabaseClient={supabaseClient}>
+            <MyUserContextProvider supabaseClient={supabaseClient}>
+              <ChartProvider>
+                <Layout meta={pageProps}>
+                  <Component {...pageProps} />
+                </Layout>
+              </ChartProvider>
+            </MyUserContextProvider>
+          </UserProvider>
+        </ChakraProvider>
+      </MagicTranslateProvider>
     </QueryClientProvider>
   );
 }

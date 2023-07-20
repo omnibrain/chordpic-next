@@ -19,6 +19,7 @@ import { Provider } from "@supabase/supabase-js";
 import { AuthBox } from "../components/AuthBox";
 import { getURL } from "../utils/helpers";
 import { GetStaticPropsResult } from "next";
+import { T, useT } from "@magic-translate/react";
 
 interface Props {
   title: string;
@@ -46,6 +47,7 @@ const SignIn = () => {
   const router = useRouter();
   const { user } = useUser();
   const toast = useToast();
+  const t = useT();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -56,7 +58,7 @@ const SignIn = () => {
 
       const { error } = await supabaseClient.auth.signIn(
         { email, password },
-        { redirectTo: getURL() }
+        { redirectTo: getURL() },
       );
       if (error) {
         setMessage({ type: "error", content: error.message });
@@ -95,10 +97,10 @@ const SignIn = () => {
 
   if (!user)
     return (
-      <AuthBox title="Sign in to Chordpic">
+      <AuthBox title={t("Sign in to Chordpic")}>
         {message.content && (
           <Text color="red.500" fontSize="sm">
-            {message.content}
+            <T>{message.content}</T>
           </Text>
         )}
 
@@ -210,18 +212,26 @@ const SignIn = () => {
         </Button> */}
 
         <Box textAlign="center" mb={2} mt={6} fontSize="sm">
-          <Box as="span">Don&apos;t have an account?</Box>
+          <Box as="span">
+            <T>Don&apos;t have an account?</T>
+          </Box>
           {` `}
           <NextLink href="/signup" legacyBehavior>
-            <Link>Sign up</Link>
+            <Link>
+              <T>Sign up</T>
+            </Link>
           </NextLink>
           .
         </Box>
         <Box textAlign="center" my={2} fontSize="sm">
-          <Box as="span">Forgot password?</Box>
+          <Box as="span">
+            <T>Forgot password?</T>
+          </Box>
           {` `}
           <NextLink href="/reset-password" legacyBehavior>
-            <Link>Reset password</Link>
+            <Link>
+              <T>Reset password</T>
+            </Link>
           </NextLink>
           .
         </Box>

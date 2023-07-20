@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import { AuthBox } from "../components/AuthBox";
 import { supabase } from "../utils/supabase-client";
 import { useUser } from "../utils/useUser";
+import { T, useT } from "@magic-translate/react";
+import { t } from "@chakra-ui/styled-system/dist/declarations/src/utils";
 
 const useUpdatePasswordMutation = () => {
   const { accessToken } = useUser();
@@ -39,6 +41,7 @@ const NewPassword = () => {
     content: "",
   });
   const toast = useToast();
+  const t = useT();
 
   const handleReset = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,21 +92,23 @@ const NewPassword = () => {
     <AuthBox title="Set new password">
       {message.content && (
         <Text color="red.500" fontSize="sm" mb={4}>
-          {message.content}
+          <T>{message.content}</T>
         </Text>
       )}
 
       <form onSubmit={handleReset}>
         <Flex direction="column" gap={4}>
           <Box>
-            <FormLabel htmlFor="password">New password</FormLabel>
+            <FormLabel htmlFor="password">
+              <T>New password</T>
+            </FormLabel>
             <Input
               id="password"
               name="password"
               border="2px"
               borderColor="primary"
               type="password"
-              placeholder="Password"
+              placeholder={t("Password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -117,7 +122,7 @@ const NewPassword = () => {
               border="2px"
               borderColor="primary"
               type="password"
-              placeholder="Confirm password"
+              placeholder={t("Confirm password")}
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               required
@@ -130,7 +135,7 @@ const NewPassword = () => {
             disabled={!password.length || !passwordConfirmation.length}
             width="100%"
           >
-            Set new password
+            <T>Set new password</T>
           </Button>
         </Flex>
       </form>

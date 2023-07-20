@@ -1,6 +1,7 @@
 import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import React, { PropsWithChildren } from "react";
 import { ProductWithPrice } from "../types";
+import { T } from '@magic-translate/react'
 
 export interface FreeProductProps {
   billingInterval: "year" | "month";
@@ -30,12 +31,12 @@ export const FreeProduct: React.FunctionComponent<
         <Heading size="lg" as="h2">
           Chordpic Free
         </Heading>
-        <Text mt={3}>Basic Chordpic features</Text>
+        <Text mt={3}><T>Basic Chordpic features</T></Text>
         <Text my={6}>
           <Box as="span" fontSize="5xl">
             {priceString}
           </Box>
-          <Box as="span">/{billingInterval}</Box>
+          <Box as="span">/<T>{billingInterval}</T></Box>
         </Text>
       </Box>
     </Box>

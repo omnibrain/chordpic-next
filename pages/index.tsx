@@ -11,8 +11,9 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { T, useT } from "@magic-translate/react";
 import type { NextPage } from "next";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { Orientation } from "svguitar";
 import { ChordEditor } from "../components/chord/ChordEditor";
 import { ChordResult } from "../components/chord/ChordResult";
@@ -25,6 +26,7 @@ import { useResizeHandler } from "../hooks/use-resize-handler";
 import { GA } from "../services/google-analytics";
 
 const Home: NextPage = () => {
+  const t = useT();
   const { width, height } = useResizeHandler();
   const borderColor = useColorModeValue("black", "white");
   const { setChart, chart } = useChart();
@@ -40,24 +42,35 @@ const Home: NextPage = () => {
           ...newSettings,
         },
       }),
-    [chart.chord, chart.settings, setChart]
+    [chart.chord, chart.settings, setChart],
   );
 
   return (
     <>
-      <Heading as="h1">Guitar Chord Diagram Creator</Heading>
+      <Heading as="h1">
+        <T>Guitar Chord Diagram Creator</T>
+      </Heading>
       <Text mt={4} fontSize="lg">
-        It&apos;s never been easier to create guitar chord diagrams! Start by
-        clicking anywhere on the{" "}
-        <Link href="#editor">
-          <i>editor</i>
-        </Link>{" "}
-        fret board and immediately see the result on the{" "}
-        <Link href="#result">
-          <i>result</i>
-        </Link>{" "}
-        fret board. Then <Link href="#download">download</Link> and{" "}
-        <Link href="#share">share</Link> your chord diagram.
+        <T>
+          It&apos;s never been easier to create guitar chord diagrams! Start by
+          clicking anywhere on the{" "}
+          <a style={{ textDecoration: "underline" }} href="#editor">
+            <i>editor</i>
+          </a>{" "}
+          fret board and immediately see the result on the{" "}
+          <a style={{ textDecoration: "underline" }} href="#result">
+            <i>result</i>
+          </a>{" "}
+          fret board. Then{" "}
+          <a style={{ textDecoration: "underline" }} href="#download">
+            download
+          </a>{" "}
+          and{" "}
+          <a style={{ textDecoration: "underline" }} href="#share">
+            share
+          </a>{" "}
+          your chord diagram.
+        </T>
       </Text>
       {isClient && (
         <>
@@ -83,14 +96,12 @@ const Home: NextPage = () => {
                 <Heading
                   as="h2"
                   size="md"
-                  transform={[null, null, null, "rotate(-45deg)"]}
                   transformOrigin="0 0"
-                  position={[null, null, null, "relative"]}
                   top={8}
                   left={-2}
                   display="inline-block"
                 >
-                  Editor
+                  <T>Editor</T>
                 </Heading>
                 <Center>
                   <ChordEditor
@@ -116,26 +127,24 @@ const Home: NextPage = () => {
                 <Heading
                   as="h2"
                   size="md"
-                  transform={[null, null, null, "rotate(-45deg)"]}
                   transformOrigin="0 0"
-                  position={[null, null, null, "relative"]}
                   top={8}
                   left={-2}
                   display="inline-block"
                 >
-                  Result
+                  <T>Result</T>
                 </Heading>
                 <Tooltip
                   placement="top"
-                  label="Rotate chord diagram"
-                  aria-label="Rotate chord diagram"
+                  label={t("Rotate chord diagram")}
+                  aria-label={t("Rotate chord diagram")}
                   hasArrow={true}
                 >
                   <IconButton
                     position="absolute"
                     right={3}
                     top={3}
-                    aria-label="Rotate chord diagram"
+                    aria-label={t("Rotate chord diagram")}
                     variant="outline"
                     icon={<RepeatIcon />}
                     onClick={() => {

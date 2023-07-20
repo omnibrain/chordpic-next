@@ -20,7 +20,8 @@ import {
 } from "react-share";
 import { Chart } from "../domain/chart";
 import { getLink } from "../hooks/url-state";
-import { GA } from '../services/google-analytics'
+import { GA } from "../services/google-analytics";
+import { T } from "@magic-translate/react";
 
 interface IProps {
   chart: Chart;
@@ -58,11 +59,11 @@ export const ShareButtons = ({ chart }: IProps) => {
   return (
     <Box mt={8} id="share">
       <Heading as="h2" size="lg" mb={3}>
-        Share
+        <T>Share</T>
       </Heading>
       <Button variant="outline" onClick={share}>
         <Icon as={MdShare} mr={1} />
-        Generate Sharing Link
+        <T>Generate Sharing Link</T>
       </Button>
 
       {link && (
@@ -78,7 +79,7 @@ export const ShareButtons = ({ chart }: IProps) => {
             />
             <InputRightElement width="4.5rem">
               <Button h="1.75rem" size="sm" onClick={copyLink}>
-                Copy
+                <T>Copy</T>
               </Button>
             </InputRightElement>
           </InputGroup>

@@ -11,6 +11,7 @@ import {
 import { AuthBox } from "../components/AuthBox";
 import { getURL } from "../utils/helpers";
 import { supabase } from "../utils/supabase-client";
+import { T, useT } from "@magic-translate/react";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ const ResetPassword = () => {
     content: "",
   });
   const toast = useToast();
+  const t = useT();
 
   const handleReset = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -52,24 +54,26 @@ const ResetPassword = () => {
   };
 
   return (
-    <AuthBox title="Reset password">
+    <AuthBox title={t("Reset password")}>
       {message.content && (
         <Text color="red.500" fontSize="sm" mb={4}>
-          {message.content}
+          <T>{message.content}</T>
         </Text>
       )}
 
       <form onSubmit={handleReset}>
         <Box>
           <Box>
-            <FormLabel htmlFor="email">Email</FormLabel>
+            <FormLabel htmlFor="email">
+              <T>Email</T>
+            </FormLabel>
             <Input
               id="email"
               name="email"
               border="2px"
               borderColor="primary"
               type="email"
-              placeholder="Email"
+              placeholder={t("Email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -82,7 +86,7 @@ const ResetPassword = () => {
             disabled={!email.length}
             width="100%"
           >
-            Reset password
+            <T>Reset password</T>
           </Button>
         </Box>
       </form>

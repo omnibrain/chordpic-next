@@ -5,6 +5,7 @@ import { useOutsideHandler } from "../hooks/use-outside-click";
 import { useEscHandler } from "../hooks/use-esc-handler";
 import SketchPicker from "react-color/lib/components/sketch/Sketch";
 import { Button } from "@chakra-ui/react";
+import { T } from '@magic-translate/react'
 
 const ColorPickerContainer = styled.div`
   position: relative;
@@ -76,7 +77,7 @@ export const ColorInput = (props: Props) => {
           onClick={() => setVisible(!visible)}
         >
           <ColorPreview color={props.value} />
-          Select color...
+          <T>Select color...</T>
         </ColorPreviewButton>
       )}
 
