@@ -82,8 +82,8 @@ const HelpPage = () => {
       <Text mb={3}>
         <T>
           These translations are provided by an amazing tool called Magic
-          Translate. If you're a website owner or developer yourself, I highly
-          recommend checking out Magic Translate at
+          Translate. If you&apos;re a website owner or developer yourself, I
+          highly recommend checking out Magic Translate at
           <a
             href="https://magictranslate.io"
             style={{ textDecoration: "underline" }}

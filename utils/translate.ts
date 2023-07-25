@@ -5,10 +5,10 @@ export const languageMap: Partial<
 > = {
   [Language.EN]: { name: "English", icon: "🇬🇧" },
   [Language.ES]: { name: "Spanish", icon: "🇪🇸" },
-  [Language.PT]: { name: "Portuguese", icon: "🇧🇷" },
+  [Language.PT]: { name: "Portuguese", icon: "🇵🇹" },
   [Language.HI]: { name: "Hindi", icon: "🇮🇳" },
   [Language.ZH]: { name: "Chinese", icon: "🇨🇳" },
-  [Language.HI]: { name: "Italian", icon: "🇮🇹" },
+  [Language.IT]: { name: "Italian", icon: "🇮🇹" },
   [Language.FR]: { name: "French", icon: "🇫🇷" },
   [Language.RU]: { name: "Russian", icon: "🇷🇺" },
   [Language.DE]: { name: "German", icon: "🇩🇪" },
