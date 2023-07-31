@@ -37,9 +37,7 @@ const Card = ({ title, description, footer, children }: Props) => (
       <Heading size="md" mb={3}>
         <T>{title}</T>
       </Heading>
-      <Text>
-        <T>{description}</T>
-      </Text>
+      <Text>{description}</Text>
       {children}
     </Box>
     <Box p={5}>{footer}</Box>
@@ -116,7 +114,9 @@ export default function Account({ user }: { user: User }) {
             {isLoading ? (
               <Spinner />
             ) : subscription ? (
-              `${subscriptionPrice}/${subscription?.prices?.interval}`
+              <>
+                {subscriptionPrice}/<T>{subscription?.prices?.interval}</T>
+              </>
             ) : (
               <NextLink href="/pricing" passHref legacyBehavior>
                 <Button as="a" variant="solid">
