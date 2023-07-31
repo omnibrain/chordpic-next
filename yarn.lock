@@ -1332,10 +1332,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@magic-translate/react@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@magic-translate/react/-/react-1.13.0.tgz#be8caa44e8f607f4453152d979f7488a1a8b8d4a"
-  integrity sha512-kq8ZfEmWjIofUxasfw1RFXlcHeG/HQyaTmTZ6JG/C6hwzmif44icQkUAzcwZuEIFTecPaH5E1nW99QX8ry6owA==
+"@magic-translate/react@^1.13.1":
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/@magic-translate/react/-/react-1.13.1.tgz#afc21f8d74577859b123c139093fba2874da3d98"
+  integrity sha512-nmnqmBCyrrrRrM/LZWo3Elooli+j5jt09Y+sWVt/SPb9EefpPyIYZyIehb2L2CwPM1iY+0i1qVe9DF22wZ2jZA==
   dependencies:
     dataloader "^2.1.0"
     html-react-parser "^3.0.4"

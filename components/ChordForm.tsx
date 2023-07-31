@@ -129,13 +129,13 @@ export const ChordForm: React.FunctionComponent<{
         <Box>
           <FormControl isInvalid={!!errors.title}>
             <FormLabel>
-              Title
+              <T>Title</T>
               <Input
-                placeholder="Enter title..."
+                placeholder={t("Enter title")}
                 {...register("title", {
                   maxLength: {
                     value: 300,
-                    message: "Title is too long.",
+                    message: t("Title is too long."),
                   },
                 })}
               />
@@ -150,12 +150,12 @@ export const ChordForm: React.FunctionComponent<{
             <FormLabel>
               <T>Starting fret</T>
               <Input
-                placeholder="Enter starting fret..."
+                placeholder={t("Enter starting fret...")}
                 {...register("position", {
                   valueAsNumber: true,
                   min: {
                     value: 1,
-                    message: "Starting fret must be at least 1",
+                    message: t("Starting fret must be at least 1"),
                   },
                   max: 50,
                 })}
@@ -172,7 +172,7 @@ export const ChordForm: React.FunctionComponent<{
             <FormLabel>
               <T>Number of frets</T>
               <Input
-                placeholder="Number of frets..."
+                placeholder={t("Number of frets...")}
                 {...register("frets", {
                   valueAsNumber: true,
                   min: {
