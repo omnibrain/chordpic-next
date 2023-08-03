@@ -9,7 +9,7 @@ import { createOrRetrieveCustomer } from "../../utils/supabase-admin";
 
 const createCheckoutSession = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   if (req.method === "POST") {
     const { price, quantity = 1, metadata = {} } = req.body;
@@ -23,7 +23,6 @@ const createCheckoutSession = async (
       });
 
       const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
         billing_address_collection: "required",
         customer,
         line_items: [
