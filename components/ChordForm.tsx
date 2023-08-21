@@ -40,6 +40,7 @@ export type AdjustableChordSettings = Pick<
   | "fretSize"
   | "fingerSize"
   | "fingerTextSize"
+  | "titleFontSize"
   | "strokeWidth"
   | "color"
   | "backgroundColor"
@@ -58,6 +59,7 @@ export const defaultValues: AdjustableChordSettings = {
   fingerSize: 0.65,
   fingerTextSize: 24,
   strokeWidth: 2,
+  titleFontSize: 50,
   backgroundColor: undefined,
   color: undefined,
   fixedDiagramPosition: false,
@@ -355,6 +357,26 @@ export const ChordForm: React.FunctionComponent<{
           <Box>
             <FormControl>
               <FormLabel>
+                <T>Title font size</T>
+                <Controller
+                  control={control}
+                  name="titleFontSize"
+                  render={({ field }) => (
+                    <SliderWithTooltip
+                      aria-label="Title font size"
+                      min={5}
+                      max={250}
+                      step={1}
+                      {...field}
+                    />
+                  )}
+                ></Controller>
+              </FormLabel>
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel>
                 <T>Stroke width</T>
                 <Controller
                   control={control}
@@ -372,6 +394,9 @@ export const ChordForm: React.FunctionComponent<{
               </FormLabel>
             </FormControl>
           </Box>
+          <Box></Box>
+          <Box></Box>
+          <Box></Box>
           <Box>
             <FormControl>
               <FormLabel>

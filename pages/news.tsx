@@ -56,6 +56,22 @@ const HelpPage = () => {
         </T>
       </Text>
 
+      <Heading size="lg" mb={3} mt={8} id="change-font-size-of-title">
+        <T>You can now change the font size of the title</T>
+      </Heading>
+      <Text mb={3}>
+        <em>
+          <T>August 21st, 2023</T>
+        </em>
+      </Text>
+      <Text mb={3}>
+        <T>
+          It&apos;s now possible to change the font size of the chord&apos;s
+          titles. Another feature that has been requested multiple times is now
+          implemented and available for all users, Free and Pro.
+        </T>{" "}
+      </Text>
+
       <Heading
         size="lg"
         mb={3}
