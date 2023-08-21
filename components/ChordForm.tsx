@@ -59,7 +59,7 @@ export const defaultValues: AdjustableChordSettings = {
   fingerSize: 0.65,
   fingerTextSize: 24,
   strokeWidth: 2,
-  titleFontSize: 50,
+  titleFontSize: 48,
   backgroundColor: undefined,
   color: undefined,
   fixedDiagramPosition: false,
