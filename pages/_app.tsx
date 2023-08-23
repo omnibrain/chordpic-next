@@ -16,6 +16,9 @@ import {
   utsLocaleToLanguage,
 } from "@magic-translate/react";
 import { useLanguage } from "../utils/use-language";
+import Head from "next/head";
+import { getURL } from "../utils/helpers";
+import { languageMap } from "../utils/translate";
 
 // unregister all previous service workers
 if (typeof navigator !== "undefined") {
@@ -52,6 +55,16 @@ function MyApp({
         language={language}
         apiKey={process.env.NEXT_PUBLIC_MAGIC_TRANSLATE_API_KEY!!}
       >
+        <Head>
+          {Object.keys(languageMap).map((lang) => (
+            <link
+              key={lang}
+              rel="alternate"
+              hrefLang={lang}
+              href={`${getURL()}/${lang}${router.asPath}`}
+            />
+          ))}
+        </Head>
         <ChakraProvider theme={theme}>
           <UserProvider supabaseClient={supabaseClient}>
             <MyUserContextProvider supabaseClient={supabaseClient}>
