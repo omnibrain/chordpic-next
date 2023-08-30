@@ -54,19 +54,19 @@ const Home: NextPage = () => {
         <T>
           It&apos;s never been easier to create guitar chord diagrams! Start by
           clicking anywhere on the{" "}
-          <a style={{ textDecoration: "underline" }} href="#editor">
+          <a style={{ textDecoration: "underline" }} href="pages#editor">
             <i>editor</i>
           </a>{" "}
           fret board and immediately see the result on the{" "}
-          <a style={{ textDecoration: "underline" }} href="#result">
+          <a style={{ textDecoration: "underline" }} href="pages#result">
             <i>result</i>
           </a>{" "}
           fret board. Then{" "}
-          <a style={{ textDecoration: "underline" }} href="#download">
+          <a style={{ textDecoration: "underline" }} href="pages#download">
             download
           </a>{" "}
           and{" "}
-          <a style={{ textDecoration: "underline" }} href="#share">
+          <a style={{ textDecoration: "underline" }} href="pages#share">
             share
           </a>{" "}
           your chord diagram.

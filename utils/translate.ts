@@ -1,4 +1,4 @@
-import { Language, setupT } from "@magic-translate/react";
+import { Language, setupT } from "@magic-translate/react-ssr";
 
 export const languageMap: Partial<
   Record<Language, { name: string; icon: string }>
