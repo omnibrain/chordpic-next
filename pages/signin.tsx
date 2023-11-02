@@ -100,16 +100,6 @@ const SignIn = () => {
   if (!user)
     return (
       <AuthBox title={t("Sign in to Chordpic")}>
-        <Alert status="warning">
-          <AlertIcon />
-          <T>
-            Due to a technical problem with our authentication provider log-ins
-            and sign-ups are currently not possible. We are in contact with the
-            Supabase support to resolve the problem as soon as possible. We
-            apologize for the inconvenience.
-          </T>
-        </Alert>
-
         {message.content && (
           <Text color="red.500" fontSize="sm">
             <T>{message.content}</T>
