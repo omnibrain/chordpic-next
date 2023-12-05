@@ -7,7 +7,7 @@ import { postData } from "../utils/helpers";
 import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
 import * as Sentry from "@sentry/nextjs";
-import { GA } from '../services/google-analytics'
+import { GA } from "../services/google-analytics";
 
 export interface ProductProps {
   billingInterval: "year" | "month";
@@ -18,7 +18,7 @@ export interface ProductProps {
 
 function wait<T>(ms: number, returnValue: T): Promise<T> {
   return new Promise<T>((resolve) =>
-    setTimeout(() => resolve(returnValue), ms)
+    setTimeout(() => resolve(returnValue), ms),
   );
 }
 
@@ -31,8 +31,6 @@ export const Product: React.FunctionComponent<
   const { colorMode } = useColorMode();
 
   const handleCheckout = async (price: Price) => {
-    const scope = new Sentry.Scope();
-
     setPriceIdLoading(price.id);
 
     if (!user) {
@@ -47,22 +45,24 @@ export const Product: React.FunctionComponent<
 
     try {
       await Promise.race([
-        await new Promise((resolve) =>
-          GA()?.("event", "begin_checkout", {
-            event_callback: resolve,
-          })
+        await new Promise(
+          (resolve) =>
+            GA()?.("event", "begin_checkout", {
+              event_callback: resolve,
+            }),
         ),
         wait(gaTimeout, null),
       ]);
 
       analyticsClientId = await Promise.race([
-        new Promise<string | null>((resolve) =>
-          GA()?.("get", GA4_ID, "client_id", (cid) => {
-            if (typeof cid === "string") {
-              resolve(cid);
-            }
-            resolve(null);
-          })
+        new Promise<string | null>(
+          (resolve) =>
+            GA()?.("get", GA4_ID, "client_id", (cid) => {
+              if (typeof cid === "string") {
+                resolve(cid);
+              }
+              resolve(null);
+            }),
         ),
         wait(gaTimeout, null),
       ]);
@@ -70,12 +70,12 @@ export const Product: React.FunctionComponent<
       Sentry.captureException(err, {
         extra: {
           gaDefined: typeof gtag !== "undefined",
-          analyticsClientId
-        }
+          analyticsClientId,
+        },
       });
-      Sentry.captureMessage(`Failed to track checkout: ${
-        err instanceof Error ? err.message : err
-      }`)
+      Sentry.captureMessage(
+        `Failed to track checkout: ${err instanceof Error ? err.message : err}`,
+      );
     }
 
     try {
@@ -97,18 +97,20 @@ export const Product: React.FunctionComponent<
         extra: {
           gaDefined: typeof gtag !== "undefined",
           analyticsClientId,
-        }
+        },
       });
-      Sentry.captureMessage(`Error creating Stripe checkout session: ${
-        error instanceof Error ? error.message : error
-      }`)
+      Sentry.captureMessage(
+        `Error creating Stripe checkout session: ${
+          error instanceof Error ? error.message : error
+        }`,
+      );
     } finally {
       setPriceIdLoading(undefined);
     }
   };
 
   const price = product?.prices?.find(
-    (price) => price.interval === billingInterval
+    (price) => price.interval === billingInterval,
   );
 
   if (!price) {
