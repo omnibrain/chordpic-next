@@ -24,6 +24,7 @@ import { ShareButtons } from "../components/ShareButtons";
 import { useIsClient } from "../hooks/use-is-client";
 import { useResizeHandler } from "../hooks/use-resize-handler";
 import { GA } from "../services/google-analytics";
+import NextLink from "next/link";
 
 const Home: NextPage = () => {
   const t = useT();
@@ -71,6 +72,13 @@ const Home: NextPage = () => {
           </a>{" "}
           your chord diagram.
         </T>
+      </Text>
+      <Text mt={2}>
+        <NextLink href="/pricing" passHref legacyBehavior>
+          <Link>
+            <T>Get the Pro version (no ads, no watermark)</T>
+          </Link>
+        </NextLink>
       </Text>
       {isClient && (
         <>
