@@ -47,7 +47,7 @@ export const ChordResult: React.FunctionComponent = () => {
 
   return (
     <Sentry.ErrorBoundary fallback={<ErrorFallback onReset={resetSettings} />}>
-      <ChordChart />;
+      <ChordChart />
     </Sentry.ErrorBoundary>
   );
 };
