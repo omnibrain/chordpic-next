@@ -12,6 +12,7 @@ export const languageMap: Partial<
   [Language.FR]: { name: "French", icon: "🇫🇷" },
   [Language.RU]: { name: "Russian", icon: "🇷🇺" },
   [Language.DE]: { name: "German", icon: "🇩🇪" },
+  [Language.NL]: { name: "Dutch", icon: "🇳🇱" },
 } as const;
 
 export const translate = setupT({

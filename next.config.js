@@ -21,7 +21,8 @@ const moduleExports = {
       Language.PT,
       Language.UR,
       Language.DE,
-      Language.FA
+      Language.FA,
+      Language.NL,
     ],
     defaultLocale: Language.EN
   }
