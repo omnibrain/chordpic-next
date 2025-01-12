@@ -12,6 +12,8 @@ const defaultSVGuitarSettings: Partial<ChordSettings> = {
   barreChordRadius: 0.5,
 };
 
+function extendSettings() {}
+
 export const ChordChart: React.FunctionComponent = () => {
   const { chart, ref, setSize } = useChart();
   const svguitarRef = useRef<SVGuitarChord>();
@@ -20,7 +22,7 @@ export const ChordChart: React.FunctionComponent = () => {
   const watermark = React.useMemo(
     () =>
       subscription === SubscriptionType.PRO ? "" : "created with chordpic.com",
-    [subscription]
+    [subscription],
   );
 
   useEffect(() => {
@@ -34,6 +36,25 @@ export const ChordChart: React.FunctionComponent = () => {
           .configure({
             ...defaultSVGuitarSettings,
             ...chart.settings,
+            fretMarkers: [
+              2,
+              4,
+              6,
+              8,
+              {
+                fret: 11,
+                double: true,
+              },
+              14,
+              16,
+              18,
+              20,
+              {
+                fret: 23,
+                double: true,
+              },
+            ],
+
             svgTitle: "Chord diagram created with chordpic.com",
             watermark,
             watermarkFontSize: 16,
