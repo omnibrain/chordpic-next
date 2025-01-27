@@ -1,14 +1,11 @@
 /** @type {import('next').NextConfig} */
 
 const { withSentryConfig } = require("@sentry/nextjs");
-const { Language } = require('@magic-translate/react');
+const { Language } = require("@magic-translate/react");
 
 const moduleExports = {
   reactStrictMode: true,
   swcMinify: true,
-  sentry: {
-    hideSourceMaps: false,
-  },
   i18n: {
     locales: [
       Language.EN,
@@ -24,13 +21,12 @@ const moduleExports = {
       Language.FA,
       Language.NL,
     ],
-    defaultLocale: Language.EN
-  }
+    defaultLocale: Language.EN,
+  },
 };
 
 const sentryWebpackPluginOptions = {
   silent: true,
 };
-
 
 module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
