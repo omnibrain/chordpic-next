@@ -46,6 +46,7 @@ export type AdjustableChordSettings = Pick<
   | "backgroundColor"
   | "fixedDiagramPosition"
   | "noPosition"
+  | "showFretMarkers"
 >;
 
 export const defaultValues: AdjustableChordSettings = {
@@ -63,6 +64,8 @@ export const defaultValues: AdjustableChordSettings = {
   backgroundColor: undefined,
   color: undefined,
   fixedDiagramPosition: false,
+  noPosition: false,
+  showFretMarkers: false,
 };
 
 export const ChordForm: React.FunctionComponent<{
@@ -394,8 +397,38 @@ export const ChordForm: React.FunctionComponent<{
               </FormLabel>
             </FormControl>
           </Box>
-          <Box></Box>
-          <Box></Box>
+          <Box display="flex" alignItems="center">
+            <Checkbox {...register("fixedDiagramPosition")}>
+              <T>Fixed diagram position</T>
+              <Tooltip
+                key="fixed-position"
+                placement="top"
+                label={t(
+                  "If enabled, the space between the diagram and the title will always be the same.",
+                )}
+                aria-label="If enabled, the space between the diagram and the title will always be the same."
+                hasArrow={true}
+              >
+                <QuestionIcon ml={2} />
+              </Tooltip>
+            </Checkbox>
+          </Box>
+          <Box display="flex" alignItems="center">
+            <Checkbox {...register("showFretMarkers")}>
+              <T>Show fret markers</T>
+              <Tooltip
+                key="fixed-position"
+                placement="top"
+                label={t(
+                  "Show fret markers on the chord diagram (dots between the frets)",
+                )}
+                aria-label="If enabled it will add fret markers on the chord diagram (dots between the frets)"
+                hasArrow={true}
+              >
+                <QuestionIcon ml={2} />
+              </Tooltip>
+            </Checkbox>
+          </Box>
           <Box></Box>
           <Box>
             <FormControl>

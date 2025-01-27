@@ -5,9 +5,10 @@ import exampleHorizontalChord from "../public/images/example-horizontal-chord.pn
 import sampleChordWithColors from "../public/images/sample-chord-with-colors.png";
 import orientationToggle from "../public/images/orientation-toggle.png";
 import sampleChordWithText from "../public/images/sample-chord-with-text.png";
+import fretMarkers from "../public/images/fret-markers.png";
 import { Center, Heading, Text } from "@chakra-ui/react";
-import { GetStaticPropsResult } from "next";
 
+import { GetStaticPropsResult } from "next";
 import sliders from "../assets/images/sliders.jpg";
 import { T, useT } from "@magic-translate/react";
 import React from "react";
@@ -54,6 +55,50 @@ const HelpPage = () => {
           </a>
           , we would love to hear your story and tell other people about it!
         </T>
+      </Text>
+
+      <Heading size="lg" mb={3} mt={8} id="change-font-size-of-title">
+        <T>Fret markers!</T>
+      </Heading>
+      <Text mb={3}>
+        <em>
+          <T>January 27th, 2025</T>
+        </em>
+      </Text>
+      <Text mb={3}>
+        <T>
+          It&apos;s been a long time since a new feature dropped for ChordPic
+          but today is the day! You can now add fret markers to your chord
+          diagrams. Just click on the &quot;More Settings&quot; toggle and you
+          will find a new checkbox to add fret markers to your chord diagrams.
+        </T>{" "}
+      </Text>
+      <Text mb={3}>
+        <T>The fret markers look like this:</T>{" "}
+      </Text>
+      <Center>
+        <Image src={fretMarkers} alt={t("Chord diagram with fret markers")} />
+      </Center>
+      <Text mb={3}>
+        <T>
+          Notice the little dot in the center? That&apos;s a fret marker. If you
+          add more frets, the dots will automatically appear on the frets
+          further down the fretboard.{" "}
+        </T>{" "}
+      </Text>
+      <Text mb={3}>
+        <T>
+          This feature was requested by a user. What would <strong>you</strong>{" "}
+          like to see next? We&apos;re always looking for feedback, so
+          don&apos;t hesitate to{" "}
+          <a
+            href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com"
+            style={{ textDecoration: "underline" }}
+          >
+            write us an email
+          </a>{" "}
+          with your feature request!
+        </T>{" "}
       </Text>
 
       <Heading size="lg" mb={3} mt={8} id="change-font-size-of-title">
@@ -471,7 +516,11 @@ const HelpPage = () => {
         </T>
       </Text>
       <Center mb={3}>
-        <Image src={sampleChordWithText} alt={t("Example chord with text")} />
+        <Image
+          width={4}
+          src={sampleChordWithText}
+          alt={t("Example chord with text")}
+        />
       </Center>
       <Text mb={3}>
         <T>
