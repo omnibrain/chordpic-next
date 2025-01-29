@@ -348,7 +348,7 @@ export const ChordForm: React.FunctionComponent<{
                     <SliderWithTooltip
                       aria-label="Chord chart finger text size"
                       min={10}
-                      max={50}
+                      max={100}
                       step={1}
                       {...field}
                     />
