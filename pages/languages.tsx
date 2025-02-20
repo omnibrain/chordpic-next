@@ -3,7 +3,6 @@ import { GetStaticPropsResult } from "next";
 import { Language, T } from "@magic-translate/react";
 import { languageMap } from "../utils/translate";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { SUPPORT_EMAIL } from "../global";
 
 interface Props {
@@ -21,8 +20,6 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
 }
 
 const Languages = () => {
-  const router = useRouter();
-
   return (
     <>
       <Heading size="2xl" mb={6}>
@@ -37,7 +34,7 @@ const Languages = () => {
         gridTemplateColumns={[null, "1fr 1fr 1fr"]}
         gridGap={[3, 4]}
       >
-        {Object.entries(languageMap).map(([lang, { name, icon }]) => (
+        {Object.entries(languageMap).map(([lang, { name }]) => (
           <ListItem key={lang}>
             <Link
               href="/"
@@ -59,8 +56,7 @@ const Languages = () => {
           >
             Magic Translate
           </a>{" "}
-          we can instantly translate ChordPic instantly to any other language.
-          Just{" "}
+          we can instantly translate ChordPic to any other language. Just{" "}
           <a
             href={`mailto:${SUPPORT_EMAIL}`}
             style={{ textDecoration: "underline" }}
