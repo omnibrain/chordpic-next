@@ -16,6 +16,7 @@ const moduleExports = {
       Language.AR,
       Language.RU,
       Language.PT,
+      Language.IT,
       Language.UR,
       Language.DE,
       Language.FA,
