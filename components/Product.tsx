@@ -41,7 +41,7 @@ export const Product: React.FunctionComponent<
       return router.push("/account");
     }
 
-    const gaTimeout = 2000; // 2 seconds
+    const gaTimeout = 1000; // 1 seconds
     let analyticsClientId: string | null = null;
 
     console.debug("try fetching GA client_id");
