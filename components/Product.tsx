@@ -47,7 +47,7 @@ export const Product: React.FunctionComponent<
     console.debug("try fetching GA client_id");
     try {
       await Promise.race([
-        await new Promise(
+        new Promise(
           (resolve) =>
             GA()?.("event", "begin_checkout", {
               event_callback: resolve,
