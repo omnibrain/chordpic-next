@@ -55,6 +55,7 @@ export const Product: React.FunctionComponent<
         ),
         wait(gaTimeout, null),
       ]);
+      console.debug("finished first race");
 
       analyticsClientId = await Promise.race([
         new Promise<string | null>(
@@ -68,6 +69,7 @@ export const Product: React.FunctionComponent<
         ),
         wait(gaTimeout, null),
       ]);
+      console.debug("finished second race", { analyticsClientId });
     } catch (err) {
       console.debug("failed to fetch GA client_id", err);
       Sentry.captureException(err, {
