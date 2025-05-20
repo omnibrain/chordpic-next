@@ -31,6 +31,7 @@ export const Product: React.FunctionComponent<
   const { colorMode } = useColorMode();
 
   const handleCheckout = async (price: Price) => {
+    console.debug("handling checkout");
     setPriceIdLoading(price.id);
 
     if (!user) {
@@ -43,6 +44,7 @@ export const Product: React.FunctionComponent<
     const gaTimeout = 2000; // 2 seconds
     let analyticsClientId: string | null = null;
 
+    console.debug("try fetching GA client_id");
     try {
       await Promise.race([
         await new Promise(
@@ -67,6 +69,7 @@ export const Product: React.FunctionComponent<
         wait(gaTimeout, null),
       ]);
     } catch (err) {
+      console.debug("failed to fetch GA client_id", err);
       Sentry.captureException(err, {
         extra: {
           gaDefined: typeof gtag !== "undefined",
@@ -79,20 +82,24 @@ export const Product: React.FunctionComponent<
     }
 
     try {
+      console.debug("creating checkout session");
       const { sessionId } = await postData({
         url: "/api/create-checkout-session",
         data: { price, analyticsClientId },
       });
 
+      console.debug(`got session id: ${sessionId}`);
       const stripe = await getStripe();
 
       if (!stripe) {
+        console.debug("Stripe was not defined during checkout");
         Sentry.captureMessage("Stripe was not defined during checkout");
         return;
       }
 
       stripe.redirectToCheckout({ sessionId });
     } catch (error) {
+      console.debug("checkout failed", error);
       Sentry.captureException(error, {
         extra: {
           gaDefined: typeof gtag !== "undefined",
