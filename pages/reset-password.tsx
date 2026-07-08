@@ -1,9 +1,11 @@
 import { FormEvent, useState } from "react";
 
 import { AuthBox } from "../components/AuthBox";
-import { Button } from "../components/ui/Button";
-import { FormLabel, Input } from "../components/ui/Input";
-import { useToast } from "../components/ui/Toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { getURL } from "../utils/helpers";
 import { supabase } from "../utils/supabase-client";
 import { T, useT } from "@magic-translate/react";
@@ -15,7 +17,7 @@ const ResetPassword = () => {
     type: "",
     content: "",
   });
-  const toast = useToast();
+  const { toast } = useToast();
   const t = useT();
 
   const handleReset = async (e: FormEvent<HTMLFormElement>) => {
@@ -34,7 +36,6 @@ const ResetPassword = () => {
         toast({
           title: "Please check your email!",
           description: "Check your email for a password reset link.",
-          status: "success",
           duration: 9000,
         });
       }
@@ -49,16 +50,16 @@ const ResetPassword = () => {
   return (
     <AuthBox title={t("Reset password")}>
       {message.content && (
-        <p className="mb-4 text-sm text-red-600 dark:text-red-400">
+        <p className="mb-4 text-sm text-destructive">
           <T>{message.content}</T>
         </p>
       )}
 
       <form onSubmit={handleReset}>
         <div>
-          <FormLabel htmlFor="email">
+          <Label className="mb-2 block" htmlFor="email">
             <T>Email</T>
-          </FormLabel>
+          </Label>
           <Input
             id="email"
             name="email"
@@ -72,9 +73,9 @@ const ResetPassword = () => {
         <Button
           type="submit"
           className="mt-4 w-full"
-          isLoading={loading}
-          disabled={!email.length}
+          disabled={loading || !email.length}
         >
+          {loading && <Loader2 className="animate-spin" />}
           <T>Reset password</T>
         </Button>
       </form>

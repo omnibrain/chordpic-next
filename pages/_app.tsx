@@ -3,7 +3,8 @@ import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { UserProvider } from "@supabase/supabase-auth-helpers/react";
 import { MyUserContextProvider } from "../utils/useUser";
 import { Layout } from "../components/Layout";
-import { ToastProvider } from "../components/ui/Toast";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import "../styles/globals.css";
 import { supabase } from "../utils/supabase-client";
@@ -67,17 +68,18 @@ function MyApp({
               />
             ))}
         </Head>
-        <ToastProvider>
+        <TooltipProvider>
           <UserProvider supabaseClient={supabaseClient}>
             <MyUserContextProvider supabaseClient={supabaseClient}>
               <ChartProvider>
                 <Layout meta={pageProps}>
                   <Component {...pageProps} />
                 </Layout>
+                <Toaster />
               </ChartProvider>
             </MyUserContextProvider>
           </UserProvider>
-        </ToastProvider>
+        </TooltipProvider>
       </MagicTranslateProvider>
     </QueryClientProvider>
   );

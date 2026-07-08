@@ -30,7 +30,7 @@ export const TuningInput = (props: IProps) => (
           </label>
           <input
             id={`tuning-input-string-${i}`}
-            className="mt-2 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-white p-0 text-center text-3xl text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+            className="mt-2 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-background p-0 text-center text-3xl text-foreground"
             placeholder={String(stringLabel)}
             type="text"
             value={tuning}

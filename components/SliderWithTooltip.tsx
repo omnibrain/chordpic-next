@@ -1,5 +1,10 @@
 import React, { forwardRef, useState } from "react";
-import { Tooltip } from "./ui/Tooltip";
+import { Slider } from "@/components/ui/slider";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface SliderWithTooltipProps {
   min: number;
@@ -15,7 +20,7 @@ export interface SliderWithTooltipProps {
 const DISPLAY_SCALE = 100;
 
 export const SliderWithTooltip = forwardRef<
-  HTMLInputElement,
+  HTMLSpanElement,
   SliderWithTooltipProps
 >(({ min, max, step, value, onChange, onBlur, name, ...rest }, ref) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -25,26 +30,27 @@ export const SliderWithTooltip = forwardRef<
   );
 
   return (
-    <Tooltip label={displayValue} isOpen={showTooltip} className="w-full">
-      <span
-        className="flex h-10 w-full items-center"
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <input
-          ref={ref}
-          type="range"
-          className="slider"
-          name={name}
-          aria-label={rest["aria-label"]}
-          min={min}
-          max={max}
-          step={step}
-          value={value ?? 0}
-          onChange={(e) => onChange?.(e.target.valueAsNumber)}
-          onBlur={onBlur}
-        />
-      </span>
+    <Tooltip open={showTooltip}>
+      <TooltipTrigger asChild>
+        <div
+          className="flex h-9 w-full items-center"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <Slider
+            ref={ref}
+            name={name}
+            aria-label={rest["aria-label"]}
+            min={min}
+            max={max}
+            step={step}
+            value={[value ?? min]}
+            onValueChange={(values) => onChange?.(values[0])}
+            onBlur={onBlur}
+          />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>{displayValue}</TooltipContent>
     </Tooltip>
   );
 });

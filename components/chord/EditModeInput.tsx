@@ -1,7 +1,7 @@
 import { T } from "@magic-translate/react";
 import * as React from "react";
 import { EditMode } from "../../domain/edit-mode";
-import { Button } from "../ui/Button";
+import { Button } from "@/components/ui/button";
 
 interface IProps {
   onEditModeChange: (mode: EditMode) => void;
@@ -22,7 +22,7 @@ export const EditModeInput = ({ onEditModeChange, editMode }: IProps) => (
         key={mode}
         type="button"
         size="sm"
-        variant={editMode === mode ? "solid" : "outline"}
+        variant={editMode === mode ? "default" : "outline"}
         onClick={() => onEditModeChange(mode)}
       >
         <T>{label}</T>

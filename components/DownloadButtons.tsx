@@ -1,9 +1,9 @@
-import { FiDownload } from "react-icons/fi";
+import { Download } from "lucide-react";
 import { ImageService } from "../services/image-service";
 import { useChart } from "./chord/useChart";
 import { GA } from "../services/google-analytics";
 import { T } from "@magic-translate/react";
-import { Button } from "./ui/Button";
+import { Button } from "@/components/ui/button";
 
 const downloadPng =
   (chartDom: HTMLDivElement | null, width: number, title?: string) => () => {
@@ -62,7 +62,7 @@ export const DownloadButtons = ({ title }: IProps) => {
       </h2>
       <div className="flex flex-wrap gap-3">
         <Button variant="outline" onClick={downloadSvg(ref.current, title)}>
-          <FiDownload />
+          <Download />
           SVG
         </Button>
 
@@ -76,7 +76,7 @@ export const DownloadButtons = ({ title }: IProps) => {
               key={multiplier}
               onClick={downloadPng(ref.current, width, title)}
             >
-              <FiDownload />
+              <Download />
               <span>
                 <T>{name} PNG</T> ({width} x {height})
               </span>

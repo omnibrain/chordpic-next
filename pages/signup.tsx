@@ -6,9 +6,10 @@ import { FormEvent, useEffect, useState } from "react";
 
 import { User } from "@supabase/gotrue-js";
 import { AuthBox } from "../components/AuthBox";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import { useToast } from "../components/ui/Toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { updateUserName } from "../utils/supabase-client";
 import { GetStaticPropsResult } from "next";
 import { T, useT } from "@magic-translate/react";
@@ -40,7 +41,7 @@ const SignUp = () => {
   });
   const router = useRouter();
   const { user } = useUser();
-  const toast = useToast();
+  const { toast } = useToast();
   const t = useT();
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
@@ -108,9 +109,9 @@ const SignUp = () => {
         <Button
           type="submit"
           className="my-6 w-full"
-          isLoading={loading}
           disabled={loading || !email.length || !password.length}
         >
+          {loading && <Loader2 className="animate-spin" />}
           Sign up
         </Button>
 
@@ -120,7 +121,7 @@ const SignUp = () => {
           </span>{" "}
           <NextLink
             href="/signin"
-            className="font-medium underline decoration-zinc-400 underline-offset-4 transition-colors hover:decoration-zinc-900 dark:hover:decoration-zinc-100"
+            className="font-medium underline underline-offset-4"
           >
             <T>Sign in</T>
           </NextLink>

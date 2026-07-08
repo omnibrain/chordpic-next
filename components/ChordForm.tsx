@@ -1,26 +1,29 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ChordSettings, ChordStyle, Orientation } from "svguitar";
-import {
-  FiChevronDown,
-  FiChevronUp,
-  FiHelpCircle,
-  FiTrash2,
-} from "react-icons/fi";
+import { ChevronDown, ChevronUp, CircleHelp, Trash2 } from "lucide-react";
 import { T, useT } from "@magic-translate/react";
 import { SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
 import { ColorInput } from "./ColorInput";
 import { SliderWithTooltip } from "./SliderWithTooltip";
 import { GA } from "../services/google-analytics";
-import { Button } from "./ui/Button";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-  Checkbox,
-  FormErrorMessage,
-  Input,
   Select,
-} from "./ui/Input";
-import { Tooltip } from "./ui/Tooltip";
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export type AdjustableChordSettings = Pick<
   ChordSettings,
@@ -61,20 +64,25 @@ export const defaultValues: AdjustableChordSettings = {
   showFretMarkers: false,
 };
 
-const fieldLabel = "block text-sm font-medium text-zinc-700 dark:text-zinc-300";
-
 const Field: React.FunctionComponent<{
   label: React.ReactNode;
   error?: string;
   children: React.ReactNode;
 }> = ({ label, error, children }) => (
-  <div>
-    <label className={fieldLabel}>
-      <span className="mb-1.5 block">{label}</span>
-      {children}
-    </label>
-    {error && <FormErrorMessage>{error}</FormErrorMessage>}
+  <div className="space-y-2">
+    <Label className="block">{label}</Label>
+    {children}
+    {error && <p className="text-sm text-destructive">{error}</p>}
   </div>
+);
+
+const HelpTooltip: React.FunctionComponent<{ label: string }> = ({ label }) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <CircleHelp className="ml-1.5 inline h-4 w-4 text-muted-foreground" />
+    </TooltipTrigger>
+    <TooltipContent className="max-w-64">{label}</TooltipContent>
+  </Tooltip>
 );
 
 export const ChordForm: React.FunctionComponent<{
@@ -204,38 +212,95 @@ export const ChordForm: React.FunctionComponent<{
       {isOpen && (
         <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Field label={<T>Style</T>} error={errors.style?.message}>
-            <Select {...register("style")}>
-              <option value={ChordStyle.normal}>{t("Normal")}</option>
-              {subscription === SubscriptionType.PRO && (
-                <option value={ChordStyle.handdrawn}>{t("Handdrawn")}</option>
+            <Controller
+              control={control}
+              name="style"
+              render={({ field }) => (
+                <Select
+                  value={field.value ?? ChordStyle.normal}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ChordStyle.normal}>
+                      {t("Normal")}
+                    </SelectItem>
+                    {subscription === SubscriptionType.PRO ? (
+                      <SelectItem value={ChordStyle.handdrawn}>
+                        {t("Handdrawn")}
+                      </SelectItem>
+                    ) : (
+                      <SelectItem value={ChordStyle.handdrawn} disabled>
+                        {t("Handdrawn (Pro only)")}
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
               )}
-              {subscription !== SubscriptionType.PRO && (
-                <option disabled>{t("Handdrawn (Pro only)")}</option>
-              )}
-            </Select>
+            />
           </Field>
           <Field label="Orientation" error={errors.orientation?.message}>
-            <Select {...register("orientation")}>
-              <option value={Orientation.vertical}>{t("Vertical")}</option>
-              <option value={Orientation.horizontal}>{t("Horizontal")}</option>
-            </Select>
+            <Controller
+              control={control}
+              name="orientation"
+              render={({ field }) => (
+                <Select
+                  value={field.value ?? Orientation.vertical}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={Orientation.vertical}>
+                      {t("Vertical")}
+                    </SelectItem>
+                    <SelectItem value={Orientation.horizontal}>
+                      {t("Horizontal")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </Field>
-          <div className="flex items-center">
-            <Checkbox {...register("fixedDiagramPosition")}>
+          <div className="flex items-center gap-2">
+            <Controller
+              control={control}
+              name="fixedDiagramPosition"
+              render={({ field }) => (
+                <Checkbox
+                  id="fixed-diagram-position"
+                  checked={field.value ?? false}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+            <Label htmlFor="fixed-diagram-position">
               <T>Fixed diagram position</T>
-              <Tooltip
+              <HelpTooltip
                 label={t(
                   "If enabled, the space between the diagram and the title will always be the same.",
                 )}
-              >
-                <FiHelpCircle className="ml-2" />
-              </Tooltip>
-            </Checkbox>
+              />
+            </Label>
           </div>
-          <div className="flex items-center">
-            <Checkbox {...register("noPosition")}>
+          <div className="flex items-center gap-2">
+            <Controller
+              control={control}
+              name="noPosition"
+              render={({ field }) => (
+                <Checkbox
+                  id="no-position"
+                  checked={field.value ?? false}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+            <Label htmlFor="no-position">
               <T>Hide position</T>
-            </Checkbox>
+            </Label>
           </div>
           <Field label={<T>Height</T>}>
             <Controller
@@ -312,17 +377,26 @@ export const ChordForm: React.FunctionComponent<{
               )}
             />
           </Field>
-          <div className="flex items-center">
-            <Checkbox {...register("showFretMarkers")}>
+          <div className="flex items-center gap-2">
+            <Controller
+              control={control}
+              name="showFretMarkers"
+              render={({ field }) => (
+                <Checkbox
+                  id="show-fret-markers"
+                  checked={field.value ?? false}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+            <Label htmlFor="show-fret-markers">
               <T>Show fret markers</T>
-              <Tooltip
+              <HelpTooltip
                 label={t(
                   "Show fret markers on the chord diagram (dots between the frets)",
                 )}
-              >
-                <FiHelpCircle className="ml-2" />
-              </Tooltip>
-            </Checkbox>
+              />
+            </Label>
           </div>
           <div className="hidden lg:block" />
           <div className="hidden lg:block" />
@@ -347,7 +421,7 @@ export const ChordForm: React.FunctionComponent<{
           <div className="hidden lg:block" />
           <div className="flex items-end justify-end">
             <Button type="button" variant="outline" onClick={resetSettings}>
-              <FiTrash2 />
+              <Trash2 />
               <T>Reset settings</T>
             </Button>
           </div>
@@ -355,7 +429,7 @@ export const ChordForm: React.FunctionComponent<{
       )}
       <div className="mt-4">
         <Button type="button" variant="ghost" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <FiChevronUp size={18} /> : <FiChevronDown size={18} />}
+          {isOpen ? <ChevronUp /> : <ChevronDown />}
           <T>{isOpen ? "Hide" : "Show more"} settings...</T>
         </Button>
       </div>

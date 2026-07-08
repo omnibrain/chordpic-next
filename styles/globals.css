@@ -2,24 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #ffffff;
-  --fg: #18181b;
-}
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
 
-.dark {
-  --bg: #0c0c0e;
-  --fg: #f4f4f5;
+    /* used by the chord editor's inline styles and pseudo-elements */
+    --fg: hsl(var(--foreground));
+    --bg: hsl(var(--background));
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+
   html {
     font-size: 16px;
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-white text-zinc-900 antialiased dark:bg-[#0c0c0e] dark:text-zinc-100;
+    @apply bg-background text-foreground antialiased;
   }
 }
 
@@ -114,24 +159,6 @@
 
 .string-cell.silent::after {
   transform: rotate(-45deg);
-}
-
-/* Minimal styled range input */
-input[type="range"].slider {
-  @apply h-1.5 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 dark:bg-zinc-700;
-}
-
-input[type="range"].slider::-webkit-slider-thumb {
-  @apply h-5 w-5 appearance-none rounded-full border border-zinc-300 bg-white shadow transition-transform dark:border-zinc-600;
-  -webkit-appearance: none;
-}
-
-input[type="range"].slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-}
-
-input[type="range"].slider::-moz-range-thumb {
-  @apply h-5 w-5 rounded-full border border-zinc-300 bg-white shadow;
 }
 
 /* SVG chart should fill its container */

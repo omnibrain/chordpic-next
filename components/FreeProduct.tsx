@@ -1,6 +1,13 @@
 import React, { PropsWithChildren } from "react";
 import { ProductWithPrice } from "../types";
 import { T } from "@magic-translate/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export interface FreeProductProps {
   billingInterval: "year" | "month";
@@ -25,20 +32,19 @@ export const FreeProduct: React.FunctionComponent<
   }).format(0);
 
   return (
-    <div
-      key={product.id}
-      className="rounded-2xl border border-zinc-200 p-6 shadow-sm dark:border-zinc-800"
-    >
-      <h2 className="font-heading text-2xl font-semibold">Chordpic Free</h2>
-      <p className="mt-3 text-zinc-600 dark:text-zinc-400">
-        <T>Basic Chordpic features</T>
-      </p>
-      <p className="my-6">
+    <Card key={product.id}>
+      <CardHeader>
+        <CardTitle className="font-heading text-2xl">Chordpic Free</CardTitle>
+        <CardDescription>
+          <T>Basic Chordpic features</T>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
         <span className="text-5xl font-semibold">{priceString}</span>
-        <span className="text-zinc-500">
+        <span className="text-muted-foreground">
           /<T>{billingInterval}</T>
         </span>
-      </p>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

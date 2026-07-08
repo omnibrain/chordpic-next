@@ -2,8 +2,16 @@ import NextLink from "next/link";
 import { ReactNode, useState } from "react";
 
 import { User, withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
-import { Button, buttonClasses } from "../components/ui/Button";
-import { Spinner } from "../components/ui/Spinner";
+import { Loader2 } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Card as UICard,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { postData } from "../utils/helpers";
 import { useUser } from "../utils/useUser";
 import { T, useT } from "@magic-translate/react";
@@ -16,14 +24,16 @@ interface Props {
 }
 
 const Card = ({ title, description, footer, children }: Props) => (
-  <div className="flex flex-col rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-    <h2 className="mb-3 font-heading text-lg font-semibold tracking-tight">
-      <T>{title}</T>
-    </h2>
-    <p className="text-zinc-600 dark:text-zinc-400">{description}</p>
-    <div className="mt-2">{children}</div>
-    {footer && <div className="mt-6">{footer}</div>}
-  </div>
+  <UICard>
+    <CardHeader>
+      <CardTitle className="font-heading text-lg">
+        <T>{title}</T>
+      </CardTitle>
+      {description && <CardDescription>{description}</CardDescription>}
+    </CardHeader>
+    <CardContent>{children}</CardContent>
+    {footer && <CardFooter>{footer}</CardFooter>}
+  </UICard>
 );
 
 export const getServerSideProps = withAuthRequired({ redirectTo: "/signin" });
@@ -68,17 +78,16 @@ export default function Account({ user }: { user: User }) {
                 You are currently on the{" "}
                 <strong>{subscription?.prices?.products?.name}</strong> plan.
               </T>
-            ) : (
-              ""
-            )
+            ) : undefined
           }
           footer={
             subscription && (
               <div>
-                <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mb-4 text-sm text-muted-foreground">
                   <T>Manage your subscription</T>
                 </p>
-                <Button isLoading={loading} onClick={redirectToCustomerPortal}>
+                <Button disabled={loading} onClick={redirectToCustomerPortal}>
+                  {loading && <Loader2 className="animate-spin" />}
                   <T>Open customer portal</T>
                 </Button>
               </div>
@@ -86,13 +95,13 @@ export default function Account({ user }: { user: User }) {
           }
         >
           {isLoading ? (
-            <Spinner />
+            <Loader2 className="h-5 w-5 animate-spin" />
           ) : subscription ? (
             <>
               {subscriptionPrice}/<T>{subscription?.prices?.interval}</T>
             </>
           ) : (
-            <NextLink href="/pricing" className={buttonClasses("solid")}>
+            <NextLink href="/pricing" className={buttonVariants()}>
               <T>Choose your plan</T>
             </NextLink>
           )}

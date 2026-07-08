@@ -12,8 +12,8 @@ import { Chart } from "../domain/chart";
 import { getLink } from "../hooks/url-state";
 import { GA } from "../services/google-analytics";
 import { T } from "@magic-translate/react";
-import { Button, buttonClasses } from "./ui/Button";
-import { Input } from "./ui/Input";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface IProps {
   chart: Chart;
@@ -48,7 +48,7 @@ export const ShareButtons = ({ chart }: IProps) => {
     }
   };
 
-  const shareButtonClass = buttonClasses("outline", "sm");
+  const shareButtonClass = buttonVariants({ variant: "outline", size: "sm" });
 
   return (
     <div className="mt-8" id="share">
@@ -73,7 +73,7 @@ export const ShareButtons = ({ chart }: IProps) => {
             />
             <Button
               size="sm"
-              className="absolute right-1 top-1 h-8"
+              className="absolute right-1 top-1 h-7"
               onClick={copyLink}
             >
               <T>Copy</T>

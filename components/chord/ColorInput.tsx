@@ -3,7 +3,7 @@ import { ColorResult } from "react-color";
 import SketchPicker from "react-color/lib/components/sketch/Sketch";
 import { useEscHandler } from "../../hooks/use-esc-handler";
 import { useOutsideHandler } from "../../hooks/use-outside-click";
-import { Button } from "../ui/Button";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   onChange: (color: string) => void;
@@ -46,7 +46,7 @@ export const ColorInput = (props: Props) => {
           onClick={() => setVisible(!visible)}
         >
           <span
-            className="inline-block h-4 w-4 rounded border border-zinc-300 dark:border-zinc-600"
+            className="inline-block h-4 w-4 rounded-sm border"
             style={{ backgroundColor: props.value || "#000" }}
           />
           Select Color...

@@ -6,10 +6,11 @@ import { FormEvent, useEffect, useState } from "react";
 
 import { Provider } from "@supabase/supabase-js";
 import { AuthBox } from "../components/AuthBox";
-import { Button } from "../components/ui/Button";
-import { FormLabel, Input } from "../components/ui/Input";
-import { Spinner } from "../components/ui/Spinner";
-import { useToast } from "../components/ui/Toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { getURL } from "../utils/helpers";
 import { GetStaticPropsResult } from "next";
 import { T, useT } from "@magic-translate/react";
@@ -28,8 +29,7 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
   };
 }
 
-const linkClasses =
-  "font-medium underline decoration-zinc-400 underline-offset-4 transition-colors hover:decoration-zinc-900 dark:hover:decoration-zinc-100";
+const linkClasses = "font-medium underline underline-offset-4";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -42,7 +42,7 @@ const SignIn = () => {
   });
   const router = useRouter();
   const { user } = useUser();
-  const toast = useToast();
+  const { toast } = useToast();
   const t = useT();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
@@ -63,7 +63,6 @@ const SignIn = () => {
         toast({
           title: "Magic link sent!",
           description: "Check your email for the magic link.",
-          status: "success",
           duration: 9000,
         });
       }
@@ -93,7 +92,7 @@ const SignIn = () => {
     return (
       <AuthBox title={t("Sign in to Chordpic")}>
         {message.content && (
-          <p className="mb-4 text-sm text-red-600 dark:text-red-400">
+          <p className="mb-4 text-sm text-destructive">
             <T>{message.content}</T>
           </p>
         )}
@@ -102,7 +101,7 @@ const SignIn = () => {
           <form onSubmit={handleSignin}>
             <div className="flex flex-col gap-4">
               <div>
-                <FormLabel htmlFor="email">Email</FormLabel>
+                <Label className="mb-2 block" htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -116,9 +115,9 @@ const SignIn = () => {
               <Button
                 type="submit"
                 className="mt-4 w-full"
-                isLoading={loading}
-                disabled={!email.length}
+                disabled={loading || !email.length}
               >
+                {loading && <Loader2 className="animate-spin" />}
                 Send magic link
               </Button>
             </div>
@@ -129,7 +128,7 @@ const SignIn = () => {
           <form onSubmit={handleSignin}>
             <div className="flex flex-col gap-4">
               <div>
-                <FormLabel htmlFor="email">Email</FormLabel>
+                <Label className="mb-2 block" htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -141,7 +140,7 @@ const SignIn = () => {
                 />
               </div>
               <div>
-                <FormLabel htmlFor="password">Password</FormLabel>
+                <Label className="mb-2 block" htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   name="password"
@@ -156,9 +155,9 @@ const SignIn = () => {
                 variant="outline"
                 type="submit"
                 className="w-full"
-                isLoading={loading}
-                disabled={!password.length || !email.length}
+                disabled={loading || !password.length || !email.length}
               >
+                {loading && <Loader2 className="animate-spin" />}
                 Sign in
               </Button>
             </div>
@@ -203,7 +202,7 @@ const SignIn = () => {
 
   return (
     <div className="mt-8 flex justify-center">
-      <Spinner />
+      <Loader2 className="h-6 w-6 animate-spin" />
     </div>
   );
 };

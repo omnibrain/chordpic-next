@@ -3,10 +3,10 @@ import { FacebookIcon, RedditIcon } from "react-share";
 import { T } from "@magic-translate/react";
 
 const footerLink =
-  "text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100";
+  "text-sm text-muted-foreground transition-colors hover:text-foreground";
 
 export const Footer = () => (
-  <footer className="border-t border-zinc-200 py-8 dark:border-zinc-800">
+  <footer className="border-t py-8">
     <div className="mx-auto flex w-full max-w-content flex-col gap-5 px-4 sm:px-6 md:flex-row md:items-center">
       <a
         href="https://reddit.com/r/chordpic"

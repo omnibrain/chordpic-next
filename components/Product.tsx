@@ -7,7 +7,17 @@ import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
 import * as Sentry from "@sentry/nextjs";
 import { GA } from "../services/google-analytics";
-import { Spinner } from "./ui/Spinner";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export interface ProductProps {
   billingInterval: "year" | "month";
@@ -132,30 +142,34 @@ export const Product: React.FunctionComponent<
   }).format((price?.unit_amount || 0) / 100);
 
   return (
-    <div
+    <Card
       key={product.id}
-      className="cursor-pointer rounded-2xl border border-zinc-900 bg-zinc-900 p-6 text-white shadow-lg transition-transform hover:-translate-y-0.5 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
+      className="cursor-pointer border-primary shadow-lg transition-transform hover:-translate-y-0.5"
       onClick={() => handleCheckout(price)}
     >
-      <h2 className="font-heading text-2xl font-semibold">{product.name}</h2>
-      <p className="mt-3 text-zinc-300 dark:text-zinc-600">
-        {product.description}
-      </p>
-      <p className="my-6">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between font-heading text-2xl">
+          {product.name}
+          <Badge>Pro</Badge>
+        </CardTitle>
+        <CardDescription>{product.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
         <span className="text-5xl font-semibold">{priceString}</span>
-        <span className="text-zinc-300 dark:text-zinc-600">
-          /{billingInterval}
-        </span>
-      </p>
-      <button
-        disabled={isLoading || priceIdLoading === price.id}
-        className="inline-flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-white px-6 text-base font-medium text-zinc-900 transition-colors hover:bg-zinc-200 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-700"
-      >
-        {priceIdLoading === price.id && <Spinner className="h-4 w-4" />}
-        {product.name === subscription?.prices?.products?.name
-          ? "Manage"
-          : "Subscribe"}
-      </button>
-    </div>
+        <span className="text-muted-foreground">/{billingInterval}</span>
+      </CardContent>
+      <CardFooter>
+        <Button
+          size="lg"
+          className="w-full"
+          disabled={isLoading || priceIdLoading === price.id}
+        >
+          {priceIdLoading === price.id && <Loader2 className="animate-spin" />}
+          {product.name === subscription?.prices?.products?.name
+            ? "Manage"
+            : "Subscribe"}
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };

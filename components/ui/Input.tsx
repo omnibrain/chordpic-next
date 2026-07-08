@@ -1,58 +1,23 @@
-import React, { forwardRef } from "react";
+import * as React from "react";
 
-export const inputClasses =
-  "h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm text-zinc-900 placeholder-zinc-400 transition-colors focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100";
+import { cn } from "@/lib/utils";
 
-export const Input = forwardRef<
+const Input = React.forwardRef<
   HTMLInputElement,
   React.InputHTMLAttributes<HTMLInputElement>
->(({ className = "", ...props }, ref) => (
-  <input ref={ref} className={`${inputClasses} ${className}`} {...props} />
-));
-
-Input.displayName = "Input";
-
-export const Select = forwardRef<
-  HTMLSelectElement,
-  React.SelectHTMLAttributes<HTMLSelectElement>
->(({ className = "", children, ...props }, ref) => (
-  <select ref={ref} className={`${inputClasses} ${className}`} {...props}>
-    {children}
-  </select>
-));
-
-Select.displayName = "Select";
-
-export const Checkbox = forwardRef<
-  HTMLInputElement,
-  React.InputHTMLAttributes<HTMLInputElement> & { label?: React.ReactNode }
->(({ className = "", label, children, ...props }, ref) => (
-  <label className="inline-flex cursor-pointer items-center gap-2 text-sm">
+>(({ className, type, ...props }, ref) => {
+  return (
     <input
+      type={type}
+      className={cn(
+        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
       ref={ref}
-      type="checkbox"
-      className={`h-4 w-4 rounded border-zinc-300 text-zinc-900 accent-zinc-900 focus:ring-zinc-900 dark:border-zinc-700 dark:accent-zinc-100 ${className}`}
       {...props}
     />
-    <span className="inline-flex items-center">{label ?? children}</span>
-  </label>
-));
+  );
+});
+Input.displayName = "Input";
 
-Checkbox.displayName = "Checkbox";
-
-export const FormLabel: React.FunctionComponent<
-  React.LabelHTMLAttributes<HTMLLabelElement>
-> = ({ className = "", children, ...props }) => (
-  <label
-    className={`mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300 ${className}`}
-    {...props}
-  >
-    {children}
-  </label>
-);
-
-export const FormErrorMessage: React.FunctionComponent<{
-  children: React.ReactNode;
-}> = ({ children }) => (
-  <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{children}</p>
-);
+export { Input };

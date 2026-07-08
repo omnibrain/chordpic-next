@@ -8,8 +8,13 @@ import { EditModeInput } from "./EditModeInput";
 import { Chart } from "../../domain/chart";
 import { EditMode } from "../../domain/edit-mode";
 import { ChordMatrix } from "../../services/chord-matrix";
-import { FiTrash2 } from "react-icons/fi";
-import { Tooltip } from "../ui/Tooltip";
+import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { GA } from '../../services/google-analytics'
 
 const lineWidth = 3;
@@ -110,14 +115,18 @@ export const ChordEditor = (props: IProps) => {
   return (
     <div>
       <div className="absolute right-3 top-3 z-10">
-        <Tooltip label="Reset chord">
-          <button
-            onClick={onResetChord}
-            aria-label="Reset chord"
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-300 text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-          >
-            <FiTrash2 />
-          </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onResetChord}
+              aria-label="Reset chord"
+            >
+              <Trash2 />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Reset chord</TooltipContent>
         </Tooltip>
       </div>
       <SilentStringsInput

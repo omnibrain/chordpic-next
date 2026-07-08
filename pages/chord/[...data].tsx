@@ -5,8 +5,8 @@ import { ChordResult } from "../../components/chord/ChordResult";
 import { useChart } from "../../components/chord/useChart";
 import { DownloadButtons } from "../../components/DownloadButtons";
 import { ShareButtons } from "../../components/ShareButtons";
-import { buttonClasses } from "../../components/ui/Button";
-import { Spinner } from "../../components/ui/Spinner";
+import { Loader2 } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { Chart } from "../../domain/chart";
 import { decompress } from "../../hooks/compressed-state";
 
@@ -37,7 +37,7 @@ const ChordPage = () => {
   }, [data]);
 
   if (!isLoading) {
-    <Spinner />;
+    <Loader2 className="animate-spin" />;
   }
 
   if (!chart) {
@@ -46,7 +46,7 @@ const ChordPage = () => {
         <h1 className="font-heading text-2xl font-semibold tracking-tight">
           Invalid sharing link
         </h1>
-        <p className="mt-3 text-zinc-600 dark:text-zinc-400">
+        <p className="mt-3 text-muted-foreground">
           Sorry but this link does not seem to be a valid sharing link. Are you
           sure you have the complete link?
         </p>
@@ -73,7 +73,7 @@ const ChordPage = () => {
         <h2 className="mb-3 mt-8 font-heading text-2xl font-semibold tracking-tight">
           Edit
         </h2>
-        <Link href="/" className={buttonClasses("solid")}>
+        <Link href="/" className={buttonVariants()}>
           Edit this chord diagram
         </Link>
       </div>

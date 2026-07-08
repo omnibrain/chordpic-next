@@ -40,7 +40,7 @@ export const ChordTextInput = (props: IChordTextInputProps) => {
               {!empty && props.editMode === EditMode.EDIT_TEXT && (
                 <input
                   type="text"
-                  className="h-2/5 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-white p-0 text-center text-base leading-normal text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                  className="h-2/5 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-background p-0 text-center text-base leading-normal text-foreground"
                   value={matrix.get(fretIndex, stringIndex).text ?? ""}
                   onChange={(e: FormEvent<HTMLInputElement>) =>
                     props.onMatrixChange(
