@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ClickCellContainer } from "./ClickCellContainer";
 import { IChordInputSettings } from "../ChordEditor";
-import styled from "@emotion/styled";
 import { ShapeButton } from "./ShapeButton";
 import { Shape } from "svguitar";
 import { ChordMatrix } from "../../../services/chord-matrix";
@@ -15,20 +14,6 @@ export interface IChordTextInputProps {
   onEditModeChange: (editMode: EditMode) => void;
   circleSize: number;
 }
-
-interface IInputCellProps {
-  size: number;
-  empty: boolean;
-}
-
-const Section = styled.div<IInputCellProps>`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  grid-column: span ${(props) => props.size};
-  position: relative;
-`;
 
 export const ChordNotes = (props: IChordTextInputProps) => {
   const matrix = props.matrix;
@@ -44,10 +29,10 @@ export const ChordNotes = (props: IChordTextInputProps) => {
         matrix
           .getSections(fretIndex)
           .map(({ length, empty, string: stringIndex }, sectionIndex) => (
-            <Section
+            <div
               key={`${fretIndex}-${stringIndex}-${sectionIndex}`}
-              size={length}
-              empty={empty}
+              className="relative flex flex-col items-center justify-center"
+              style={{ gridColumn: `span ${length}` }}
               onClick={
                 empty
                   ? () => props.onEditModeChange(EditMode.EDIT_NOTES)
@@ -68,12 +53,11 @@ export const ChordNotes = (props: IChordTextInputProps) => {
                   circleSize={props.circleSize}
                   length={length}
                   color={
-                    matrix.get(fretIndex, stringIndex).color ??
-                    "var(--chakra-colors-chakra-body-text)"
+                    matrix.get(fretIndex, stringIndex).color ?? "var(--fg)"
                   }
                 />
               )}
-            </Section>
+            </div>
           ))
       )}
     </ClickCellContainer>

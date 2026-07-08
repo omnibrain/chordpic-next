@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
 } from "react";
-import styled from "@emotion/styled";
 import range from "lodash.range";
 import { IChordInputSettings } from "../ChordEditor";
 import { ClickCellContainer } from "./ClickCellContainer";
@@ -25,28 +24,19 @@ interface IProps {
   onEditModeChange: (mode: EditMode) => void;
 }
 
-const StyledChordInput = styled.div<
-  IChordInputSettings & { numFrets: number; numStrings: number }
->`
-  display: grid;
-  margin-left: ${(props) => props.width / props.numStrings / 2}px;
-  position: relative;
-  width: ${(props) => props.width - props.width / props.numStrings}px;
-  grid-template-columns: repeat(${(props) => props.numStrings - 1}, 1fr);
-  grid-template-rows: repeat(
-    ${(props) => props.numFrets},
-    ${(props) => props.height / 4}px
-  );
-  grid-gap: ${(props) => props.lineWidth}px;
-  padding: ${(props) => props.lineWidth}px ${(props) => props.lineWidth}px 0
-    ${(props) => props.lineWidth}px;
-
-  background-color: var(--chakra-colors-chakra-body-text);
-
-  .cell {
-    background-color: var(--chakra-colors-chakra-body-bg);
-  }
-`;
+const chordInputStyle = (
+  props: IChordInputSettings & { numFrets: number; numStrings: number },
+): React.CSSProperties => ({
+  display: "grid",
+  marginLeft: props.width / props.numStrings / 2,
+  position: "relative",
+  width: props.width - props.width / props.numStrings,
+  gridTemplateColumns: `repeat(${props.numStrings - 1}, 1fr)`,
+  gridTemplateRows: `repeat(${props.numFrets}, ${props.height / 4}px)`,
+  gridGap: props.lineWidth,
+  padding: `${props.lineWidth}px ${props.lineWidth}px 0 ${props.lineWidth}px`,
+  backgroundColor: "var(--fg)",
+});
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -114,14 +104,21 @@ export const ChordInput = (props: IProps) => {
   const { matrix } = props;
 
   return (
-    <StyledChordInput
-      {...props.settings}
+    <div
+      style={chordInputStyle({
+        ...props.settings,
+        numFrets: matrix.numFrets,
+        numStrings: matrix.numStrings,
+      })}
       ref={wrapperRef}
-      numFrets={matrix.numFrets}
-      numStrings={matrix.numStrings}
     >
       {range(matrix.numStrings * matrix.numFrets - 1).map((i) => (
-        <div key={i} className="cell" data-cell-index={i} />
+        <div
+          key={i}
+          className="cell"
+          style={{ backgroundColor: "var(--bg)" }}
+          data-cell-index={i}
+        />
       ))}
 
       <ClickCellContainer
@@ -212,6 +209,6 @@ export const ChordInput = (props: IProps) => {
         onMatrixChange={props.onMatrixChange}
         onEditModeChange={props.onEditModeChange}
       />
-    </StyledChordInput>
+    </div>
   );
 };

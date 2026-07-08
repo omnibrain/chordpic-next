@@ -1,21 +1,14 @@
 import { FormEvent, useState } from "react";
 
-import {
-  Box,
-  Button,
-  Flex,
-  FormLabel,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { AuthBox } from "../components/AuthBox";
+import { Button } from "../components/ui/Button";
+import { FormLabel, Input } from "../components/ui/Input";
+import { useToast } from "../components/ui/Toast";
 import { supabase } from "../utils/supabase-client";
 import { useUser } from "../utils/useUser";
 import { T, useT } from "@magic-translate/react";
-import { t } from "@chakra-ui/styled-system/dist/declarations/src/utils";
 
 const useUpdatePasswordMutation = () => {
   const { accessToken } = useUser();
@@ -77,8 +70,6 @@ const NewPassword = () => {
           description: "Use the new password for logging in from now on.",
           status: "success",
           duration: 9000,
-          isClosable: true,
-          position: "top",
         });
         router.push("/account");
       }
@@ -91,53 +82,50 @@ const NewPassword = () => {
   return (
     <AuthBox title="Set new password">
       {message.content && (
-        <Text color="red.500" fontSize="sm" mb={4}>
+        <p className="mb-4 text-sm text-red-600 dark:text-red-400">
           <T>{message.content}</T>
-        </Text>
+        </p>
       )}
 
       <form onSubmit={handleReset}>
-        <Flex direction="column" gap={4}>
-          <Box>
+        <div className="flex flex-col gap-4">
+          <div>
             <FormLabel htmlFor="password">
               <T>New password</T>
             </FormLabel>
             <Input
               id="password"
               name="password"
-              border="2px"
-              borderColor="primary"
               type="password"
               placeholder={t("Password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </Box>
-          <Box>
-            <FormLabel htmlFor="password">Confirm new password</FormLabel>
+          </div>
+          <div>
+            <FormLabel htmlFor="confirm-password">
+              Confirm new password
+            </FormLabel>
             <Input
               id="confirm-password"
               name="confirm-password"
-              border="2px"
-              borderColor="primary"
               type="password"
               placeholder={t("Confirm password")}
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               required
             />
-          </Box>
+          </div>
           <Button
-            mt={4}
             type="submit"
+            className="mt-4 w-full"
             isLoading={mutation.isLoading}
             disabled={!password.length || !passwordConfirmation.length}
-            width="100%"
           >
             <T>Set new password</T>
           </Button>
-        </Flex>
+        </div>
       </form>
     </AuthBox>
   );

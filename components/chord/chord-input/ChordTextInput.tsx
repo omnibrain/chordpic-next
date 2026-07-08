@@ -2,7 +2,6 @@ import * as React from "react";
 import { FormEvent } from "react";
 import { ClickCellContainer } from "./ClickCellContainer";
 import { IChordInputSettings } from "../ChordEditor";
-import styled from "@emotion/styled";
 import { ChordMatrix } from "../../../services/chord-matrix";
 import { EditMode } from "../../../domain/edit-mode";
 
@@ -13,36 +12,6 @@ export interface IChordTextInputProps {
   onMatrixChange: (matrix: ChordMatrix) => void;
   onEditModeChange: (editMode: EditMode) => void;
 }
-
-interface IInputCellProps {
-  size: number;
-}
-
-const InputCell = styled.div<IInputCellProps>`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  grid-column: span ${(props) => props.size};
-  position: relative;
-`;
-
-const StyledInput = styled.input`
-  height: 40%;
-  width: 100%;
-  border: 2px solid var(--chakra-colors-chakra-body-text);
-  border-radius: 3px;
-  padding: 0;
-  text-align: center;
-  font-size: 1em;
-
-  line-height: normal;
-`;
-
-const StyledTextSpan = styled.span`
-  position: absolute;
-  color: #b3b3b3;
-`;
 
 export const ChordTextInput = (props: IChordTextInputProps) => {
   const matrix = props.matrix;
@@ -58,9 +27,10 @@ export const ChordTextInput = (props: IChordTextInputProps) => {
         matrix
           .getSections(fretIndex)
           .map(({ length, empty, string: stringIndex }, sectionIndex) => (
-            <InputCell
+            <div
               key={`${fretIndex}-${sectionIndex}`}
-              size={length}
+              className="relative flex flex-col items-center justify-center"
+              style={{ gridColumn: `span ${length}` }}
               onClick={
                 empty
                   ? () => props.onEditModeChange(EditMode.EDIT_NOTES)
@@ -68,8 +38,9 @@ export const ChordTextInput = (props: IChordTextInputProps) => {
               }
             >
               {!empty && props.editMode === EditMode.EDIT_TEXT && (
-                <StyledInput
+                <input
                   type="text"
+                  className="h-2/5 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-white p-0 text-center text-base leading-normal text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
                   value={matrix.get(fretIndex, stringIndex).text ?? ""}
                   onChange={(e: FormEvent<HTMLInputElement>) =>
                     props.onMatrixChange(
@@ -83,11 +54,11 @@ export const ChordTextInput = (props: IChordTextInputProps) => {
                 />
               )}
               {!empty && props.editMode !== EditMode.EDIT_TEXT && (
-                <StyledTextSpan>
+                <span className="absolute text-[#b3b3b3]">
                   {matrix.get(fretIndex, stringIndex).text ?? ""}
-                </StyledTextSpan>
+                </span>
               )}
-            </InputCell>
+            </div>
           ))
       )}
     </ClickCellContainer>

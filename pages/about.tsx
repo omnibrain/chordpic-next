@@ -1,4 +1,3 @@
-import { Heading, Link, Text } from "@chakra-ui/react";
 import { GetStaticPropsResult } from "next";
 import NextLink from "next/link";
 import { T } from "@magic-translate/react";
@@ -20,23 +19,23 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
 
 const HelpPage = () => {
   return (
-    <>
-      <Heading size="2xl" mb={6} as="h1">
+    <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-heading prose-a:underline-offset-4">
+      <h1>
         <T>About</T>
-      </Heading>
-      <Text mb={3}>
+      </h1>
+      <p>
         <T>ChordPic is a completely free tool to create guitar chord charts.</T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           While many tools exist to create guitar chord charts, ChordPic is by
           far the fastest and easiest solution.
         </T>
-      </Text>
-      <Heading size="lg" mb={3} id="feature-requests-or-bug-reports">
+      </p>
+      <h2 id="feature-requests-or-bug-reports">
         <T>Feature Requests or Bug Reports</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <T>
           If you&apos;re missing an essential feature or found a bug,{" "}
           <a
@@ -54,29 +53,28 @@ const HelpPage = () => {
           </a>
           .
         </T>
-      </Text>
-      <Heading size="lg" mb={3} id="privacy-notice">
+      </p>
+      <h2 id="privacy-notice">
         <T>Privacy Notice</T>
-      </Heading>
-      <Text mb={3}>
-        <NextLink href="/privacy-notice" passHref legacyBehavior>
-          <Link>
-            <T>Read ChordPic&apos;s privacy notice here.</T>
-          </Link>
+      </h2>
+      <p>
+        <NextLink href="/privacy-notice">
+          <T>Read ChordPic&apos;s privacy notice here.</T>
         </NextLink>
-      </Text>
-      <Heading size="lg" mb={3} id="cookie-policy">
+      </p>
+      <h2 id="cookie-policy">
         <T>Cookie Policy</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         {/* this is not a next link on purpose: The cookiefirst stuff will not load when routed with next */}
-        <Link href="/cookie-policy">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/cookie-policy">
           <T>
             Read ChordPic&apos;s cookie policy or adjust your settings here.
           </T>
-        </Link>
-      </Text>
-    </>
+        </a>
+      </p>
+    </article>
   );
 };
 

@@ -1,16 +1,9 @@
 import NextLink from "next/link";
 import { ReactNode, useState } from "react";
 
-import {
-  Badge,
-  Box,
-  Button,
-  Heading,
-  SimpleGrid,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
 import { User, withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
+import { Button, buttonClasses } from "../components/ui/Button";
+import { Spinner } from "../components/ui/Spinner";
 import { postData } from "../utils/helpers";
 import { useUser } from "../utils/useUser";
 import { T, useT } from "@magic-translate/react";
@@ -23,25 +16,14 @@ interface Props {
 }
 
 const Card = ({ title, description, footer, children }: Props) => (
-  <Box
-    maxW="sm"
-    borderRadius="lg"
-    overflow="hidden"
-    flexBasis="22rem"
-    p={4}
-    shadow="md"
-    border="2px"
-    borderColor="primary"
-  >
-    <Box p={5}>
-      <Heading size="md" mb={3}>
-        <T>{title}</T>
-      </Heading>
-      <Text>{description}</Text>
-      {children}
-    </Box>
-    <Box p={5}>{footer}</Box>
-  </Box>
+  <div className="flex flex-col rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <h2 className="mb-3 font-heading text-lg font-semibold tracking-tight">
+      <T>{title}</T>
+    </h2>
+    <p className="text-zinc-600 dark:text-zinc-400">{description}</p>
+    <div className="mt-2">{children}</div>
+    {footer && <div className="mt-6">{footer}</div>}
+  </div>
 );
 
 export const getServerSideProps = withAuthRequired({ redirectTo: "/signin" });
@@ -73,11 +55,11 @@ export default function Account({ user }: { user: User }) {
     }).format((subscription?.prices?.unit_amount || 0) / 100);
 
   return (
-    <Box as="section">
-      <Heading as="h1" size="xl" mb={12}>
+    <section>
+      <h1 className="mb-12 font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
         <T>Account</T>
-      </Heading>
-      <SimpleGrid gap={3} minChildWidth="15rem">
+      </h1>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card
           title={t("Your Plan")}
           description={
@@ -91,45 +73,34 @@ export default function Account({ user }: { user: User }) {
             )
           }
           footer={
-            <>
-              {subscription && (
-                <Box>
-                  <Text mb={4}>
-                    <T>Manage your subscription</T>
-                  </Text>
-                  <Button
-                    variant="solid"
-                    isLoading={loading}
-                    // disabled={loading || !subscription}
-                    onClick={redirectToCustomerPortal}
-                  >
-                    <T>Open customer portal</T>
-                  </Button>
-                </Box>
-              )}
-            </>
+            subscription && (
+              <div>
+                <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                  <T>Manage your subscription</T>
+                </p>
+                <Button isLoading={loading} onClick={redirectToCustomerPortal}>
+                  <T>Open customer portal</T>
+                </Button>
+              </div>
+            )
           }
         >
-          <Box>
-            {isLoading ? (
-              <Spinner />
-            ) : subscription ? (
-              <>
-                {subscriptionPrice}/<T>{subscription?.prices?.interval}</T>
-              </>
-            ) : (
-              <NextLink href="/pricing" passHref legacyBehavior>
-                <Button as="a" variant="solid">
-                  <T>Choose your plan</T>
-                </Button>
-              </NextLink>
-            )}
-          </Box>
+          {isLoading ? (
+            <Spinner />
+          ) : subscription ? (
+            <>
+              {subscriptionPrice}/<T>{subscription?.prices?.interval}</T>
+            </>
+          ) : (
+            <NextLink href="/pricing" className={buttonClasses("solid")}>
+              <T>Choose your plan</T>
+            </NextLink>
+          )}
         </Card>
         <Card title={t("Your Email")}>
-          <Text as="i">{user ? user.email : undefined}</Text>
+          <p className="italic">{user ? user.email : undefined}</p>
         </Card>
-      </SimpleGrid>
-    </Box>
+      </div>
+    </section>
   );
 }

@@ -1,11 +1,3 @@
-import {
-  Button,
-  Grid,
-  GridItem,
-  Heading,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -13,6 +5,8 @@ import { ChordResult } from "../../components/chord/ChordResult";
 import { useChart } from "../../components/chord/useChart";
 import { DownloadButtons } from "../../components/DownloadButtons";
 import { ShareButtons } from "../../components/ShareButtons";
+import { buttonClasses } from "../../components/ui/Button";
+import { Spinner } from "../../components/ui/Spinner";
 import { Chart } from "../../domain/chart";
 import { decompress } from "../../hooks/compressed-state";
 
@@ -49,46 +43,41 @@ const ChordPage = () => {
   if (!chart) {
     return (
       <>
-        <Heading size="lg">Invalid sharing link</Heading>
-        <Text>
+        <h1 className="font-heading text-2xl font-semibold tracking-tight">
+          Invalid sharing link
+        </h1>
+        <p className="mt-3 text-zinc-600 dark:text-zinc-400">
           Sorry but this link does not seem to be a valid sharing link. Are you
           sure you have the complete link?
-        </Text>
+        </p>
 
-        <Text>
+        <p className="mt-3">
           Anyway, all you can do now is{" "}
-          <Link href="/">go back and create a new guitar chord chart</Link>.
-        </Text>
+          <Link href="/" className="font-medium underline underline-offset-4">
+            go back and create a new guitar chord chart
+          </Link>
+          .
+        </p>
       </>
     );
   }
 
   return (
-    <Grid
-      templateColumns={[
-        "repeat(1, 1fr)",
-        "repeat(1, 1fr)",
-        "repeat(2, 1fr)",
-        "repeat(2, 1fr)",
-      ]}
-      gap={6}
-    >
-      <GridItem>
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div>
         <ChordResult />
-      </GridItem>
-      <GridItem>
+      </div>
+      <div>
         <DownloadButtons />
         <ShareButtons chart={chart} />
-        <Heading as="h2" size="lg" mb={3} mt={8}>
+        <h2 className="mb-3 mt-8 font-heading text-2xl font-semibold tracking-tight">
           Edit
-        </Heading>
-        <Link href="/" passHref legacyBehavior>
-          <Button as="a" size="md" variant="solid">
-            Edit this chord diagram
-          </Button>
+        </h2>
+        <Link href="/" className={buttonClasses("solid")}>
+          Edit this chord diagram
         </Link>
-      </GridItem>
-    </Grid>
+      </div>
+    </div>
   );
 };
 

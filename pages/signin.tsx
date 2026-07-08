@@ -4,21 +4,12 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  Center,
-  FormLabel,
-  Input,
-  Link,
-  Spinner,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
 import { Provider } from "@supabase/supabase-js";
 import { AuthBox } from "../components/AuthBox";
+import { Button } from "../components/ui/Button";
+import { FormLabel, Input } from "../components/ui/Input";
+import { Spinner } from "../components/ui/Spinner";
+import { useToast } from "../components/ui/Toast";
 import { getURL } from "../utils/helpers";
 import { GetStaticPropsResult } from "next";
 import { T, useT } from "@magic-translate/react";
@@ -36,6 +27,9 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
     },
   };
 }
+
+const linkClasses =
+  "font-medium underline decoration-zinc-400 underline-offset-4 transition-colors hover:decoration-zinc-900 dark:hover:decoration-zinc-100";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -71,8 +65,6 @@ const SignIn = () => {
           description: "Check your email for the magic link.",
           status: "success",
           duration: 9000,
-          isClosable: true,
-          position: "top",
         });
       }
       setLoading(false);
@@ -101,47 +93,42 @@ const SignIn = () => {
     return (
       <AuthBox title={t("Sign in to Chordpic")}>
         {message.content && (
-          <Text color="red.500" fontSize="sm">
+          <p className="mb-4 text-sm text-red-600 dark:text-red-400">
             <T>{message.content}</T>
-          </Text>
+          </p>
         )}
 
         {!showPasswordInput && (
           <form onSubmit={handleSignin}>
-            <Box display="flex" flexDir="column" gap={4}>
-              <Box>
+            <div className="flex flex-col gap-4">
+              <div>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  border="2px"
-                  borderColor="primary"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  colorScheme="teal"
                 />
-              </Box>
+              </div>
               <Button
-                variant="solid"
-                mt={4}
                 type="submit"
+                className="mt-4 w-full"
                 isLoading={loading}
                 disabled={!email.length}
-                width="100%"
               >
                 Send magic link
               </Button>
-            </Box>
+            </div>
           </form>
         )}
 
         {showPasswordInput && (
           <form onSubmit={handleSignin}>
-            <Box display="flex" flexDir="column" gap={4}>
-              <Box>
+            <div className="flex flex-col gap-4">
+              <div>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <Input
                   id="email"
@@ -151,10 +138,9 @@ const SignIn = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  width="100%"
                 />
-              </Box>
-              <Box>
+              </div>
+              <div>
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <Input
                   id="password"
@@ -164,26 +150,25 @@ const SignIn = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  width="100%"
                 />
-              </Box>
+              </div>
               <Button
                 variant="outline"
-                border="2px"
                 type="submit"
+                className="w-full"
                 isLoading={loading}
                 disabled={!password.length || !email.length}
-                width="100%"
               >
                 Sign in
               </Button>
-            </Box>
+            </div>
           </form>
         )}
 
-        <Box mt={4} mb={6} textAlign="center">
-          <Link
+        <div className="mb-6 mt-4 text-center text-sm">
+          <a
             href="#"
+            className={linkClasses}
             onClick={() => {
               if (showPasswordInput) setPassword("");
               setShowPasswordInput(!showPasswordInput);
@@ -191,59 +176,35 @@ const SignIn = () => {
             }}
           >
             {`Or sign in with ${showPasswordInput ? "magic link" : "password"}`}
-          </Link>
+          </a>
           .
-        </Box>
+        </div>
 
-        {/* <Box display="flex" alignItems="center" my={8}>
-          <Divider />
-          <Box textAlign="center" px={8}>
-            Or
-          </Box>
-          <Divider />
-        </Box>
-
-        <Button
-          type="submit"
-          disabled={loading}
-          onClick={() => handleOAuthSignIn("google")}
-          width="100%"
-        >
-          <Icon as={FaGoogle} mr={3} />
-          Continue with Google
-        </Button> */}
-
-        <Box textAlign="center" mb={2} mt={6} fontSize="sm">
-          <Box as="span">
+        <div className="mb-2 mt-6 text-center text-sm">
+          <span>
             <T>Don&apos;t have an account?</T>
-          </Box>
-          {` `}
-          <NextLink href="/signup" legacyBehavior>
-            <Link>
-              <T>Sign up</T>
-            </Link>
+          </span>{" "}
+          <NextLink href="/signup" className={linkClasses}>
+            <T>Sign up</T>
           </NextLink>
           .
-        </Box>
-        <Box textAlign="center" my={2} fontSize="sm">
-          <Box as="span">
+        </div>
+        <div className="my-2 text-center text-sm">
+          <span>
             <T>Forgot password?</T>
-          </Box>
-          {` `}
-          <NextLink href="/reset-password" legacyBehavior>
-            <Link>
-              <T>Reset password</T>
-            </Link>
+          </span>{" "}
+          <NextLink href="/reset-password" className={linkClasses}>
+            <T>Reset password</T>
           </NextLink>
           .
-        </Box>
+        </div>
       </AuthBox>
     );
 
   return (
-    <Center mt={8}>
+    <div className="mt-8 flex justify-center">
       <Spinner />
-    </Center>
+    </div>
   );
 };
 

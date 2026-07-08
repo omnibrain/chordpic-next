@@ -1,13 +1,3 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
-} from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FaTelegram, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { MdFacebook, MdShare, MdEmail } from "react-icons/md";
@@ -22,6 +12,8 @@ import { Chart } from "../domain/chart";
 import { getLink } from "../hooks/url-state";
 import { GA } from "../services/google-analytics";
 import { T } from "@magic-translate/react";
+import { Button, buttonClasses } from "./ui/Button";
+import { Input } from "./ui/Input";
 
 interface IProps {
   chart: Chart;
@@ -56,47 +48,51 @@ export const ShareButtons = ({ chart }: IProps) => {
     }
   };
 
+  const shareButtonClass = buttonClasses("outline", "sm");
+
   return (
-    <Box mt={8} id="share">
-      <Heading as="h2" size="lg" mb={3}>
+    <div className="mt-8" id="share">
+      <h2 className="mb-3 font-heading text-2xl font-semibold tracking-tight">
         <T>Share</T>
-      </Heading>
+      </h2>
       <Button variant="outline" onClick={share}>
-        <Icon as={MdShare} mr={1} />
+        <MdShare />
         <T>Generate Sharing Link</T>
       </Button>
 
       {link && (
         <>
-          <InputGroup size="md" mt={3}>
+          <div className="relative mt-3">
             <Input
               ref={inputRef}
-              pr="4.5rem"
+              className="pr-20"
               aria-label="Sharing Link"
               readOnly={true}
               value={link}
               type="text"
             />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={copyLink}>
-                <T>Copy</T>
-              </Button>
-            </InputRightElement>
-          </InputGroup>
+            <Button
+              size="sm"
+              className="absolute right-1 top-1 h-8"
+              onClick={copyLink}
+            >
+              <T>Copy</T>
+            </Button>
+          </div>
 
-          <Flex wrap="wrap" gap={1} mt={3}>
+          <div className="mt-3 flex flex-wrap gap-2">
             <FacebookShareButton url={link}>
-              <Button size="sm" variant="outline">
-                <Icon as={MdFacebook} mr={1} />
+              <span className={shareButtonClass}>
+                <MdFacebook />
                 Facebook
-              </Button>
+              </span>
             </FacebookShareButton>
 
             <TelegramShareButton url={link} title={title}>
-              <Button size="sm" variant="outline">
-                <Icon as={FaTelegram} mr={1} />
+              <span className={shareButtonClass}>
+                <FaTelegram />
                 Telegram
-              </Button>
+              </span>
             </TelegramShareButton>
 
             <TwitterShareButton
@@ -105,17 +101,17 @@ export const ShareButtons = ({ chart }: IProps) => {
               via="https://chordpic.com"
               hashtags={["guitar", "chord"]}
             >
-              <Button size="sm" variant="outline">
-                <Icon as={FaTwitter} mr={1} />
+              <span className={shareButtonClass}>
+                <FaTwitter />
                 Twitter
-              </Button>
+              </span>
             </TwitterShareButton>
 
             <WhatsappShareButton url={link} title={title}>
-              <Button size="sm" variant="outline">
-                <Icon as={FaWhatsapp} mr={1} />
+              <span className={shareButtonClass}>
+                <FaWhatsapp />
                 WhatsApp
-              </Button>
+              </span>
             </WhatsappShareButton>
 
             <EmailShareButton
@@ -123,14 +119,14 @@ export const ShareButtons = ({ chart }: IProps) => {
               url={link}
               body="Here's a chord chart I created on ChordPic.com"
             >
-              <Button size="sm" variant="outline">
-                <Icon as={MdEmail} mr={1} />
+              <span className={shareButtonClass}>
+                <MdEmail />
                 Email
-              </Button>
+              </span>
             </EmailShareButton>
-          </Flex>
+          </div>
         </>
       )}
-    </Box>
+    </div>
   );
 };

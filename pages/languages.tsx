@@ -1,4 +1,3 @@
-import { Heading, List, ListItem, Text } from "@chakra-ui/react";
 import { GetStaticPropsResult } from "next";
 import { Language, T } from "@magic-translate/react";
 import { languageMap } from "../utils/translate";
@@ -21,33 +20,25 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
 
 const Languages = () => {
   return (
-    <>
-      <Heading size="2xl" mb={6}>
+    <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-heading prose-a:underline-offset-4">
+      <h1>
         <T>Languages</T>
-      </Heading>
-      <Text mb={4}>
+      </h1>
+      <p>
         <T>ChordPic is currently available in the following languages:</T>
-      </Text>
+      </p>
 
-      <List
-        display="grid"
-        gridTemplateColumns={[null, "1fr 1fr 1fr"]}
-        gridGap={[3, 4]}
-      >
+      <ul className="grid list-none grid-cols-1 gap-3 pl-0 sm:grid-cols-3 sm:gap-4">
         {Object.entries(languageMap).map(([lang, { name }]) => (
-          <ListItem key={lang}>
-            <Link
-              href="/"
-              locale={lang}
-              style={{ textDecoration: "underline" }}
-            >
+          <li key={lang} className="pl-0">
+            <Link href="/" locale={lang} className="underline">
               <T lang={lang as Language}>{name}</T>
             </Link>
-          </ListItem>
+          </li>
         ))}
-      </List>
+      </ul>
 
-      <Text mt={5}>
+      <p>
         <T>
           Missing a language? Thanks to{" "}
           <a
@@ -65,8 +56,8 @@ const Languages = () => {
           </a>{" "}
           and let us know which language to add.
         </T>
-      </Text>
-    </>
+      </p>
+    </article>
   );
 };
 

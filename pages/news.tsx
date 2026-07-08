@@ -6,7 +6,6 @@ import sampleChordWithColors from "../public/images/sample-chord-with-colors.png
 import orientationToggle from "../public/images/orientation-toggle.png";
 import sampleChordWithText from "../public/images/sample-chord-with-text.png";
 import fretMarkers from "../public/images/fret-markers.png";
-import { Center, Heading, Text } from "@chakra-ui/react";
 
 import { GetStaticPropsResult } from "next";
 import sliders from "../assets/images/sliders.jpg";
@@ -33,17 +32,17 @@ const HelpPage = () => {
   const t = useT();
 
   return (
-    <>
-      <Heading size="2xl" mb={6} as="h1">
+    <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-heading prose-a:underline-offset-4">
+      <h1>
         <T>News</T>
-      </Heading>
-      <Text mb={3} fontSize="lg">
+      </h1>
+      <p>
         <T>
           Read about new features, ideas, and success stories of guitar players
           around the world using ChordPic to create chord diagram images.
         </T>
-      </Text>
-      <Text mb={3} fontSize="lg">
+      </p>
+      <p>
         <T>
           Are you using ChordPic for your website, book, YouTube channel or in
           any other way? Please{" "}
@@ -55,38 +54,38 @@ const HelpPage = () => {
           </a>
           , we would love to hear your story and tell other people about it!
         </T>
-      </Text>
+      </p>
 
-      <Heading size="lg" mb={3} mt={8} id="change-font-size-of-title">
+      <h2 id="change-font-size-of-title">
         <T>Fret markers!</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>January 27th, 2025</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           It&apos;s been a long time since a new feature dropped for ChordPic
           but today is the day! You can now add fret markers to your chord
           diagrams. Just click on the &quot;More Settings&quot; toggle and you
           will find a new checkbox to add fret markers to your chord diagrams.
         </T>{" "}
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>The fret markers look like this:</T>{" "}
-      </Text>
-      <Center>
+      </p>
+      <div className="flex justify-center">
         <Image src={fretMarkers} alt={t("Chord diagram with fret markers")} />
-      </Center>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           Notice the little dot in the center? That&apos;s a fret marker. If you
           add more frets, the dots will automatically appear on the frets
           further down the fretboard.{" "}
         </T>{" "}
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           This feature was requested by a user. What would <strong>you</strong>{" "}
           like to see next? We&apos;re always looking for feedback, so
@@ -99,38 +98,33 @@ const HelpPage = () => {
           </a>{" "}
           with your feature request!
         </T>{" "}
-      </Text>
+      </p>
 
-      <Heading size="lg" mb={3} mt={8} id="change-font-size-of-title">
+      <h2 id="change-font-size-of-title">
         <T>You can now change the font size of the title</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>August 21st, 2023</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           It&apos;s now possible to change the font size of the chord&apos;s
           titles. Another feature that has been requested multiple times is now
           implemented and available for all users, Free and Pro.
         </T>{" "}
-      </Text>
+      </p>
 
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="you-can-now-create-horizontal-chord-diagrams-"
-      >
+      <h2 id="you-can-now-create-horizontal-chord-diagrams-">
         <T>ChordPic is now available in 8 languages</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>July 19th, 2023</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           ChordPic is now available for an even broader audience. From today,
           ChordPic is available in the following languages: English, Spanish
@@ -139,8 +133,8 @@ const HelpPage = () => {
         <Link href="/languages" style={{ textDecoration: "underline" }}>
           <T>Choose your language here.</T>
         </Link>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           These translations are provided by an amazing tool called Magic
           Translate. If you&apos;re a website owner or developer yourself, I
@@ -153,62 +147,52 @@ const HelpPage = () => {
           </a>
           .
         </T>
-      </Text>
+      </p>
 
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="you-can-now-create-horizontal-chord-diagrams-"
-      >
+      <h2 id="you-can-now-create-horizontal-chord-diagrams-">
         <T>Sliders now show numerical values</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>November 16th, 2022</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           A small improvement that makes it easier to see the exact values of
           the sliders in the chord settings: Now the sliders show the numerical
           value of the setting they control.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>Here&apos;s what this looks like in action:</T>
-      </Text>
-      <Center>
+      </p>
+      <div className="flex justify-center">
         <Image src={sliders} alt={t("Sliders with numerical values")} />
-      </Center>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           This makes it much easier to rember your settings so you can create
           chord diagrams with the exact same settings on a different machine.
         </T>
-      </Text>
+      </p>
 
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="you-can-now-create-horizontal-chord-diagrams-"
-      >
+      <h2 id="you-can-now-create-horizontal-chord-diagrams-">
         <T>Position can now be hidden</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>October 29th, 2022</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           Another user request has been implemented: You can now hide the
           position of a chord. Just check the &apos;Hide position&apos;
           checkmark.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>What feature would you like to see?</T>{" "}
         <T>
           <a
@@ -219,29 +203,24 @@ const HelpPage = () => {
           </a>{" "}
           with your feature request!
         </T>
-      </Text>
+      </p>
 
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="you-can-now-create-horizontal-chord-diagrams-"
-      >
+      <h2 id="you-can-now-create-horizontal-chord-diagrams-">
         <T>Font size of fingers can now be adjusted</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>October 19th, 2022</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           Yet another way to customize your chord diagrams! Under the &quot;More
           Settings&quot; toggle you will now find a slider to adjust the text
           size of the text inside fingers and barres.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           This feature was requested by a user. What would <strong>you</strong>{" "}
           like to adjust? We&apos;re always looking for feedback, so don&apos;t
@@ -254,37 +233,32 @@ const HelpPage = () => {
           </a>{" "}
           with your feature request.
         </T>
-      </Text>
+      </p>
 
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="you-can-now-create-horizontal-chord-diagrams-"
-      >
+      <h2 id="you-can-now-create-horizontal-chord-diagrams-">
         <T>OMG, what&apos;s happening with ChordPic?</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>October 16th, 2022</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           If you have used ChordPic before, you may have noticed that things
           have changed a litlle around here. First of all, ChordPic has an all
           new look! And second, there are a couple new links on top, and an all
           new <strong>dark mode</strong> 😱 🤯
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           The ChordPic that you know and love is still here and works almost
           exactly the same as before, but now there&apos;s a way to create an
           account and get a ChordPic Pro subscription. The ChordPic Pro
           subscription gives you access to:
         </T>
-      </Text>
+      </p>
       <T>
         <ul style={{ marginBottom: "1rem" }}>
           <li>A completely ad free experience</li>
@@ -296,23 +270,23 @@ const HelpPage = () => {
         </ul>
       </T>
 
-      <Text mb={3}>
+      <p>
         <T>
           The ChordPic Pro subscription is not a way for us to get rich, but our
           hope is that at some point enough people have a Pro subscription so
           that we can spend more time on this tool and introduce new cool
           features.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           The indroduction of a user login and an actual backend opens up a wide
           range of new possibliities for ChordPic and we would love to spend
           time to explore these possibilities.
         </T>
-      </Text>
+      </p>
 
-      <Text mb={3}>
+      <p>
         <T>
           We hope you like this re-build of ChordPic. If you have any feature
           suggestions, bug reports, or general feelings about the site,
@@ -325,70 +299,65 @@ const HelpPage = () => {
           </a>
           .
         </T>
-      </Text>
+      </p>
 
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="you-can-now-create-horizontal-chord-diagrams-"
-      >
+      <h2 id="you-can-now-create-horizontal-chord-diagrams-">
         <T>You can now create horizontal chord diagrams 😮</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>January 15th, 2022</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           There is now a new setting hidden under the &quot;More Settings&quot;
           toggle that allows you to create horizontal chord diagrams.
         </T>
-      </Text>
-      <Center mb={3}>
+      </p>
+      <div className="flex justify-center">
         <Image src={orientationToggle} alt="Example horizontal chord" />
-      </Center>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           The setting is called &quot;Orientation&quot; and you can chose
           between &quot;Horizontal&quot; and &quot;Vertical&quot;. Give it a try
           and see which orientation suit your needs best!
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>Here&apos;s an example of a horizontal chord diagram:</T>
-      </Text>
-      <Center mb={3}>
+      </p>
+      <div className="flex justify-center">
         <Image
           src={exampleHorizontalChord}
           alt={t("Example horizontal chord")}
         />
-      </Center>
-      <Heading size="lg" mb={3} mt={8} id="barre-chords-on-firefox-fixed-">
+      </div>
+      <h2 id="barre-chords-on-firefox-fixed-">
         <T>Barre Chords on Firefox Fixed!</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>December 13th, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           If you ever wondered why you couldn&apos;t draw barre chords on
           Firefox: Wonder no longer! That was a very old bug that has finally
           been fixed.
         </T>
-      </Text>
-      <Heading size="lg" mb={3} mt={8} id="new-shapes-for-fingers-">
+      </p>
+      <h2 id="new-shapes-for-fingers-">
         <T>New Shapes for Fingers!</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>December 12th, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           It&apos;s been quite a while since the last new feature was released
           for ChordPic. Which is why we&apos;re even more excited to release
@@ -398,42 +367,37 @@ const HelpPage = () => {
           button and click on the notes, and you will circle through the
           different shapes.
         </T>
-      </Text>
-      <Heading size="lg" mb={3} mt={8} id="chordpic-firefox-">
+      </p>
+      <h2 id="chordpic-firefox-">
         <T>ChordPic + Firefox = ❤️</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>October 3rd, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           ChordPic has been updated to work with Firefox! Before this update it
           wasn&apos;t possible to download the diagrams as PNGs on Firefox.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           Another, unrelated update: Whn you download your diagram as SVG the
           SVG file name will now be the diagrams title. This was already the
           case for PNG images.
         </T>
-      </Text>
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="chordpic-featured-by-youtuber-cesar-all-guitar"
-      >
+      </p>
+      <h2 id="chordpic-featured-by-youtuber-cesar-all-guitar">
         <T>ChordPic featured by YouTuber Cesar All Guitar</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>July 27th, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           ChordPic has been featured in a video by the fantastic YouTuber{" "}
           <em>Cesar All Guitar</em>.
@@ -452,21 +416,16 @@ const HelpPage = () => {
           </a>{" "}
           for more great guitar related content!
         </T>
-      </Text>
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="changing-colors-of-fingers-and-barre-chords"
-      >
+      </p>
+      <h2 id="changing-colors-of-fingers-and-barre-chords">
         <T>Changing Colors of Fingers and Barre Chords</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>June 20th, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           Another requested feature is now ready to use: Changing the color of
           individual fingers and barre chords! Just like adding text you can
@@ -475,14 +434,14 @@ const HelpPage = () => {
           for the finger or barre chord that you selected. As easy as that!
           Here&apos;s an example:
         </T>
-      </Text>
-      <Center mb={3}>
+      </p>
+      <div className="flex justify-center">
         <Image
           src={sampleChordWithColors}
           alt={t("Example chord with colors")}
         />
-      </Center>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           Have you found a bug or do you have an idea how to make this feature
           even better? Don&apos;t hesitate to
@@ -494,42 +453,37 @@ const HelpPage = () => {
           </a>
           !
         </T>
-      </Text>
-      <Heading
-        size="lg"
-        mb={3}
-        mt={8}
-        id="adding-text-to-fingers-and-barre-chords"
-      >
+      </p>
+      <h2 id="adding-text-to-fingers-and-barre-chords">
         <T>Adding Text to Fingers and Barre Chords</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>June 6th, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           The probably most requested feature is now finally here: Each finger
           and barre chord can now be labelled! You can now add arbitrary text to
           each nut and each barre chord. Here&apos;s an example:
         </T>
-      </Text>
-      <Center mb={3}>
+      </p>
+      <div className="flex justify-center">
         <Image
           width={4}
           src={sampleChordWithText}
           alt={t("Example chord with text")}
         />
-      </Center>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           It&apos;s really easy too. Just click on the &quot;Edit Text&quot;
           button at the bottom of the chord editor and start labelling your
           fingers and barre chords.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           As always, if you have any suggestion how to make this feature even
           better or if you experience any problems with this new feature please{" "}
@@ -541,29 +495,29 @@ const HelpPage = () => {
           </a>
           !
         </T>
-      </Text>
-      <Heading size="lg" mb={3} mt={8} id="improved-chord-logic">
+      </p>
+      <h2 id="improved-chord-logic">
         <T>Improved Chord Logic</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>May 2nd, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           Multiple users of ChordPic have reported that it was not possible to
           create a chord diagram with a barre chart and a finger on the same
           fret. This is now fixed! You can now create chord diagrams like this:
         </T>
-      </Text>
-      <Center mb={3}>
+      </p>
+      <div className="flex justify-center">
         <Image src={barreAndFingerSameFret} alt={t("Example chord chart")} />
-      </Center>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>Special thanks to everyone that reported this issue.</T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           Have you found a bug or do you have a feature request? Don&apos;t
           hesitate to
@@ -576,16 +530,16 @@ const HelpPage = () => {
           . Together we will improve ChordPic to make it the best chord diagram
           creator out there!
         </T>
-      </Text>
-      <Heading size="lg" mb={3} mt={8} id="how-it-all-started">
+      </p>
+      <h2 id="how-it-all-started">
         <T>How it all started</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <em>
           <T>May 2nd, 2020</T>
         </em>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           ChordPic was created after its predecessor, Chordpix, suddenly went
           offline and left guitar players around the world hanging. After
@@ -594,8 +548,8 @@ const HelpPage = () => {
           fun side project ever since, and I&apos;m looking forward to
           continuing improving this tool for all guitar players.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           Since the very early days of ChordPic, Jonathan Eli has been using the
           generated chord chart images for his unique educational YouTube
@@ -608,8 +562,8 @@ const HelpPage = () => {
           </a>
           !
         </T>
-      </Text>
-    </>
+      </p>
+    </article>
   );
 };
 

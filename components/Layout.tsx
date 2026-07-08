@@ -1,4 +1,3 @@
-import { Container, Grid } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
@@ -93,20 +92,13 @@ export const Layout: React.FunctionComponent<
         </>
       )}
 
-      <Grid
-        templateAreas={`"header"
-                        "content"
-                        "footer"`}
-        gridTemplateRows={"auto 1fr auto"}
-        gap="2.5rem"
-        h="100vh"
-      >
+      <div className="flex min-h-screen flex-col">
         <NavBar />
-        <Container maxW="container.lg" as="main" mb={12}>
+        <main className="mx-auto mb-24 mt-10 w-full max-w-content flex-1 px-4 sm:px-6">
           {children}
-        </Container>
+        </main>
         <Footer />
-      </Grid>
+      </div>
     </>
   );
 };

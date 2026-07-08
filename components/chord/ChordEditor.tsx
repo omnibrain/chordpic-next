@@ -8,8 +8,8 @@ import { EditModeInput } from "./EditModeInput";
 import { Chart } from "../../domain/chart";
 import { EditMode } from "../../domain/edit-mode";
 import { ChordMatrix } from "../../services/chord-matrix";
-import { Box, IconButton, Tooltip } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { FiTrash2 } from "react-icons/fi";
+import { Tooltip } from "../ui/Tooltip";
 import { GA } from '../../services/google-analytics'
 
 const lineWidth = 3;
@@ -108,24 +108,18 @@ export const ChordEditor = (props: IProps) => {
   const displaySettings = { lineWidth, circleSize, width, height };
 
   return (
-    <Box>
-      <Tooltip
-        placement="top"
-        label="Reset chord"
-        aria-label="Reset chord"
-        hasArrow={true}
-      >
-        <IconButton
-          zIndex={1}
-          onClick={onResetChord}
-          position="absolute"
-          right={3}
-          top={3}
-          aria-label="Reset chord"
-          variant="outline"
-          icon={<DeleteIcon />}
-        />
-      </Tooltip>
+    <div>
+      <div className="absolute right-3 top-3 z-10">
+        <Tooltip label="Reset chord">
+          <button
+            onClick={onResetChord}
+            aria-label="Reset chord"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-300 text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+          >
+            <FiTrash2 />
+          </button>
+        </Tooltip>
+      </div>
       <SilentStringsInput
         settings={displaySettings}
         matrix={matrix}
@@ -145,7 +139,7 @@ export const ChordEditor = (props: IProps) => {
         numStrings={numStrings}
       />
       <EditModeInput editMode={editMode} onEditModeChange={setEditMode} />
-    </Box>
+    </div>
   );
 };
 

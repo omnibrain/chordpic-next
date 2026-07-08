@@ -1,6 +1,6 @@
-import { ColorModeScript } from "@chakra-ui/react";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 import Script from "next/script";
+import { colorModeInitScript } from "../hooks/use-color-mode";
 
 export default class Document extends NextDocument {
   render() {
@@ -46,7 +46,9 @@ export default class Document extends NextDocument {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <body>
-          <ColorModeScript initialColorMode="light" />
+          <script
+            dangerouslySetInnerHTML={{ __html: colorModeInitScript }}
+          />
           <Main />
           <NextScript />
         </body>

@@ -1,14 +1,9 @@
 import { FormEvent, useState } from "react";
 
-import {
-  Box,
-  Button,
-  FormLabel,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
 import { AuthBox } from "../components/AuthBox";
+import { Button } from "../components/ui/Button";
+import { FormLabel, Input } from "../components/ui/Input";
+import { useToast } from "../components/ui/Toast";
 import { getURL } from "../utils/helpers";
 import { supabase } from "../utils/supabase-client";
 import { T, useT } from "@magic-translate/react";
@@ -41,8 +36,6 @@ const ResetPassword = () => {
           description: "Check your email for a password reset link.",
           status: "success",
           duration: 9000,
-          isClosable: true,
-          position: "top",
         });
       }
 
@@ -56,39 +49,34 @@ const ResetPassword = () => {
   return (
     <AuthBox title={t("Reset password")}>
       {message.content && (
-        <Text color="red.500" fontSize="sm" mb={4}>
+        <p className="mb-4 text-sm text-red-600 dark:text-red-400">
           <T>{message.content}</T>
-        </Text>
+        </p>
       )}
 
       <form onSubmit={handleReset}>
-        <Box>
-          <Box>
-            <FormLabel htmlFor="email">
-              <T>Email</T>
-            </FormLabel>
-            <Input
-              id="email"
-              name="email"
-              border="2px"
-              borderColor="primary"
-              type="email"
-              placeholder={t("Email")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Box>
-          <Button
-            mt={4}
-            type="submit"
-            isLoading={loading}
-            disabled={!email.length}
-            width="100%"
-          >
-            <T>Reset password</T>
-          </Button>
-        </Box>
+        <div>
+          <FormLabel htmlFor="email">
+            <T>Email</T>
+          </FormLabel>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder={t("Email")}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <Button
+          type="submit"
+          className="mt-4 w-full"
+          isLoading={loading}
+          disabled={!email.length}
+        >
+          <T>Reset password</T>
+        </Button>
       </form>
     </AuthBox>
   );

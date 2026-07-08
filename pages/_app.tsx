@@ -1,11 +1,11 @@
 import type { AppProps } from "next/app";
-import { ChakraProvider } from "@chakra-ui/react";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { UserProvider } from "@supabase/supabase-auth-helpers/react";
 import { MyUserContextProvider } from "../utils/useUser";
 import { Layout } from "../components/Layout";
-import { theme } from "../theme/theme";
+import { ToastProvider } from "../components/ui/Toast";
 import { useEffect } from "react";
+import "../styles/globals.css";
 import { supabase } from "../utils/supabase-client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -67,7 +67,7 @@ function MyApp({
               />
             ))}
         </Head>
-        <ChakraProvider theme={theme}>
+        <ToastProvider>
           <UserProvider supabaseClient={supabaseClient}>
             <MyUserContextProvider supabaseClient={supabaseClient}>
               <ChartProvider>
@@ -77,7 +77,7 @@ function MyApp({
               </ChartProvider>
             </MyUserContextProvider>
           </UserProvider>
-        </ChakraProvider>
+        </ToastProvider>
       </MagicTranslateProvider>
     </QueryClientProvider>
   );

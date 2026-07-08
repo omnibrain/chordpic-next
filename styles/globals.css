@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffff;
+  --fg: #18181b;
+}
+
+.dark {
+  --bg: #0c0c0e;
+  --fg: #f4f4f5;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-zinc-900 antialiased dark:bg-[#0c0c0e] dark:text-zinc-100;
+  }
+}
+
+/* Chord editor cells: pseudo-elements can't be styled inline, so the
+   dynamic sizes are passed down as CSS variables. */
+.click-cell {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+}
+
+.click-cell.active::after {
+  content: "";
+  height: var(--circle-size);
+  width: var(--circle-size);
+  border-radius: calc(var(--circle-size) / 2);
+  display: block;
+  position: absolute;
+  top: calc(50% - var(--circle-size) / 2);
+  left: calc(50% - var(--circle-size) / 2);
+}
+
+.click-cell.hl-middle::after,
+.click-cell.hl-left::after,
+.click-cell.hl-right::after {
+  background-color: rgba(128, 128, 128, 0.35);
+  left: 0;
+  width: 100%;
+}
+
+.click-cell.hl-middle::after {
+  border-radius: 0;
+}
+
+.click-cell.hl-left::after {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.click-cell.hl-right::after {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Open / silent string toggles above the fretboard */
+.string-cell {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+}
+
+.string-cell::before {
+  height: var(--circle-size);
+  width: var(--circle-size);
+  display: block;
+  position: absolute;
+  top: calc(50% - var(--circle-size) / 2);
+  left: calc(50% - var(--circle-size) / 2);
+}
+
+.string-cell.open::before {
+  content: "";
+  border-radius: calc(var(--circle-size) / 2);
+  border: 3px solid var(--fg);
+}
+
+.string-cell.silent::before,
+.string-cell.silent::after {
+  position: absolute;
+  content: " ";
+  width: 3px;
+  background-color: var(--fg);
+  top: calc(50% - var(--circle-size) / 2 - 3px);
+  height: calc(var(--circle-size) + 6px);
+  left: calc(var(--circle-size) / 2);
+  transform-origin: center;
+}
+
+.string-cell.silent::before {
+  transform: rotate(45deg);
+}
+
+.string-cell.silent::after {
+  transform: rotate(-45deg);
+}
+
+/* Minimal styled range input */
+input[type="range"].slider {
+  @apply h-1.5 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 dark:bg-zinc-700;
+}
+
+input[type="range"].slider::-webkit-slider-thumb {
+  @apply h-5 w-5 appearance-none rounded-full border border-zinc-300 bg-white shadow transition-transform dark:border-zinc-600;
+  -webkit-appearance: none;
+}
+
+input[type="range"].slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+input[type="range"].slider::-moz-range-thumb {
+  @apply h-5 w-5 rounded-full border border-zinc-300 bg-white shadow;
+}
+
+/* SVG chart should fill its container */
+#chord-result svg {
+  height: 100%;
+  width: 100%;
+}

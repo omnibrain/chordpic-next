@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import * as React from "react";
 import { useEffect, useRef } from "react";
 import { ChordSettings, SVGuitarChord } from "svguitar";
@@ -71,25 +70,8 @@ export const ChordChart: React.FunctionComponent = () => {
   }, [chart, ref, setSize, watermark]);
 
   return (
-    <Box
-      height="100%"
-      display="flex"
-      flexDir="column"
-      alignItems="stretch"
-      justifyContent="flex-start"
-    >
-      <Box
-        id="chord-result"
-        flex="1"
-        maxHeight="40rem"
-        ref={ref}
-        sx={{
-          svg: {
-            height: "100%",
-            width: "100%",
-          },
-        }}
-      ></Box>
-    </Box>
+    <div className="flex h-full flex-col items-stretch justify-start">
+      <div id="chord-result" className="max-h-[40rem] flex-1" ref={ref}></div>
+    </div>
   );
 };

@@ -1,4 +1,3 @@
-import { Box, Button, Heading, Text, useColorMode } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren, useState } from "react";
 import { GA4_ID } from "../global";
@@ -8,6 +7,7 @@ import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
 import * as Sentry from "@sentry/nextjs";
 import { GA } from "../services/google-analytics";
+import { Spinner } from "./ui/Spinner";
 
 export interface ProductProps {
   billingInterval: "year" | "month";
@@ -28,7 +28,6 @@ export const Product: React.FunctionComponent<
   const router = useRouter();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const { user, isLoading, subscription } = useUser();
-  const { colorMode } = useColorMode();
 
   const handleCheckout = async (price: Price) => {
     console.debug("handling checkout");
@@ -133,44 +132,30 @@ export const Product: React.FunctionComponent<
   }).format((price?.unit_amount || 0) / 100);
 
   return (
-    <Box
+    <div
       key={product.id}
-      borderWidth={colorMode === "dark" ? undefined : "2px"}
-      borderRadius="xl"
-      p={6}
-      shadow="lg"
-      borderColor="black"
-      bgGradient={
-        colorMode === "dark"
-          ? "linear(to-b, teal.300, purple.600)"
-          : "linear(to-b, teal.100, purple.300)"
-      }
+      className="cursor-pointer rounded-2xl border border-zinc-900 bg-zinc-900 p-6 text-white shadow-lg transition-transform hover:-translate-y-0.5 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
       onClick={() => handleCheckout(price)}
-      cursor="pointer"
     >
-      <Box>
-        <Heading size="lg" as="h2">
-          {product.name}
-        </Heading>
-        <Text mt={3}>{product.description}</Text>
-        <Text my={6}>
-          <Box as="span" fontSize="5xl">
-            {priceString}
-          </Box>
-          <Box as="span">/{billingInterval}</Box>
-        </Text>
-        <Button
-          disabled={isLoading}
-          isLoading={priceIdLoading === price.id}
-          size="lg"
-          width="100%"
-          colorScheme="gray"
-        >
-          {product.name === subscription?.prices?.products?.name
-            ? "Manage"
-            : "Subscribe"}
-        </Button>
-      </Box>
-    </Box>
+      <h2 className="font-heading text-2xl font-semibold">{product.name}</h2>
+      <p className="mt-3 text-zinc-300 dark:text-zinc-600">
+        {product.description}
+      </p>
+      <p className="my-6">
+        <span className="text-5xl font-semibold">{priceString}</span>
+        <span className="text-zinc-300 dark:text-zinc-600">
+          /{billingInterval}
+        </span>
+      </p>
+      <button
+        disabled={isLoading || priceIdLoading === price.id}
+        className="inline-flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-white px-6 text-base font-medium text-zinc-900 transition-colors hover:bg-zinc-200 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-700"
+      >
+        {priceIdLoading === price.id && <Spinner className="h-4 w-4" />}
+        {product.name === subscription?.prices?.products?.name
+          ? "Manage"
+          : "Subscribe"}
+      </button>
+    </div>
   );
 };

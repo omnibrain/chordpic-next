@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import * as React from "react";
 import { IChordInputSettings } from "./ChordEditor";
 
@@ -9,59 +8,29 @@ interface IProps {
   onTunings: (tunings: string[]) => void;
 }
 
-const StyledTuningInput = styled.div<
-  IChordInputSettings & { numStrings: number }
->(
-  (props) => `
-  position: relative;
-  width: ${props.width}px;
-  display: grid;
-  grid-template-columns: repeat(${props.numStrings}, 1fr);
-  grid-row-gap: ${props.lineWidth}px;
-  height: ${props.height / 4}px;
-  padding: ${props.lineWidth}px ${props.lineWidth}px 0 ${props.lineWidth}px;
-
-  .string-input {
-    position: relative;
-    padding: 1px;
-  }
-
-  input {
-    width: 100%;
-    text-align: center;
-    font-size: 2rem;
-    margin-top: 0.5rem;
-  }
-`
-);
-
-const ScreenReaderLabel = styled.label`
-  position: absolute !important; /* Outside the DOM flow */
-  height: 1px;
-  width: 1px; /* Nearly collapsed */
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px); /* IE 7+ only support clip without commas */
-  clip: rect(1px, 1px, 1px, 1px); /* All other browsers */
-`;
-
-const Input = styled.input`
-  border: 2px solid var(--chakra-colors-chakra-body-text);
-  border-radius: 3px;
-  padding: 0;
-`;
-
 export const TuningInput = (props: IProps) => (
-  <StyledTuningInput {...props.settings} numStrings={props.numStrings}>
+  <div
+    style={{
+      position: "relative",
+      width: props.settings.width,
+      display: "grid",
+      gridTemplateColumns: `repeat(${props.numStrings}, 1fr)`,
+      gridRowGap: props.settings.lineWidth,
+      height: props.settings.height / 4,
+      padding: `${props.settings.lineWidth}px ${props.settings.lineWidth}px 0 ${props.settings.lineWidth}px`,
+    }}
+  >
     {props.tunings.map((tuning, i) => {
       const stringLabel = Math.abs(i - props.numStrings);
 
       return (
-        <div key={i} className="string-input" data-cell-index={i}>
-          <ScreenReaderLabel htmlFor={`tuning-input-string-${i}`}>
+        <div key={i} className="relative p-px" data-cell-index={i}>
+          <label htmlFor={`tuning-input-string-${i}`} className="sr-only">
             Tuning of String {stringLabel}
-          </ScreenReaderLabel>
-          <Input
+          </label>
+          <input
             id={`tuning-input-string-${i}`}
+            className="mt-2 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-white p-0 text-center text-3xl text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
             placeholder={String(stringLabel)}
             type="text"
             value={tuning}
@@ -74,5 +43,5 @@ export const TuningInput = (props: IProps) => (
         </div>
       );
     })}
-  </StyledTuningInput>
+  </div>
 );

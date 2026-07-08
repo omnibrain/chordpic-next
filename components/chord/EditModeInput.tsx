@@ -1,46 +1,32 @@
-import { Button, SimpleGrid } from "@chakra-ui/react";
 import { T } from "@magic-translate/react";
 import * as React from "react";
 import { EditMode } from "../../domain/edit-mode";
+import { Button } from "../ui/Button";
 
 interface IProps {
   onEditModeChange: (mode: EditMode) => void;
   editMode: EditMode;
 }
 
-export const EditModeInput = ({ onEditModeChange, editMode }: IProps) => {
-  const onChange = (mode: EditMode) => () => onEditModeChange(mode);
+const modes: { mode: EditMode; label: string }[] = [
+  { mode: EditMode.EDIT_NOTES, label: "Edit Fingers" },
+  { mode: EditMode.EDIT_TEXT, label: "Edit Text" },
+  { mode: EditMode.EDIT_COLOR, label: "Edit Colors" },
+  { mode: EditMode.EDIT_SHAPE, label: "Edit Shapes" },
+];
 
-  return (
-    <SimpleGrid gridTemplateColumns="1fr 1fr" gap={2}>
+export const EditModeInput = ({ onEditModeChange, editMode }: IProps) => (
+  <div className="grid grid-cols-2 gap-2">
+    {modes.map(({ mode, label }) => (
       <Button
-        onClick={onChange(EditMode.EDIT_NOTES)}
-        variant={editMode === EditMode.EDIT_NOTES ? "solid" : "outline"}
+        key={mode}
+        type="button"
         size="sm"
+        variant={editMode === mode ? "solid" : "outline"}
+        onClick={() => onEditModeChange(mode)}
       >
-        <T>Edit Fingers</T>
+        <T>{label}</T>
       </Button>
-      <Button
-        onClick={onChange(EditMode.EDIT_TEXT)}
-        variant={editMode === EditMode.EDIT_TEXT ? "solid" : "outline"}
-        size="sm"
-      >
-        <T>Edit Text</T>
-      </Button>
-      <Button
-        onClick={onChange(EditMode.EDIT_COLOR)}
-        variant={editMode === EditMode.EDIT_COLOR ? "solid" : "outline"}
-        size="sm"
-      >
-        <T>Edit Colors</T>
-      </Button>
-      <Button
-        onClick={onChange(EditMode.EDIT_SHAPE)}
-        variant={editMode === EditMode.EDIT_SHAPE ? "solid" : "outline"}
-        size="sm"
-      >
-        <T>Edit Shapes</T>
-      </Button>
-    </SimpleGrid>
-  );
-};
+    ))}
+  </div>
+);
