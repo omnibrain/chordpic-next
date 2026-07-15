@@ -13,16 +13,6 @@ export default class Document extends NextDocument {
             strategy="lazyOnload"
             src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
           />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin=""
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Besley:wght@400;600&family=Inter:wght@400;600&display=swap"
-            rel="stylesheet"
-          />
           <link
             rel="apple-touch-icon"
             sizes="180x180"

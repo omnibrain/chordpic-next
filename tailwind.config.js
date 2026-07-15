@@ -5,8 +5,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        heading: ["Besley", "serif"],
+        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        heading: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
       },
       maxWidth: {
         content: "64rem",

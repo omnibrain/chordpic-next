@@ -36,4 +36,6 @@ export function useColorMode() {
   return { colorMode, toggleColorMode };
 }
 
-export const colorModeInitScript = `(function(){try{var m=localStorage.getItem("${STORAGE_KEY}");if(m==="dark"||(!m&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})()`;
+// Light is the default regardless of the OS preference; dark is applied
+// only when the user explicitly toggled it.
+export const colorModeInitScript = `(function(){try{if(localStorage.getItem("${STORAGE_KEY}")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})()`;

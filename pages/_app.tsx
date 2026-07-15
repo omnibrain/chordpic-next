@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import { GeistSans } from "geist/font/sans";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { UserProvider } from "@supabase/supabase-auth-helpers/react";
 import { MyUserContextProvider } from "../utils/useUser";
@@ -49,6 +50,13 @@ function MyApp({
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* on <html> so Radix portals rendered into <body> inherit the font */}
+      <style jsx global>{`
+        html {
+          font-family: ${GeistSans.style.fontFamily};
+          --font-geist-sans: ${GeistSans.style.fontFamily};
+        }
+      `}</style>
       {process.env.NODE_ENV !== "production" && (
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       )}

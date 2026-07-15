@@ -6,6 +6,8 @@ const { Language } = require("@magic-translate/react");
 const moduleExports = {
   reactStrictMode: true,
   swcMinify: true,
+  // geist ships ESM that breaks Node's resolver during prerendering
+  transpilePackages: ["geist"],
   i18n: {
     locales: [
       Language.EN,
