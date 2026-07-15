@@ -11,6 +11,7 @@ import { SubscriptionType } from "../types";
 import { languageMap } from "../utils/translate";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const Logo: React.FunctionComponent = () => {
   const subscription = useSubscription();
@@ -99,7 +100,7 @@ const MenuLinks: React.FunctionComponent<{
         <NextLink
           href="/"
           onClick={onCloseMenu}
-          className={buttonVariants({ size: "sm" })}
+          className={cn(buttonVariants(), "text-base")}
         >
           <T>Create chord diagram</T>
         </NextLink>
