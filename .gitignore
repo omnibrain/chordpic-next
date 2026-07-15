@@ -40,3 +40,6 @@ yarn-error.log*
 # Idea
 .idea
 *.iml
+
+# Claude Code local settings
+.claude/settings.local.json
