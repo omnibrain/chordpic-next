@@ -1,7 +1,7 @@
-import { Box, Center, Flex, Heading } from "@chakra-ui/react";
 import React, { PropsWithChildren } from "react";
 import { Logo } from "./Logo";
-import { T } from '@magic-translate/react'
+import { T } from "@magic-translate/react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export interface AuthBoxProps {
   title: string;
@@ -9,26 +9,16 @@ export interface AuthBoxProps {
 
 export const AuthBox: React.FunctionComponent<
   PropsWithChildren<AuthBoxProps>
-> = ({ children, title }) => {
-  return (
-    <Flex justify="center">
-      <Box
-        flexBasis="22rem"
-        p={4}
-        shadow="lg"
-        borderColor="primary"
-        borderRadius="lg"
-        borderWidth="2px"
-      >
-        <Center my={8} flexDir="column">
-          <Logo width={12} height={12} />
-          <Heading as="h1" size="md" fontWeight="normal" mt={8} mb={4}>
-            <T>{title}</T>
-          </Heading>
-        </Center>
-
-        {children}
-      </Box>
-    </Flex>
-  );
-};
+> = ({ children, title }) => (
+  <div className="flex justify-center">
+    <Card className="w-full max-w-sm">
+      <CardHeader className="items-center pt-10">
+        <Logo className="h-12 w-12" />
+        <h1 className="pt-6 text-center font-heading text-xl">
+          <T>{title}</T>
+        </h1>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  </div>
+);

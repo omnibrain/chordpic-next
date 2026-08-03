@@ -1,51 +1,39 @@
-import {
-  Box,
-  Container,
-  Flex,
-  GridItem,
-  Link,
-  Spacer,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import Link from "next/link";
 import { FacebookIcon, RedditIcon } from "react-share";
-import { T } from '@magic-translate/react'
+import { T } from "@magic-translate/react";
 
-export const Footer = () => {
-  const bg = useColorModeValue("gray.100", "gray.900");
+const footerLink =
+  "text-sm text-muted-foreground transition-colors hover:text-foreground";
 
-  return (
-    <GridItem as="footer" bg={bg} display="flex" py={[8, 8, 4]}>
-      <Container
-        maxW="container.lg"
-        display="flex"
-        gap={5}
-        flexDirection={["column", "column", "row"]}
+export const Footer = () => (
+  <footer className="border-t py-8">
+    <div className="mx-auto flex w-full max-w-content flex-col gap-5 px-4 sm:px-6 md:flex-row md:items-center">
+      <a
+        href="https://reddit.com/r/chordpic"
+        className={`flex items-center gap-2 ${footerLink}`}
+        rel="noopener noreferrer"
+        target="_blank"
       >
-        <Link
-          href="https://reddit.com/r/chordpic"
-          display="flex"
-          alignItems="center"
-          gap={2}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <RedditIcon borderRadius={100} size="1.5em" /> Reddit
-        </Link>
-        <Link
-          href="https://www.facebook.com/chordpic"
-          display="flex"
-          alignItems="center"
-          gap={2}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <FacebookIcon borderRadius={100} size="1.5em" /> Facebook
-        </Link>
-        <Spacer />
-        <Link href="/about"><T>About</T></Link>
-        <Link href="/terms"><T>Terms of Use</T></Link>
-        <Link href="/privacy-notice"><T>Privacy</T></Link>
-      </Container>
-    </GridItem>
-  );
-};
+        <RedditIcon borderRadius={100} size="1.5em" /> Reddit
+      </a>
+      <a
+        href="https://www.facebook.com/chordpic"
+        className={`flex items-center gap-2 ${footerLink}`}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <FacebookIcon borderRadius={100} size="1.5em" /> Facebook
+      </a>
+      <div className="flex-1" />
+      <Link href="/about" className={footerLink}>
+        <T>About</T>
+      </Link>
+      <Link href="/terms" className={footerLink}>
+        <T>Terms of Use</T>
+      </Link>
+      <Link href="/privacy-notice" className={footerLink}>
+        <T>Privacy</T>
+      </Link>
+    </div>
+  </footer>
+);

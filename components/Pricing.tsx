@@ -1,20 +1,8 @@
-import {
-  Badge,
-  Box,
-  Center,
-  Heading,
-  SimpleGrid,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-} from "@chakra-ui/react";
 import { ProductWithPrice } from "../types";
 import { FreeProduct } from "./FreeProduct";
 import { Product } from "./Product";
-import { T } from '@magic-translate/react'
+import { T } from "@magic-translate/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   products: ProductWithPrice[];
@@ -22,36 +10,40 @@ interface Props {
 
 export default function Pricing({ products }: Props) {
   return (
-    <Box as="section">
-      <Heading as="h1" size="3xl" mb={6} textAlign="center">
+    <section>
+      <h1 className="mb-6 text-center font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
         <T>Pricing Plans</T>
-      </Heading>
-      <Text fontSize="xl" textAlign="center" mb={12}>
-        <T>Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
+      </h1>
+      <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-muted-foreground">
+        <T>
+          Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
           <strong> without watermark</strong>, <strong>handdrawn style</strong>{" "}
-          and <strong>no ads</strong>.</T>
-      </Text>
+          and <strong>no ads</strong>.
+        </T>
+      </p>
 
-      <Tabs variant="soft-rounded" colorScheme="green" align="center">
-        <TabList>
-          <Tab><T>Monthly billing</T></Tab>
-        <Tab><T>Yearly billing</T></Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel pt={12}>
-            <SimpleGrid minChildWidth="18rem" spacing="1rem">
-              <FreeProduct billingInterval="month" product={products[0]} />
-              <Product billingInterval="month" product={products[0]} />
-            </SimpleGrid>
-          </TabPanel>
-          <TabPanel pt={12}>
-            <SimpleGrid minChildWidth="18rem" spacing="1rem">
-              <FreeProduct billingInterval="year" product={products[0]} />
-              <Product billingInterval="year" product={products[0]} />
-            </SimpleGrid>
-          </TabPanel>
-        </TabPanels>
+      <Tabs defaultValue="month" className="flex flex-col items-center">
+        <TabsList>
+          <TabsTrigger value="month">
+            <T>Monthly billing</T>
+          </TabsTrigger>
+          <TabsTrigger value="year">
+            <T>Yearly billing</T>
+          </TabsTrigger>
+        </TabsList>
+        {(["month", "year"] as const).map((interval) => (
+          <TabsContent
+            key={interval}
+            value={interval}
+            className="mt-10 w-full"
+          >
+            <div className="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
+              <FreeProduct billingInterval={interval} product={products[0]} />
+              <Product billingInterval={interval} product={products[0]} />
+            </div>
+          </TabsContent>
+        ))}
       </Tabs>
-    </Box>
+    </section>
   );
 }

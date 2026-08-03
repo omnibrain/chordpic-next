@@ -1,9 +1,9 @@
-import { DownloadIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { Download } from "lucide-react";
 import { ImageService } from "../services/image-service";
 import { useChart } from "./chord/useChart";
 import { GA } from "../services/google-analytics";
 import { T } from "@magic-translate/react";
+import { Button } from "@/components/ui/button";
 
 const downloadPng =
   (chartDom: HTMLDivElement | null, width: number, title?: string) => () => {
@@ -56,18 +56,13 @@ export const DownloadButtons = ({ title }: IProps) => {
   const { ref, size } = useChart();
 
   return (
-    <Box mt={8} id="download">
-      <Heading as="h2" size="lg" mb={3}>
+    <div className="mt-8" id="download">
+      <h2 className="mb-3 font-heading text-2xl font-semibold tracking-tight">
         <T>Download</T>
-      </Heading>
-      <Flex gap={3} wrap="wrap">
-        <Button
-          variant="outline"
-          display="flex"
-          gap={2}
-          onClick={downloadSvg(ref.current, title)}
-        >
-          <DownloadIcon />
+      </h2>
+      <div className="flex flex-wrap gap-3">
+        <Button variant="outline" onClick={downloadSvg(ref.current, title)}>
+          <Download />
           SVG
         </Button>
 
@@ -78,17 +73,17 @@ export const DownloadButtons = ({ title }: IProps) => {
           return (
             <Button
               variant="outline"
-              display="flex"
-              gap={2}
               key={multiplier}
               onClick={downloadPng(ref.current, width, title)}
             >
-              <DownloadIcon />
-              <T>{name} PNG</T> ({width} x {height})
+              <Download />
+              <span>
+                <T>{name} PNG</T> ({width} x {height})
+              </span>
             </Button>
           );
         })}
-      </Flex>
-    </Box>
+      </div>
+    </div>
   );
 };

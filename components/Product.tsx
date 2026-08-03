@@ -1,4 +1,3 @@
-import { Box, Button, Heading, Text, useColorMode } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren, useState } from "react";
 import { GA4_ID } from "../global";
@@ -8,6 +7,17 @@ import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
 import * as Sentry from "@sentry/nextjs";
 import { GA } from "../services/google-analytics";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export interface ProductProps {
   billingInterval: "year" | "month";
@@ -28,7 +38,6 @@ export const Product: React.FunctionComponent<
   const router = useRouter();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const { user, isLoading, subscription } = useUser();
-  const { colorMode } = useColorMode();
 
   const handleCheckout = async (price: Price) => {
     console.debug("handling checkout");
@@ -133,44 +142,34 @@ export const Product: React.FunctionComponent<
   }).format((price?.unit_amount || 0) / 100);
 
   return (
-    <Box
+    <Card
       key={product.id}
-      borderWidth={colorMode === "dark" ? undefined : "2px"}
-      borderRadius="xl"
-      p={6}
-      shadow="lg"
-      borderColor="black"
-      bgGradient={
-        colorMode === "dark"
-          ? "linear(to-b, teal.300, purple.600)"
-          : "linear(to-b, teal.100, purple.300)"
-      }
+      className="cursor-pointer border-primary shadow-lg transition-transform hover:-translate-y-0.5"
       onClick={() => handleCheckout(price)}
-      cursor="pointer"
     >
-      <Box>
-        <Heading size="lg" as="h2">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between font-heading text-2xl">
           {product.name}
-        </Heading>
-        <Text mt={3}>{product.description}</Text>
-        <Text my={6}>
-          <Box as="span" fontSize="5xl">
-            {priceString}
-          </Box>
-          <Box as="span">/{billingInterval}</Box>
-        </Text>
+          <Badge>Pro</Badge>
+        </CardTitle>
+        <CardDescription>{product.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <span className="text-5xl font-semibold">{priceString}</span>
+        <span className="text-muted-foreground">/{billingInterval}</span>
+      </CardContent>
+      <CardFooter>
         <Button
-          disabled={isLoading}
-          isLoading={priceIdLoading === price.id}
           size="lg"
-          width="100%"
-          colorScheme="gray"
+          className="w-full"
+          disabled={isLoading || priceIdLoading === price.id}
         >
+          {priceIdLoading === price.id && <Loader2 className="animate-spin" />}
           {product.name === subscription?.prices?.products?.name
             ? "Manage"
             : "Subscribe"}
         </Button>
-      </Box>
-    </Box>
+      </CardFooter>
+    </Card>
   );
 };

@@ -1,56 +1,58 @@
+import React, { forwardRef, useState } from "react";
+import { Slider } from "@/components/ui/slider";
 import {
-  ComponentWithAs,
-  forwardRef,
-  Slider,
-  SliderFilledTrack,
-  SliderProps,
-  SliderThumb,
-  SliderTrack,
   Tooltip,
-} from "@chakra-ui/react";
-import React from "react";
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface SliderWithTooltipProps {
   min: number;
   max: number;
   step: number;
+  value?: number;
+  name?: string;
+  "aria-label"?: string;
+  onChange?: (value: number) => void;
+  onBlur?: () => void;
 }
 
 const DISPLAY_SCALE = 100;
 
-export const SliderWithTooltip: ComponentWithAs<
-  "div",
-  SliderProps & SliderWithTooltipProps
-> = forwardRef(({ min, max, step, value, ...field }, ref) => {
-  const [showTooltip, setShowTooltip] = React.useState(false);
+export const SliderWithTooltip = forwardRef<
+  HTMLSpanElement,
+  SliderWithTooltipProps
+>(({ min, max, step, value, onChange, onBlur, name, ...rest }, ref) => {
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const displayValue = Math.round(
-    (DISPLAY_SCALE / (max - min)) * ((value ?? 0) - max) + DISPLAY_SCALE
+    (DISPLAY_SCALE / (max - min)) * ((value ?? 0) - max) + DISPLAY_SCALE,
   );
 
   return (
-    <Slider
-      ref={ref}
-      aria-label="Chord chart finger size"
-      min={min}
-      max={max}
-      step={step}
-      value={value}
-      {...field}
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-    >
-      <SliderTrack>
-        <SliderFilledTrack />
-      </SliderTrack>
-      <Tooltip
-        hasArrow
-        placement="top"
-        isOpen={showTooltip}
-        label={displayValue}
-      >
-        <SliderThumb boxSize={6} />
-      </Tooltip>
-    </Slider>
+    <Tooltip open={showTooltip}>
+      <TooltipTrigger asChild>
+        <div
+          className="flex h-9 w-full items-center"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <Slider
+            ref={ref}
+            name={name}
+            aria-label={rest["aria-label"]}
+            min={min}
+            max={max}
+            step={step}
+            value={[value ?? min]}
+            onValueChange={(values) => onChange?.(values[0])}
+            onBlur={onBlur}
+          />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>{displayValue}</TooltipContent>
+    </Tooltip>
   );
 });
+
+SliderWithTooltip.displayName = "SliderWithTooltip";

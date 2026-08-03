@@ -8,8 +8,13 @@ import { EditModeInput } from "./EditModeInput";
 import { Chart } from "../../domain/chart";
 import { EditMode } from "../../domain/edit-mode";
 import { ChordMatrix } from "../../services/chord-matrix";
-import { Box, IconButton, Tooltip } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { GA } from '../../services/google-analytics'
 
 const lineWidth = 3;
@@ -108,24 +113,22 @@ export const ChordEditor = (props: IProps) => {
   const displaySettings = { lineWidth, circleSize, width, height };
 
   return (
-    <Box>
-      <Tooltip
-        placement="top"
-        label="Reset chord"
-        aria-label="Reset chord"
-        hasArrow={true}
-      >
-        <IconButton
-          zIndex={1}
-          onClick={onResetChord}
-          position="absolute"
-          right={3}
-          top={3}
-          aria-label="Reset chord"
-          variant="outline"
-          icon={<DeleteIcon />}
-        />
-      </Tooltip>
+    <div>
+      <div className="absolute right-3 top-3 z-10">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onResetChord}
+              aria-label="Reset chord"
+            >
+              <Trash2 />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Reset chord</TooltipContent>
+        </Tooltip>
+      </div>
       <SilentStringsInput
         settings={displaySettings}
         matrix={matrix}
@@ -145,7 +148,7 @@ export const ChordEditor = (props: IProps) => {
         numStrings={numStrings}
       />
       <EditModeInput editMode={editMode} onEditModeChange={setEditMode} />
-    </Box>
+    </div>
   );
 };
 

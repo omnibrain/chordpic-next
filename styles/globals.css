@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+
+    /* used by the chord editor's inline styles and pseudo-elements */
+    --fg: hsl(var(--foreground));
+    --bg: hsl(var(--background));
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* Chord editor cells: pseudo-elements can't be styled inline, so the
+   dynamic sizes are passed down as CSS variables. */
+.click-cell {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+}
+
+.click-cell.active::after {
+  content: "";
+  height: var(--circle-size);
+  width: var(--circle-size);
+  border-radius: calc(var(--circle-size) / 2);
+  display: block;
+  position: absolute;
+  top: calc(50% - var(--circle-size) / 2);
+  left: calc(50% - var(--circle-size) / 2);
+}
+
+.click-cell.hl-middle::after,
+.click-cell.hl-left::after,
+.click-cell.hl-right::after {
+  background-color: rgba(128, 128, 128, 0.35);
+  left: 0;
+  width: 100%;
+}
+
+.click-cell.hl-middle::after {
+  border-radius: 0;
+}
+
+.click-cell.hl-left::after {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.click-cell.hl-right::after {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Open / silent string toggles above the fretboard */
+.string-cell {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+}
+
+.string-cell::before {
+  height: var(--circle-size);
+  width: var(--circle-size);
+  display: block;
+  position: absolute;
+  top: calc(50% - var(--circle-size) / 2);
+  left: calc(50% - var(--circle-size) / 2);
+}
+
+.string-cell.open::before {
+  content: "";
+  border-radius: calc(var(--circle-size) / 2);
+  border: 3px solid var(--fg);
+}
+
+.string-cell.silent::before,
+.string-cell.silent::after {
+  position: absolute;
+  content: " ";
+  width: 3px;
+  background-color: var(--fg);
+  top: calc(50% - var(--circle-size) / 2 - 3px);
+  height: calc(var(--circle-size) + 6px);
+  left: calc(var(--circle-size) / 2);
+  transform-origin: center;
+}
+
+.string-cell.silent::before {
+  transform: rotate(45deg);
+}
+
+.string-cell.silent::after {
+  transform: rotate(-45deg);
+}
+
+/* SVG chart should fill its container */
+#chord-result svg {
+  height: 100%;
+  width: 100%;
+}

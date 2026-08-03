@@ -1,4 +1,3 @@
-import { Flex, Heading, Text } from "@chakra-ui/react";
 import { GetStaticPropsResult } from "next";
 import Image from "next/image";
 
@@ -31,56 +30,56 @@ const HelpPage = () => {
   const t = useT();
 
   return (
-    <>
-      <Heading size="2xl" mb={6}>
+    <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-heading prose-a:underline-offset-4">
+      <h1>
         <T>Help</T>
-      </Heading>
-      <Text mb={3}>
+      </h1>
+      <p>
         <T>
           If you haven&apos;t figured it out already, here&apos;s how you create
           a chord chart and then save it as a PNG or SVG image. Don&apos;t
           worry, it&apos;s super simple!
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           ChordPic has 3 main sections: The <em>Editor</em>, the <em>Result</em>{" "}
           and the <em>Download and Share</em> section.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           As the name suggests, in the editor section you edit you chord chart.
           Every change of the chord chart is done in this section! More on this
           section later.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>In the Result section you can see a preview of your chord chart.</T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           The download and share section allows you to download your chart in
           different formats and sharing the charts on different platforms.
         </T>
-      </Text>
-      <Heading size="lg" mb={3} id="the-editor">
+      </p>
+      <h2 id="the-editor">
         <T>The Editor</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <T>
           <strong>Adding / removing fingers</strong>: Simply click anywhere you
           want the finger to appear. To remove the finger, just click on it
           again and it will disappear.
         </T>
-      </Text>
-      <Flex justifyContent="center">
+      </p>
+      <div className="flex justify-center">
         <Image
           src={toggleGif}
           alt={t("Example of adding and removing fingers")}
         />
-      </Flex>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           <strong>Toggling silent or open strings</strong>: If there is no
           finger on a string, an &apos;O&apos; automatically appears above the
@@ -89,14 +88,14 @@ const HelpPage = () => {
           make it an &apos;X&apos;. When you click it again it will change back
           to an &apos;O&apos;.
         </T>
-      </Text>
-      <Flex justifyContent="center">
+      </p>
+      <div className="flex justify-center">
         <Image
           src={silentstringsGif}
           alt={t("Example of toggling strings from do not play to open")}
         />
-      </Flex>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           <strong>Adding a barre chord</strong>: To add a barre chord, you can
           simply connect the strings with the mouse or if you&apos;re on mobile
@@ -104,14 +103,14 @@ const HelpPage = () => {
           the bare chord simply click anywhere on the fret with the barre chord
           to remove it.
         </T>
-      </Text>
-      <Flex justifyContent="center">
+      </p>
+      <div className="flex justify-center">
         <Image
           src={barreGif}
           alt={t("Example of adding and removing a barre chord")}
         />
-      </Flex>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           <strong>Adding labels to fingers and barre chords</strong>: To add
           text to any finger or barre chords, first click the &quot;Edit
@@ -121,16 +120,16 @@ const HelpPage = () => {
           click on the &quot;Edit Notes&quot; button to continue editing the
           notes.
         </T>
-      </Text>
-      <Flex justifyContent="center">
+      </p>
+      <div className="flex justify-center">
         <Image
           src={editTextGif}
           alt={t(
             "Example of adding and editing text on fingers and barre chords",
           )}
         />
-      </Flex>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           <strong>Changing colors of fingers and barre chords</strong>: Changing
           colors of fingers and barre chords works just like editing text. After
@@ -139,16 +138,16 @@ const HelpPage = () => {
           click on any finger or barre chord to reveal a color picker where you
           can pick your desired color.
         </T>
-      </Text>
-      <Flex justifyContent="center">
+      </p>
+      <div className="flex justify-center">
         <Image
           src={editColorsGif}
           alt={t(
             "Example of adding and editing text on fingers and barre chords",
           )}
         />
-      </Flex>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           <strong>Changing the shapes of fingers</strong>: After you added your
           fingers to the fret board click the &quot;Edit Shapes&quot; button at
@@ -156,44 +155,44 @@ const HelpPage = () => {
           change its shape. To revert the shape to a circle, keep clicking the
           finger until the shape is a circle again.
         </T>
-      </Text>
-      <Flex justifyContent="center">
+      </p>
+      <div className="flex justify-center">
         <Image
           src={editShapesGif}
           alt={t("Example of changing the shape of a finger")}
         />
-      </Flex>
-      <Text mb={3}>
+      </div>
+      <p>
         <T>
           <strong>Adding labels to strings</strong>: To label the strings you
           can enter any letters or numbers below the strings. By default the
           strings are not labelled.
         </T>
-      </Text>
+      </p>
 
-      <Flex justifyContent="center">
+      <div className="flex justify-center">
         <Image
           src={labelsGif}
           alt={t("Example of adding and removing a barre chord")}
         />
-      </Flex>
-      <Heading size="lg" mb={3} id="the-result-section">
+      </div>
+      <h2 id="the-result-section">
         <T>The Result Section</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <T>
           The result section gives you a preview of what your chart image will
           look like. All changes made in the editor section are immediately
           visible in the result section. Sample chart:
         </T>
-      </Text>
-      <Flex justifyContent="center">
+      </p>
+      <div className="flex justify-center">
         <Image src={samplechordGif} alt={t("Example chord chart")} />
-      </Flex>
-      <Heading size="lg" mb={3} id="the-download-sharing-section">
+      </div>
+      <h2 id="the-download-sharing-section">
         <T>The Download &amp; Sharing Section</T>
-      </Heading>
-      <Text mb={3}>
+      </h2>
+      <p>
         <T>
           In the download section you can download your chord chart as an image.
           You can export the image as an SVG or PNG image. When you download a
@@ -202,16 +201,16 @@ const HelpPage = () => {
           width will always stay the same though, no matter what your chart
           looks like.
         </T>
-      </Text>
-      <Text mb={3}>
+      </p>
+      <p>
         <T>
           In the share section you can generate a link that you can share with
           other people. All your settings and the whole chart are saved{" "}
           <em>in that link</em>. The sharing section also allows you to share
           your charts on many different platforms or messengers.
         </T>
-      </Text>
-    </>
+      </p>
+    </article>
   );
 };
 

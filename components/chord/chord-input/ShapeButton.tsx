@@ -1,5 +1,5 @@
+import React from "react";
 import { Shape } from "svguitar";
-import styled from "@emotion/styled";
 
 function ngonPath(x: number, y: number, size: number, edges: number): string {
   let i: number;
@@ -36,40 +36,13 @@ export interface IShapeButtonProps {
   onClick: () => void;
 }
 
-const BaseButton = styled.button<IShapeButtonProps>`
-  width: ${(props) =>
-    props.length === 1 ? `${props.length * props.circleSize}px` : "100%"};
-  height: ${(props) => props.circleSize}px;
-  border: none;
-  border-radius: ${(props) => props.circleSize / 2}px;
-  background-color: ${(props) => props.color};
-
-  :focus {
-    outline: none;
-  }
-`;
-
-const CircleButton = styled(BaseButton)`
-  border-radius: ${(props) => props.circleSize / 2}px;
-`;
-const SquareButton = styled(BaseButton)`
-  border-radius: 0;
-`;
-const TriangleButton = styled(BaseButton)`
-  background-color: transparent;
-  padding: 0;
-  svg {
-    position: relative;
-    top: 5px;
-  }
-`;
-const PentagonButton = styled(BaseButton)`
-  background-color: transparent;
-  padding: 0;
-  svg {
-    position: relative;
-  }
-`;
+const baseStyle = (props: IShapeButtonProps): React.CSSProperties => ({
+  width: props.length === 1 ? props.length * props.circleSize : "100%",
+  height: props.circleSize,
+  border: "none",
+  outline: "none",
+  backgroundColor: props.color,
+});
 
 const Ngon = (props: IShapeButtonProps & { edges: number }) => (
   <svg height={props.circleSize} width={props.circleSize} viewBox="0 0 100 100">
@@ -77,28 +50,55 @@ const Ngon = (props: IShapeButtonProps & { edges: number }) => (
   </svg>
 );
 
-const Triangle = (props: IShapeButtonProps) => (
-  <TriangleButton {...props}>
-    <Ngon {...props} edges={3} />
-  </TriangleButton>
-);
-const Pentagon = (props: IShapeButtonProps) => (
-  <PentagonButton {...props}>
-    <Ngon {...props} edges={5} />
-  </PentagonButton>
-);
-
 export function ShapeButton(props: IShapeButtonProps) {
-  switch (props.shape) {
-    case Shape.CIRCLE:
-      return <CircleButton {...props} />;
+  const { shape, onClick } = props;
+
+  switch (shape) {
     case Shape.SQUARE:
-      return <SquareButton {...props} />;
+      return (
+        <button
+          onClick={onClick}
+          style={{ ...baseStyle(props), borderRadius: 0 }}
+        />
+      );
     case Shape.TRIANGLE:
-      return <Triangle {...props} />;
+      return (
+        <button
+          onClick={onClick}
+          style={{
+            ...baseStyle(props),
+            backgroundColor: "transparent",
+            padding: 0,
+          }}
+        >
+          <span className="relative top-[5px] inline-block">
+            <Ngon {...props} edges={3} />
+          </span>
+        </button>
+      );
     case Shape.PENTAGON:
-      return <Pentagon {...props} />;
+      return (
+        <button
+          onClick={onClick}
+          style={{
+            ...baseStyle(props),
+            backgroundColor: "transparent",
+            padding: 0,
+          }}
+        >
+          <Ngon {...props} edges={5} />
+        </button>
+      );
+    case Shape.CIRCLE:
     default:
-      return <CircleButton {...props} />;
+      return (
+        <button
+          onClick={onClick}
+          style={{
+            ...baseStyle(props),
+            borderRadius: props.circleSize / 2,
+          }}
+        />
+      );
   }
 }

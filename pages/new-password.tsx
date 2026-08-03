@@ -1,21 +1,16 @@
 import { FormEvent, useState } from "react";
 
-import {
-  Box,
-  Button,
-  Flex,
-  FormLabel,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { AuthBox } from "../components/AuthBox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "../utils/supabase-client";
 import { useUser } from "../utils/useUser";
 import { T, useT } from "@magic-translate/react";
-import { t } from "@chakra-ui/styled-system/dist/declarations/src/utils";
 
 const useUpdatePasswordMutation = () => {
   const { accessToken } = useUser();
@@ -40,7 +35,7 @@ const NewPassword = () => {
     type: "",
     content: "",
   });
-  const toast = useToast();
+  const { toast } = useToast();
   const t = useT();
 
   const handleReset = async (e: FormEvent<HTMLFormElement>) => {
@@ -75,10 +70,7 @@ const NewPassword = () => {
         toast({
           title: "New password set!",
           description: "Use the new password for logging in from now on.",
-          status: "success",
           duration: 9000,
-          isClosable: true,
-          position: "top",
         });
         router.push("/account");
       }
@@ -91,53 +83,54 @@ const NewPassword = () => {
   return (
     <AuthBox title="Set new password">
       {message.content && (
-        <Text color="red.500" fontSize="sm" mb={4}>
+        <p className="mb-4 text-sm text-destructive">
           <T>{message.content}</T>
-        </Text>
+        </p>
       )}
 
       <form onSubmit={handleReset}>
-        <Flex direction="column" gap={4}>
-          <Box>
-            <FormLabel htmlFor="password">
+        <div className="flex flex-col gap-4">
+          <div>
+            <Label className="mb-2 block" htmlFor="password">
               <T>New password</T>
-            </FormLabel>
+            </Label>
             <Input
               id="password"
               name="password"
-              border="2px"
-              borderColor="primary"
               type="password"
               placeholder={t("Password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </Box>
-          <Box>
-            <FormLabel htmlFor="password">Confirm new password</FormLabel>
+          </div>
+          <div>
+            <Label className="mb-2 block" htmlFor="confirm-password">
+              Confirm new password
+            </Label>
             <Input
               id="confirm-password"
               name="confirm-password"
-              border="2px"
-              borderColor="primary"
               type="password"
               placeholder={t("Confirm password")}
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               required
             />
-          </Box>
+          </div>
           <Button
-            mt={4}
             type="submit"
-            isLoading={mutation.isLoading}
-            disabled={!password.length || !passwordConfirmation.length}
-            width="100%"
+            className="mt-4 w-full"
+            disabled={
+              mutation.isLoading ||
+              !password.length ||
+              !passwordConfirmation.length
+            }
           >
+            {mutation.isLoading && <Loader2 className="animate-spin" />}
             <T>Set new password</T>
           </Button>
-        </Flex>
+        </div>
       </form>
     </AuthBox>
   );

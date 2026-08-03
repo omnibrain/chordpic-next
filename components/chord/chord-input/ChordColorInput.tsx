@@ -1,5 +1,3 @@
-import { VisuallyHidden } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import { EditMode } from "../../../domain/edit-mode";
 import { ChordMatrix } from "../../../services/chord-matrix";
 import { IChordInputSettings } from "../ChordEditor";
@@ -13,32 +11,6 @@ export interface IChordTextInputProps {
   onMatrixChange: (matrix: ChordMatrix) => void;
   onEditModeChange: (editMode: EditMode) => void;
 }
-
-interface IInputCellProps {
-  size: number;
-}
-
-const InputCell = styled.div<IInputCellProps>`
-  display: flex;
-  flex-direction: row;
-  justify-content: stretch;
-  align-items: stretch;
-  grid-column: span ${(props) => props.size};
-  position: relative;
-`;
-
-const ColorButton = styled.button<{ color: string }>`
-  background-color: transparent;
-  border: none;
-  height: 100%;
-  width: 100%;
-
-  :focus,
-  :active {
-    border: none;
-    outline: none;
-  }
-`;
 
 export const ChordColorInput = (props: IChordTextInputProps) => {
   const matrix = props.matrix;
@@ -54,9 +26,10 @@ export const ChordColorInput = (props: IChordTextInputProps) => {
         matrix
           .getSections(fretIndex)
           .map(({ length, empty, string: stringIndex }, sectionIndex) => (
-            <InputCell
+            <div
               key={`${fretIndex}-${sectionIndex}`}
-              size={length}
+              className="relative flex flex-row items-stretch justify-stretch"
+              style={{ gridColumn: `span ${length}` }}
               onClick={
                 empty
                   ? () => props.onEditModeChange(EditMode.EDIT_NOTES)
@@ -66,20 +39,14 @@ export const ChordColorInput = (props: IChordTextInputProps) => {
               {!empty && props.editMode === EditMode.EDIT_COLOR && (
                 <ColorInput
                   render={(renderProps) => (
-                    <ColorButton
+                    <button
                       onClick={renderProps.onClick}
-                      color={
-                        renderProps.value ||
-                        "var(--chakra-colors-chakra-body-text)"
-                      }
+                      className="h-full w-full border-none bg-transparent outline-none"
                     >
-                      <VisuallyHidden>pick color</VisuallyHidden>
-                    </ColorButton>
+                      <span className="sr-only">pick color</span>
+                    </button>
                   )}
-                  value={
-                    matrix.get(fretIndex, stringIndex).color ??
-                    "var(--chakra-colors-chakra-body-text)"
-                  }
+                  value={matrix.get(fretIndex, stringIndex).color ?? "var(--fg)"}
                   onChange={(color) => {
                     props.onMatrixChange(
                       matrix.color(stringIndex, fretIndex, color)
@@ -87,7 +54,7 @@ export const ChordColorInput = (props: IChordTextInputProps) => {
                   }}
                 />
               )}
-            </InputCell>
+            </div>
           ))
       )}
     </ClickCellContainer>

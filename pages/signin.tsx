@@ -4,21 +4,13 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  Center,
-  FormLabel,
-  Input,
-  Link,
-  Spinner,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
 import { Provider } from "@supabase/supabase-js";
 import { AuthBox } from "../components/AuthBox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { getURL } from "../utils/helpers";
 import { GetStaticPropsResult } from "next";
 import { T, useT } from "@magic-translate/react";
@@ -37,6 +29,8 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
   };
 }
 
+const linkClasses = "font-medium underline underline-offset-4";
+
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,7 +42,7 @@ const SignIn = () => {
   });
   const router = useRouter();
   const { user } = useUser();
-  const toast = useToast();
+  const { toast } = useToast();
   const t = useT();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
@@ -69,10 +63,7 @@ const SignIn = () => {
         toast({
           title: "Magic link sent!",
           description: "Check your email for the magic link.",
-          status: "success",
           duration: 9000,
-          isClosable: true,
-          position: "top",
         });
       }
       setLoading(false);
@@ -101,48 +92,43 @@ const SignIn = () => {
     return (
       <AuthBox title={t("Sign in to Chordpic")}>
         {message.content && (
-          <Text color="red.500" fontSize="sm">
+          <p className="mb-4 text-sm text-destructive">
             <T>{message.content}</T>
-          </Text>
+          </p>
         )}
 
         {!showPasswordInput && (
           <form onSubmit={handleSignin}>
-            <Box display="flex" flexDir="column" gap={4}>
-              <Box>
-                <FormLabel htmlFor="email">Email</FormLabel>
+            <div className="flex flex-col gap-4">
+              <div>
+                <Label className="mb-2 block" htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  border="2px"
-                  borderColor="primary"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  colorScheme="teal"
                 />
-              </Box>
+              </div>
               <Button
-                variant="solid"
-                mt={4}
                 type="submit"
-                isLoading={loading}
-                disabled={!email.length}
-                width="100%"
+                className="mt-4 w-full"
+                disabled={loading || !email.length}
               >
+                {loading && <Loader2 className="animate-spin" />}
                 Send magic link
               </Button>
-            </Box>
+            </div>
           </form>
         )}
 
         {showPasswordInput && (
           <form onSubmit={handleSignin}>
-            <Box display="flex" flexDir="column" gap={4}>
-              <Box>
-                <FormLabel htmlFor="email">Email</FormLabel>
+            <div className="flex flex-col gap-4">
+              <div>
+                <Label className="mb-2 block" htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -151,11 +137,10 @@ const SignIn = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  width="100%"
                 />
-              </Box>
-              <Box>
-                <FormLabel htmlFor="password">Password</FormLabel>
+              </div>
+              <div>
+                <Label className="mb-2 block" htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   name="password"
@@ -164,26 +149,25 @@ const SignIn = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  width="100%"
                 />
-              </Box>
+              </div>
               <Button
                 variant="outline"
-                border="2px"
                 type="submit"
-                isLoading={loading}
-                disabled={!password.length || !email.length}
-                width="100%"
+                className="w-full"
+                disabled={loading || !password.length || !email.length}
               >
+                {loading && <Loader2 className="animate-spin" />}
                 Sign in
               </Button>
-            </Box>
+            </div>
           </form>
         )}
 
-        <Box mt={4} mb={6} textAlign="center">
-          <Link
+        <div className="mb-6 mt-4 text-center text-sm">
+          <a
             href="#"
+            className={linkClasses}
             onClick={() => {
               if (showPasswordInput) setPassword("");
               setShowPasswordInput(!showPasswordInput);
@@ -191,59 +175,35 @@ const SignIn = () => {
             }}
           >
             {`Or sign in with ${showPasswordInput ? "magic link" : "password"}`}
-          </Link>
+          </a>
           .
-        </Box>
+        </div>
 
-        {/* <Box display="flex" alignItems="center" my={8}>
-          <Divider />
-          <Box textAlign="center" px={8}>
-            Or
-          </Box>
-          <Divider />
-        </Box>
-
-        <Button
-          type="submit"
-          disabled={loading}
-          onClick={() => handleOAuthSignIn("google")}
-          width="100%"
-        >
-          <Icon as={FaGoogle} mr={3} />
-          Continue with Google
-        </Button> */}
-
-        <Box textAlign="center" mb={2} mt={6} fontSize="sm">
-          <Box as="span">
+        <div className="mb-2 mt-6 text-center text-sm">
+          <span>
             <T>Don&apos;t have an account?</T>
-          </Box>
-          {` `}
-          <NextLink href="/signup" legacyBehavior>
-            <Link>
-              <T>Sign up</T>
-            </Link>
+          </span>{" "}
+          <NextLink href="/signup" className={linkClasses}>
+            <T>Sign up</T>
           </NextLink>
           .
-        </Box>
-        <Box textAlign="center" my={2} fontSize="sm">
-          <Box as="span">
+        </div>
+        <div className="my-2 text-center text-sm">
+          <span>
             <T>Forgot password?</T>
-          </Box>
-          {` `}
-          <NextLink href="/reset-password" legacyBehavior>
-            <Link>
-              <T>Reset password</T>
-            </Link>
+          </span>{" "}
+          <NextLink href="/reset-password" className={linkClasses}>
+            <T>Reset password</T>
           </NextLink>
           .
-        </Box>
+        </div>
       </AuthBox>
     );
 
   return (
-    <Center mt={8}>
-      <Spinner />
-    </Center>
+    <div className="mt-8 flex justify-center">
+      <Loader2 className="h-6 w-6 animate-spin" />
+    </div>
   );
 };
 

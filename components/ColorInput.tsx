@@ -1,43 +1,10 @@
 import React, { useCallback, useRef, useState } from "react";
 import { ColorResult } from "react-color";
-import styled from "@emotion/styled";
+import SketchPicker from "react-color/lib/components/sketch/Sketch";
+import { T } from "@magic-translate/react";
 import { useOutsideHandler } from "../hooks/use-outside-click";
 import { useEscHandler } from "../hooks/use-esc-handler";
-import SketchPicker from "react-color/lib/components/sketch/Sketch";
-import { Button } from "@chakra-ui/react";
-import { T } from '@magic-translate/react'
-
-const ColorPickerContainer = styled.div`
-  position: relative;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ColorPreview = styled.span<{ color?: string }>`
-  width: 1em;
-  height: 1em;
-  border: 2px solid #ced4da;
-  border-radius: 5px;
-  margin-right: 10px;
-  display: inline-block;
-  background-color: ${(props) => props.color || "000#"};
-`;
-
-const ColorPreviewButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
-
-const ClickWrapper = styled.div`
-  position: absolute;
-  bottom: 60px;
-  z-index: 10;
-`;
+import { Button } from "@/components/ui/button";
 
 interface Props {
   onChange: (color: string) => void;
@@ -65,27 +32,32 @@ export const ColorInput = (props: Props) => {
   };
 
   return (
-    <ColorPickerContainer>
+    <div className="relative flex flex-1 flex-col items-center justify-center">
       {props.render ? (
         props.render({
           value: props.value,
           onClick: () => setVisible(!visible),
         })
       ) : (
-        <ColorPreviewButton
+        <Button
+          type="button"
           variant="outline"
+          className="w-full"
           onClick={() => setVisible(!visible)}
         >
-          <ColorPreview color={props.value} />
+          <span
+            className="inline-block h-4 w-4 rounded-sm border"
+            style={{ backgroundColor: props.value || "#000" }}
+          />
           <T>Select color...</T>
-        </ColorPreviewButton>
+        </Button>
       )}
 
       {visible && (
-        <ClickWrapper ref={ref}>
+        <div ref={ref} className="absolute bottom-[60px] z-10">
           <SketchPicker color={props.value} onChangeComplete={onColorChange} />
-        </ClickWrapper>
+        </div>
       )}
-    </ColorPickerContainer>
+    </div>
   );
 };

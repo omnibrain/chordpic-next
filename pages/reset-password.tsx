@@ -1,14 +1,11 @@
 import { FormEvent, useState } from "react";
 
-import {
-  Box,
-  Button,
-  FormLabel,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
 import { AuthBox } from "../components/AuthBox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { getURL } from "../utils/helpers";
 import { supabase } from "../utils/supabase-client";
 import { T, useT } from "@magic-translate/react";
@@ -20,7 +17,7 @@ const ResetPassword = () => {
     type: "",
     content: "",
   });
-  const toast = useToast();
+  const { toast } = useToast();
   const t = useT();
 
   const handleReset = async (e: FormEvent<HTMLFormElement>) => {
@@ -39,10 +36,7 @@ const ResetPassword = () => {
         toast({
           title: "Please check your email!",
           description: "Check your email for a password reset link.",
-          status: "success",
           duration: 9000,
-          isClosable: true,
-          position: "top",
         });
       }
 
@@ -56,39 +50,34 @@ const ResetPassword = () => {
   return (
     <AuthBox title={t("Reset password")}>
       {message.content && (
-        <Text color="red.500" fontSize="sm" mb={4}>
+        <p className="mb-4 text-sm text-destructive">
           <T>{message.content}</T>
-        </Text>
+        </p>
       )}
 
       <form onSubmit={handleReset}>
-        <Box>
-          <Box>
-            <FormLabel htmlFor="email">
-              <T>Email</T>
-            </FormLabel>
-            <Input
-              id="email"
-              name="email"
-              border="2px"
-              borderColor="primary"
-              type="email"
-              placeholder={t("Email")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Box>
-          <Button
-            mt={4}
-            type="submit"
-            isLoading={loading}
-            disabled={!email.length}
-            width="100%"
-          >
-            <T>Reset password</T>
-          </Button>
-        </Box>
+        <div>
+          <Label className="mb-2 block" htmlFor="email">
+            <T>Email</T>
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder={t("Email")}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <Button
+          type="submit"
+          className="mt-4 w-full"
+          disabled={loading || !email.length}
+        >
+          {loading && <Loader2 className="animate-spin" />}
+          <T>Reset password</T>
+        </Button>
       </form>
     </AuthBox>
   );

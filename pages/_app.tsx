@@ -1,11 +1,13 @@
 import type { AppProps } from "next/app";
-import { ChakraProvider } from "@chakra-ui/react";
+import { GeistSans } from "geist/font/sans";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { UserProvider } from "@supabase/supabase-auth-helpers/react";
 import { MyUserContextProvider } from "../utils/useUser";
 import { Layout } from "../components/Layout";
-import { theme } from "../theme/theme";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
+import "../styles/globals.css";
 import { supabase } from "../utils/supabase-client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -48,6 +50,13 @@ function MyApp({
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* on <html> so Radix portals rendered into <body> inherit the font */}
+      <style jsx global>{`
+        html {
+          font-family: ${GeistSans.style.fontFamily};
+          --font-geist-sans: ${GeistSans.style.fontFamily};
+        }
+      `}</style>
       {process.env.NODE_ENV !== "production" && (
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       )}
@@ -67,17 +76,18 @@ function MyApp({
               />
             ))}
         </Head>
-        <ChakraProvider theme={theme}>
+        <TooltipProvider>
           <UserProvider supabaseClient={supabaseClient}>
             <MyUserContextProvider supabaseClient={supabaseClient}>
               <ChartProvider>
                 <Layout meta={pageProps}>
                   <Component {...pageProps} />
                 </Layout>
+                <Toaster />
               </ChartProvider>
             </MyUserContextProvider>
           </UserProvider>
-        </ChakraProvider>
+        </TooltipProvider>
       </MagicTranslateProvider>
     </QueryClientProvider>
   );
