@@ -1,17 +1,15 @@
 import {
   createContext,
-  Dispatch,
   MutableRefObject,
   PropsWithChildren,
-  SetStateAction,
   useCallback,
   useContext,
   useRef,
   useState,
 } from "react";
 import { ChordSettings } from "svguitar";
-import { Chart } from "../../domain/chart";
-import { usePersistedState } from "../../hooks/use-persisted-state";
+import { Chart } from "@/domain/chart";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 
 const LOCALSTORAGE_KEY = "chord_v1";
 
@@ -29,6 +27,7 @@ const defaultSVGuitarSettings: Partial<ChordSettings> = {
   barreChordRadius: 0.5,
   frets: 5,
   strings: 6,
+  showFretMarkers: false,
 };
 
 const ChartContext = createContext<ChartContextType | undefined>(undefined);
