@@ -30,13 +30,13 @@ export const TuningInput = (props: IProps) => (
           </label>
           <input
             id={`tuning-input-string-${i}`}
-            className="mt-2 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-background p-0 text-center text-3xl text-foreground"
+            className="mt-2 py-1 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-background p-0 text-center text-lg text-foreground"
             placeholder={String(stringLabel)}
             type="text"
             value={tuning}
             onChange={(e) =>
               props.onTunings(
-                props.tunings.map((val, j) => (i === j ? e.target.value : val))
+                props.tunings.map((val, j) => (i === j ? e.target.value : val)),
               )
             }
           />

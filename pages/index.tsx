@@ -4,12 +4,12 @@ import React, { useCallback } from "react";
 import { RotateCw } from "lucide-react";
 import { Orientation } from "svguitar";
 import NextLink from "next/link";
-import { ChordEditor } from "../components/chord/ChordEditor";
-import { ChordResult } from "../components/chord/ChordResult";
-import { useChart } from "../components/chord/useChart";
-import { AdjustableChordSettings, ChordForm } from "../components/ChordForm";
-import { DownloadButtons } from "../components/DownloadButtons";
-import { ShareButtons } from "../components/ShareButtons";
+import { ChordEditor } from "@/components/chord/ChordEditor";
+import { ChordResult } from "@/components/chord/ChordResult";
+import { useChart } from "@/components/chord/useChart";
+import { AdjustableChordSettings, ChordForm } from "@/components/ChordForm";
+import { DownloadButtons } from "@/components/DownloadButtons";
+import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -17,9 +17,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useIsClient } from "../hooks/use-is-client";
-import { useResizeHandler } from "../hooks/use-resize-handler";
-import { GA } from "../services/google-analytics";
+import { useIsClient } from "@/hooks/use-is-client";
+import { useResizeHandler } from "@/hooks/use-resize-handler";
+import { GA } from "@/services/google-analytics";
 
 const panelHeading =
   "inline-block font-heading text-lg font-semibold tracking-tight";
@@ -53,11 +53,11 @@ const Home: NextPage = () => {
           It&apos;s never been easier to create guitar chord diagrams! Start by
           clicking anywhere on the{" "}
           <a className="underline" href="#editor">
-            <i>editor</i>
+            editor
           </a>{" "}
           fret board and immediately see the result on the{" "}
           <a className="underline" href="#result">
-            <i>result</i>
+            result
           </a>{" "}
           fret board. Then{" "}
           <a className="underline" href="#download">
@@ -130,9 +130,7 @@ const Home: NextPage = () => {
                         <RotateCw />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      {t("Rotate chord diagram")}
-                    </TooltipContent>
+                    <TooltipContent>{t("Rotate chord diagram")}</TooltipContent>
                   </Tooltip>
                 </div>
                 <ChordResult />
