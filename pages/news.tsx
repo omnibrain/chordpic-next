@@ -56,6 +56,36 @@ const HelpPage = () => {
         </T>
       </p>
 
+      <h2 id="a-fresh-new-look">
+        <T>A fresh new look for ChordPic ✨</T>
+      </h2>
+      <p>
+        <em>
+          <T>August 3rd, 2026</T>
+        </em>
+      </p>
+      <p>
+        <T>
+          ChordPic just got a redesign! You&apos;ll notice a cleaner layout, a
+          new typeface, and a generally tidier feel across the whole site. The
+          chord editor you know and love works exactly the same as before,
+          we&apos;ve just given the surroundings a good polish.
+        </T>{" "}
+      </p>
+      <p>
+        <T>
+          As always, if you run into anything that looks off or you have
+          thoughts on the new design, don&apos;t hesitate to{" "}
+          <a
+            href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com"
+            style={{ textDecoration: "underline" }}
+          >
+            write us an email
+          </a>
+          !
+        </T>{" "}
+      </p>
+
       <h2 id="change-font-size-of-title">
         <T>Fret markers!</T>
       </h2>
