@@ -12,7 +12,7 @@ const createCheckoutSession = async (
   res: NextApiResponse,
 ) => {
   if (req.method === "POST") {
-    const { price, quantity = 1, metadata = {} } = req.body;
+    const { price, quantity = 1, metadata = {}, referral } = req.body;
 
     try {
       const { user } = await getUser({ req, res });
@@ -25,6 +25,7 @@ const createCheckoutSession = async (
       const session = await stripe.checkout.sessions.create({
         billing_address_collection: "required",
         customer,
+        ...(referral ? { client_reference_id: referral } : {}),
         line_items: [
           {
             price: price.id,

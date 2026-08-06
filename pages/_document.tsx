@@ -36,11 +36,22 @@ export default class Document extends NextDocument {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <body>
-          <script
-            dangerouslySetInnerHTML={{ __html: colorModeInitScript }}
-          />
+          <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
           <Main />
           <NextScript />
+          <Script
+            id="rewardful-queue"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`,
+            }}
+          />
+          <Script
+            id="rewardful"
+            strategy="beforeInteractive"
+            src="https://r.wdfl.co/rw.js"
+            data-rewardful="014828"
+          />
         </body>
       </Html>
     );
