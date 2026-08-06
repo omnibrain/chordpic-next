@@ -17,7 +17,11 @@ export const postData = async ({
   data,
 }: {
   url: string;
-  data?: { price: Price; analyticsClientId: string | null };
+  data?: {
+    price: Price;
+    analyticsClientId: string | null;
+    referral?: string | null;
+  };
 }) => {
   const res: Response = await fetch(url, {
     method: "POST",
