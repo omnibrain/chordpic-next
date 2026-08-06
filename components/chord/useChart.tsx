@@ -25,7 +25,7 @@ interface ChartContextType {
 const defaultSVGuitarSettings: Partial<ChordSettings> = {
   fretSize: 1.75,
   barreChordRadius: 0.5,
-  frets: 5,
+  frets: 4,
   strings: 6,
   showFretMarkers: false,
 };

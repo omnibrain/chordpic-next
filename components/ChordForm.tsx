@@ -48,7 +48,7 @@ export type AdjustableChordSettings = Pick<
 export const defaultValues: AdjustableChordSettings = {
   orientation: Orientation.vertical,
   title: "",
-  frets: 5,
+  frets: 4,
   strings: 6,
   position: 1,
   style: ChordStyle.normal,
@@ -428,7 +428,11 @@ export const ChordForm: React.FunctionComponent<{
         </div>
       )}
       <div className="mt-4">
-        <Button type="button" variant="ghost" onClick={() => setIsOpen(!isOpen)}>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           {isOpen ? <ChevronUp /> : <ChevronDown />}
           <T>{isOpen ? "Hide" : "Show more"} settings...</T>
         </Button>
