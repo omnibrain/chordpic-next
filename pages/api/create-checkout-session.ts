@@ -12,7 +12,7 @@ const createCheckoutSession = async (
   res: NextApiResponse,
 ) => {
   if (req.method === "POST") {
-    const { price, quantity = 1, metadata = {}, referral } = req.body;
+    const { price, quantity = 1, metadata = {}, referral, coupon } = req.body;
 
     try {
       const { user } = await getUser({ req, res });
@@ -21,6 +21,26 @@ const createCheckoutSession = async (
         uuid: user?.id || "",
         email: user?.email || "",
       });
+
+      // Validate the Rewardful coupon against Stripe before applying it, so a
+      // stale/invalid coupon id never blocks checkout with a "No such coupon" error.
+      let validCoupon: string | undefined;
+      if (coupon) {
+        try {
+          const retrievedCoupon = await stripe.coupons.retrieve(coupon);
+          // `retrieve` still returns coupons that exist but are no longer
+          // usable (expired or past `max_redemptions`); those come back with
+          // `valid: false`. Only apply the coupon when it's actually valid,
+          // otherwise Stripe rejects the Checkout Session and blocks checkout.
+          if (retrievedCoupon.valid) {
+            validCoupon = coupon;
+          } else {
+            console.log("Invalid Rewardful coupon, ignoring", coupon);
+          }
+        } catch (err) {
+          console.log("Invalid Rewardful coupon, ignoring", err);
+        }
+      }
 
       const session = await stripe.checkout.sessions.create({
         billing_address_collection: "required",
@@ -33,7 +53,12 @@ const createCheckoutSession = async (
           },
         ],
         mode: "subscription",
-        allow_promotion_codes: true,
+        // Stripe rejects Checkout Sessions that set both `discounts` and
+        // `allow_promotion_codes`, so only allow manual promo codes when
+        // there's no referral coupon to auto-apply.
+        ...(validCoupon
+          ? { discounts: [{ coupon: validCoupon }] }
+          : { allow_promotion_codes: true }),
         subscription_data: {
           trial_from_plan: true,
           metadata,
