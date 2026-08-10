@@ -27,8 +27,16 @@ const createCheckoutSession = async (
       let validCoupon: string | undefined;
       if (coupon) {
         try {
-          await stripe.coupons.retrieve(coupon);
-          validCoupon = coupon;
+          const retrievedCoupon = await stripe.coupons.retrieve(coupon);
+          // `retrieve` still returns coupons that exist but are no longer
+          // usable (expired or past `max_redemptions`); those come back with
+          // `valid: false`. Only apply the coupon when it's actually valid,
+          // otherwise Stripe rejects the Checkout Session and blocks checkout.
+          if (retrievedCoupon.valid) {
+            validCoupon = coupon;
+          } else {
+            console.log("Invalid Rewardful coupon, ignoring", coupon);
+          }
         } catch (err) {
           console.log("Invalid Rewardful coupon, ignoring", err);
         }
