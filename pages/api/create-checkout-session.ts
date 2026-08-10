@@ -12,7 +12,7 @@ const createCheckoutSession = async (
   res: NextApiResponse,
 ) => {
   if (req.method === "POST") {
-    const { price, quantity = 1, metadata = {}, referral } = req.body;
+    const { price, quantity = 1, metadata = {}, referral, coupon } = req.body;
 
     try {
       const { user } = await getUser({ req, res });
@@ -21,6 +21,18 @@ const createCheckoutSession = async (
         uuid: user?.id || "",
         email: user?.email || "",
       });
+
+      // Validate the Rewardful coupon against Stripe before applying it, so a
+      // stale/invalid coupon id never blocks checkout with a "No such coupon" error.
+      let validCoupon: string | undefined;
+      if (coupon) {
+        try {
+          await stripe.coupons.retrieve(coupon);
+          validCoupon = coupon;
+        } catch (err) {
+          console.log("Invalid Rewardful coupon, ignoring", err);
+        }
+      }
 
       const session = await stripe.checkout.sessions.create({
         billing_address_collection: "required",
@@ -33,7 +45,12 @@ const createCheckoutSession = async (
           },
         ],
         mode: "subscription",
-        allow_promotion_codes: true,
+        // Stripe rejects Checkout Sessions that set both `discounts` and
+        // `allow_promotion_codes`, so only allow manual promo codes when
+        // there's no referral coupon to auto-apply.
+        ...(validCoupon
+          ? { discounts: [{ coupon: validCoupon }] }
+          : { allow_promotion_codes: true }),
         subscription_data: {
           trial_from_plan: true,
           metadata,

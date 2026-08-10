@@ -7,7 +7,10 @@ import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
 import * as Sentry from "@sentry/nextjs";
 import { GA } from "../services/google-analytics";
-import { getRewardfulReferral } from "../services/rewardful";
+import {
+  getRewardfulCoupon,
+  getRewardfulReferral,
+} from "../services/rewardful";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -97,7 +100,12 @@ export const Product: React.FunctionComponent<
       console.debug("creating checkout session");
       const { sessionId } = await postData({
         url: "/api/create-checkout-session",
-        data: { price, analyticsClientId, referral: getRewardfulReferral() },
+        data: {
+          price,
+          analyticsClientId,
+          referral: getRewardfulReferral(),
+          coupon: getRewardfulCoupon(),
+        },
       });
 
       console.debug(`got session id: ${sessionId}`);

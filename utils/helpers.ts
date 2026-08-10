@@ -21,6 +21,7 @@ export const postData = async ({
     price: Price;
     analyticsClientId: string | null;
     referral?: string | null;
+    coupon?: string | null;
   };
 }) => {
   const res: Response = await fetch(url, {
