@@ -3,7 +3,8 @@ declare global {
     rewardful?: (...args: any[]) => void;
     Rewardful?: {
       referral: string | null;
-      coupon?: string | null;
+      // Rewardful exposes the full coupon record here, not just its id.
+      coupon?: { id: string; [key: string]: any } | null;
       affiliate?: Record<string, any>;
     };
   }
@@ -13,9 +14,10 @@ export const getRewardfulReferral = (): string | null =>
   typeof window !== "undefined" ? window.Rewardful?.referral ?? null : null;
 
 // Empty when the visitor isn't a referral or the campaign has no
-// double-sided coupon configured.
+// double-sided coupon configured. Stripe's coupon APIs take the coupon id,
+// not the full Rewardful coupon record.
 export const getRewardfulCoupon = (): string | null =>
-  typeof window !== "undefined" ? window.Rewardful?.coupon ?? null : null;
+  typeof window !== "undefined" ? window.Rewardful?.coupon?.id ?? null : null;
 
 // Rewardful's rw.js only auto-tracks the referral token from the `?via=`
 // query string. Our affiliate links use a `#via=` hash fragment instead (the
