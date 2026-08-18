@@ -21,6 +21,7 @@ import { useLanguage } from "../utils/use-language";
 import Head from "next/head";
 import { getURL } from "../utils/helpers";
 import { languageMap } from "../utils/translate";
+import { applyHashReferral } from "../services/rewardful";
 
 // unregister all previous service workers
 if (typeof navigator !== "undefined") {
@@ -46,6 +47,9 @@ function MyApp({
       }
     });
   }, [router]);
+  useEffect(() => {
+    applyHashReferral();
+  }, []);
   const language = useLanguage();
 
   return (
