@@ -132,7 +132,9 @@ export const ChordEditor = (props: IProps) => {
       <SilentStringsInput
         settings={displaySettings}
         matrix={matrix}
+        editMode={editMode}
         onMatrixChange={onMatrixChange}
+        onEditModeChange={setEditMode}
       />
       <ChordInput
         matrix={matrix}

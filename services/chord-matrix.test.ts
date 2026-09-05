@@ -543,4 +543,80 @@ describe("Chord Matrix", () => {
     matrix.print();
     expect(matrix.isEmptyString(string)).toBe(empty);
   });
+
+  describe("Open/silent string customization", () => {
+    it("Should cycle through open -> silent -> hidden -> open", () => {
+      expect(matrix.getEmptyStringStates()[0]).toEqual(EmptyStringState.O);
+
+      matrix.toggleEmptyState(0);
+      expect(matrix.getEmptyStringStates()[0]).toEqual(EmptyStringState.X);
+
+      matrix.toggleEmptyState(0);
+      expect(matrix.getEmptyStringStates()[0]).toEqual(EmptyStringState.NONE);
+
+      matrix.toggleEmptyState(0);
+      expect(matrix.getEmptyStringStates()[0]).toEqual(EmptyStringState.O);
+    });
+
+    it("Should not render a finger for a hidden empty string", () => {
+      // when
+      matrix.toggleEmptyState(0); // O -> X
+      matrix.toggleEmptyState(0); // X -> NONE
+
+      // then
+      expect(matrix.toChord().some(([string]) => string === 3)).toBe(false);
+    });
+
+    it("Should allow setting text on an open string", () => {
+      // when
+      matrix.emptyStringText(0, "E");
+
+      // then
+      expect(matrix.getEmptyStringCells()[0]).toEqual({
+        state: EmptyStringState.O,
+        text: "E",
+      });
+      expect(matrix.toChord()).toContainEqual([3, 0, { text: "E" }]);
+    });
+
+    it("Should allow setting a color on a silent string", () => {
+      // when
+      matrix.toggleEmptyState(1); // O -> X
+      matrix.emptyStringColor(1, "red");
+
+      // then
+      expect(matrix.toChord()).toContainEqual([2, "x", { color: "red" }]);
+    });
+
+    it("Should preserve text/color when cycling through states", () => {
+      // when
+      matrix.emptyStringText(0, "R");
+      matrix.emptyStringColor(0, "blue");
+      matrix.toggleEmptyState(0); // O -> X
+
+      // then
+      expect(matrix.getEmptyStringCells()[0]).toEqual({
+        state: EmptyStringState.X,
+        text: "R",
+        color: "blue",
+      });
+    });
+
+    it("Should correctly round-trip text/color on empty strings through vexchord", () => {
+      // given
+      const settings = { frets: numFrets, strings: numStrings };
+      matrix.emptyStringText(0, "R");
+      matrix.emptyStringColor(0, "blue");
+      matrix.toggleEmptyState(1); // O -> X
+      matrix.emptyStringText(1, "b3");
+
+      // then
+      expect(matrix.toVexchord()).toEqual(
+        ChordMatrix.fromChart({
+          chord: matrix.toVexchord(),
+          settings,
+        }).toVexchord()
+      );
+    });
+  });
 });
