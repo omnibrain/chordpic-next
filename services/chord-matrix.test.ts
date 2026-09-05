@@ -1,4 +1,5 @@
 import { CellState, ChordMatrix, EmptyStringState } from "./chord-matrix";
+import { FingerOptions, OPEN, SILENT } from "svguitar";
 
 describe("Chord Matrix", () => {
   const numStrings = 3;
@@ -579,14 +580,59 @@ describe("Chord Matrix", () => {
       expect(matrix.toChord()).toContainEqual([3, 0, { text: "E" }]);
     });
 
-    it("Should allow setting a color on a silent string", () => {
-      // when
-      matrix.toggleEmptyState(1); // O -> X
-      matrix.emptyStringColor(1, "red");
+    it.each([OPEN, SILENT])(
+      "Should export and restore the outline color of an empty string (%s)",
+      (value) => {
+        if (value === SILENT) matrix.toggleEmptyState(1);
+        matrix.emptyStringText(1, "R");
+        matrix.emptyStringColor(1, "rgba(255, 0, 0, 0.5)");
 
-      // then
-      expect(matrix.toChord()).toContainEqual([2, "x", { color: "red" }]);
-    });
+        expect(matrix.toChord()).toContainEqual([
+          2,
+          value,
+          { text: "R", strokeColor: "rgba(255, 0, 0, 0.5)" },
+        ]);
+
+        const restored = ChordMatrix.fromChart({
+          chord: JSON.parse(JSON.stringify(matrix.toVexchord())),
+          settings: { frets: numFrets, strings: numStrings },
+        });
+        expect(restored.getEmptyStringCells()[1]).toEqual(
+          expect.objectContaining({ text: "R", color: "rgba(255, 0, 0, 0.5)" })
+        );
+        expect(restored.toVexchord()).toEqual(matrix.toVexchord());
+      }
+    );
+
+    it.each([OPEN, SILENT])(
+      "Should read legacy colors and prefer strokeColor for an empty string (%s)",
+      (value) => {
+        const options: FingerOptions[] = [
+          { color: "red" },
+          { strokeColor: "red" },
+          { color: "blue", strokeColor: "red" },
+        ];
+
+        options.forEach((options) => {
+          const restored = ChordMatrix.fromChart({
+            chord: { fingers: [[2, value, options]], barres: [] },
+            settings: { frets: numFrets, strings: numStrings },
+          });
+
+          expect(restored.getEmptyStringCells()[1].color).toBe("red");
+          expect(restored.toChord()).toContainEqual([
+            2,
+            value,
+            { strokeColor: "red" },
+          ]);
+
+          restored.emptyStringColor(1, "blue");
+          expect(restored.toChord()).toContainEqual([2, value, { strokeColor: "blue" }]);
+          restored.emptyStringColor(1, undefined);
+          expect(restored.toChord()).toContainEqual([2, value]);
+        });
+      }
+    );
 
     it("Should preserve text/color when cycling through states", () => {
       // when

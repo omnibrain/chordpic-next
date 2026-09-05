@@ -71,7 +71,7 @@ export class ChordMatrix {
     chord.fingers.forEach(([string, fret, textOrOptions]: Finger) => {
       const stringIndex = Math.abs(string - numStrings)
 
-      let options: CellOptions
+      let options: FingerOptions
 
       if (!textOrOptions) {
         options = {}
@@ -84,9 +84,9 @@ export class ChordMatrix {
       }
 
       if (fret === OPEN) {
-        emptyStringsStates[stringIndex] = { state: EmptyStringState.O, text: options.text, color: options.color, textColor: options.textColor }
+        emptyStringsStates[stringIndex] = { state: EmptyStringState.O, text: options.text, color: options.strokeColor ?? options.color, textColor: options.textColor }
       } else if (fret === SILENT) {
-        emptyStringsStates[stringIndex] = { state: EmptyStringState.X, text: options.text, color: options.color, textColor: options.textColor }
+        emptyStringsStates[stringIndex] = { state: EmptyStringState.X, text: options.text, color: options.strokeColor ?? options.color, textColor: options.textColor }
       } else {
         cells[(fret - 1) * numStrings + stringIndex] = {
           state: CellState.ACTIVE,
@@ -528,7 +528,8 @@ export class ChordMatrix {
 
         const options: FingerOptions = {
           ...(cell.text ? { text: cell.text } : {}),
-          ...(cell.color ? { color: cell.color } : {}),
+          // SVGuitar draws O/X markers with a stroke; color only controls filled notes.
+          ...(cell.color ? { strokeColor: cell.color } : {}),
           ...(cell.textColor ? { textColor: cell.textColor } : {})
         }
 
