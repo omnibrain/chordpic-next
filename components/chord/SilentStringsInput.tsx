@@ -82,7 +82,7 @@ export const SilentStringsInput = ({
             />
           )}
           {editable && cell.text && editMode !== EditMode.EDIT_TEXT && (
-            <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[10px] text-[#b3b3b3]">
+            <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[#b3b3b3]">
               {cell.text}
             </span>
           )}
