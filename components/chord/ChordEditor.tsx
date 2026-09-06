@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { TuningInput } from "./TuningInput";
 import { ChordInput } from "./chord-input/ChordInput";
 import { SilentStringsInput } from "./SilentStringsInput";
-import { Chord, ChordSettings } from "svguitar";
+import { ChordSettings } from "svguitar";
 import { EditModeInput } from "./EditModeInput";
 import { Chart } from "../../domain/chart";
 import { EditMode } from "../../domain/edit-mode";
@@ -29,7 +29,7 @@ export interface IChordInputSettings {
 interface IProps {
   numFrets: number;
   numStrings: number;
-  chord: Chord;
+  chord: Chart["chord"];
   settings: ChordSettings;
   onChart: (newChart: Chart) => void;
   width: number;
@@ -132,7 +132,9 @@ export const ChordEditor = (props: IProps) => {
       <SilentStringsInput
         settings={displaySettings}
         matrix={matrix}
+        editMode={editMode}
         onMatrixChange={onMatrixChange}
+        onEditModeChange={setEditMode}
       />
       <ChordInput
         matrix={matrix}

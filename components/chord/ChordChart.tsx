@@ -4,6 +4,7 @@ import { ChordSettings, SVGuitarChord } from "svguitar";
 import { SubscriptionType } from "../../types";
 import { useSubscription } from "../../utils/useSubscription";
 import { useChart } from "./useChart";
+import { toSvguitarChord } from "../../services/chord-rendering";
 import * as Sentry from "@sentry/react";
 
 const defaultSVGuitarSettings: Partial<ChordSettings> = {
@@ -57,7 +58,7 @@ export const ChordChart: React.FunctionComponent = () => {
             watermarkFontSize: 16,
             watermarkColor: "rgba(0, 0, 0, 0.5)",
           })
-          .chord(chart.chord)
+          .chord(toSvguitarChord(chart.chord))
           .draw();
 
         setSize(size);

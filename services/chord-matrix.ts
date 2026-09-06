@@ -1,6 +1,7 @@
 import chunk from 'lodash.chunk'
 import range from 'lodash.range'
-import { Barre, Chord, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from 'svguitar'
+import { Barre, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from 'svguitar'
+import { EditableChord, HiddenString } from '../domain/chart'
 
 export enum CellState {
   ACTIVE, // single finger
@@ -26,8 +27,25 @@ type CellOptions = Omit<Cell, 'state'>
 export enum EmptyStringState {
   X,
   O,
+  NONE,
   NOT_EMPTY
 }
+
+/**
+ * The state of an open ("O") or silent ("X") string marker above the nut, including the
+ * optional text/color customization requested by users (e.g. to label the note name of an
+ * open string, or to highlight it as a root note). NONE means the marker is hidden entirely,
+ * which is useful for scale/pattern diagrams that don't want an O or X above every string.
+ */
+export interface EmptyStringCell {
+  state: EmptyStringState
+  text?: string
+  color?: string
+  textColor?: string
+}
+
+// the order the empty-string marker cycles through when a string toggle is clicked
+const EMPTY_STATE_CYCLE = [EmptyStringState.O, EmptyStringState.X, EmptyStringState.NONE]
 
 /**
  * This class contains all the logic of the chords. The state is held in a 1D array. Each mutating operation will
@@ -38,10 +56,10 @@ export class ChordMatrix {
     public numFrets: number,
     public numStrings: number,
     private cells: Cell[] = Array(numStrings * numFrets).fill({ state: CellState.INACTIVE }),
-    private emptyStringsStates: EmptyStringState[] = Array(numStrings).fill(EmptyStringState.O)
+    private emptyStringsStates: EmptyStringCell[] = Array(numStrings).fill({ state: EmptyStringState.O })
   ) {}
 
-  static fromChart({ chord, settings }: { chord: Chord; settings: ChordSettings }): ChordMatrix {
+  static fromChart({ chord, settings }: { chord: EditableChord; settings: ChordSettings }): ChordMatrix {
     if (!settings.frets || !settings.strings) {
       throw new Error('Cannot create matrix if frets or strings is not known')
     }
@@ -49,12 +67,19 @@ export class ChordMatrix {
     const numStrings = settings.strings
 
     const cells: Cell[] = Array(numFrets * numStrings).fill({ state: CellState.INACTIVE })
-    const emptyStringsStates = Array(numStrings).fill(EmptyStringState.O)
+    const emptyStringsStates: EmptyStringCell[] = Array(numStrings).fill({ state: EmptyStringState.O })
+
+    // Older diagrams have no hiddenStrings metadata; missing markers still default to O.
+    chord.hiddenStrings?.forEach(({ string, text, strokeColor, textColor }) => {
+      if (Number.isInteger(string) && string >= 1 && string <= numStrings) {
+        emptyStringsStates[numStrings - string] = { state: EmptyStringState.NONE, text, color: strokeColor, textColor }
+      }
+    })
 
     chord.fingers.forEach(([string, fret, textOrOptions]: Finger) => {
       const stringIndex = Math.abs(string - numStrings)
 
-      let options: CellOptions
+      let options: FingerOptions
 
       if (!textOrOptions) {
         options = {}
@@ -67,9 +92,9 @@ export class ChordMatrix {
       }
 
       if (fret === OPEN) {
-        emptyStringsStates[stringIndex] = EmptyStringState.O
+        emptyStringsStates[stringIndex] = { state: EmptyStringState.O, text: options.text, color: options.strokeColor ?? options.color, textColor: options.textColor }
       } else if (fret === SILENT) {
-        emptyStringsStates[stringIndex] = EmptyStringState.X
+        emptyStringsStates[stringIndex] = { state: EmptyStringState.X, text: options.text, color: options.strokeColor ?? options.color, textColor: options.textColor }
       } else {
         cells[(fret - 1) * numStrings + stringIndex] = {
           state: CellState.ACTIVE,
@@ -146,7 +171,7 @@ export class ChordMatrix {
         return acc
       }, [])
 
-      this.emptyStringsStates = [...this.emptyStringsStates, ...Array(numStrings - numStringsBefore).fill(EmptyStringState.O)]
+      this.emptyStringsStates = [...this.emptyStringsStates, ...Array(numStrings - numStringsBefore).fill({ state: EmptyStringState.O })]
     }
 
     this.numStrings = numStrings
@@ -280,8 +305,28 @@ export class ChordMatrix {
     }
   }
 
+  /**
+   * Cycles the empty-string marker through open ("O") -> silent ("X") -> hidden (no marker at
+   * all, useful for scale/pattern diagrams) -> back to open. Any text/color previously set on
+   * the marker is preserved across the cycle so it doesn't get lost by toggling through it.
+   */
   toggleEmptyState(string: number): ChordMatrix {
-    this.emptyStringsStates[string] = this.emptyStringsStates[string] === EmptyStringState.O ? EmptyStringState.X : EmptyStringState.O
+    const currentIndex = EMPTY_STATE_CYCLE.indexOf(this.emptyStringsStates[string].state)
+    const nextState = EMPTY_STATE_CYCLE[(currentIndex + 1) % EMPTY_STATE_CYCLE.length]
+
+    this.emptyStringsStates[string] = { ...this.emptyStringsStates[string], state: nextState }
+
+    return this.clone()
+  }
+
+  emptyStringText(string: number, text?: string): ChordMatrix {
+    this.emptyStringsStates[string] = { ...this.emptyStringsStates[string], text }
+
+    return this.clone()
+  }
+
+  emptyStringColor(string: number, color?: string): ChordMatrix {
+    this.emptyStringsStates[string] = { ...this.emptyStringsStates[string], color }
 
     return this.clone()
   }
@@ -291,7 +336,17 @@ export class ChordMatrix {
   }
 
   getEmptyStringStates(): EmptyStringState[] {
-    return range(0, this.numStrings).map((i) => (this.isEmptyString(i) ? this.emptyStringsStates[i] : EmptyStringState.NOT_EMPTY))
+    return this.getEmptyStringCells().map((cell) => cell.state)
+  }
+
+  /**
+   * Like {@link getEmptyStringStates} but also exposes the text/color customization of each
+   * open/silent string marker, for the editor UI to render and edit.
+   */
+  getEmptyStringCells(): EmptyStringCell[] {
+    return range(0, this.numStrings).map((i) =>
+      this.isEmptyString(i) ? this.emptyStringsStates[i] : { state: EmptyStringState.NOT_EMPTY }
+    )
   }
 
   toggle(string: number, fret: number): ChordMatrix {
@@ -470,9 +525,24 @@ export class ChordMatrix {
         return [string, fret]
       })
 
-    const emptyStringStates = this.emptyStringIndices().map<Finger>((stringIndex) => {
-      return [Math.abs(stringIndex - this.numStrings), this.emptyStringsStates[stringIndex] === EmptyStringState.O ? 0 : 'x']
-    })
+    const emptyStringStates = this.emptyStringIndices()
+      // a NONE marker means "no O/X above the nut at all" - simply omit the finger so
+      // svguitar doesn't draw anything for that string
+      .filter((stringIndex) => this.emptyStringsStates[stringIndex].state !== EmptyStringState.NONE)
+      .map<Finger>((stringIndex) => {
+        const cell = this.emptyStringsStates[stringIndex]
+        const value: OpenString | SilentString = cell.state === EmptyStringState.O ? OPEN : SILENT
+        const vexString = Math.abs(stringIndex - this.numStrings)
+
+        const options: FingerOptions = {
+          ...(cell.text ? { text: cell.text } : {}),
+          // SVGuitar draws O/X markers with a stroke; color only controls filled notes.
+          ...(cell.color ? { strokeColor: cell.color } : {}),
+          ...(cell.textColor ? { textColor: cell.textColor } : {})
+        }
+
+        return Object.keys(options).length ? [vexString, value, options] : [vexString, value]
+      })
 
     return [...newState, ...emptyStringStates]
   }
@@ -497,10 +567,22 @@ export class ChordMatrix {
     }, [] as Barre[])
   }
 
-  toVexchord(): Chord {
+  toVexchord(): EditableChord {
+    const hiddenStrings = this.emptyStringsStates.flatMap<HiddenString>((cell, stringIndex) =>
+      cell.state === EmptyStringState.NONE
+        ? [{
+            string: this.numStrings - stringIndex,
+            ...(cell.text ? { text: cell.text } : {}),
+            ...(cell.color ? { strokeColor: cell.color } : {}),
+            ...(cell.textColor ? { textColor: cell.textColor } : {})
+          }]
+        : []
+    )
+
     return {
       fingers: this.toChord(),
-      barres: this.toBarres()
+      barres: this.toBarres(),
+      ...(hiddenStrings.length ? { hiddenStrings } : {})
     }
   }
 
