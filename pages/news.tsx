@@ -56,6 +56,29 @@ const HelpPage = () => {
         </T>
       </p>
 
+      <h2 id="customize-open-and-silent-strings">
+        <T>More options for open and silent strings!</T>
+      </h2>
+      <p>
+        <em>
+          <T>September 6th, 2026</T>
+        </em>
+      </p>
+      <p>
+        <T>
+          You can now add text and custom colors to the O and X markers above
+          the fretboard! Just use &quot;Edit Text&quot; or &quot;Edit Colors&quot;
+          to label note names or highlight an open string, just like you do
+          with fretted notes.
+        </T>
+      </p>
+      <p>
+        <T>
+          Want to leave a marker out? In &quot;Edit Fingers&quot; mode, click it
+          to cycle through open, silent, and hidden. Handy for scale diagrams!
+        </T>
+      </p>
+
       <h2 id="a-fresh-new-look">
         <T>A fresh new look for ChordPic ✨</T>
       </h2>
