@@ -1,6 +1,7 @@
 import chunk from 'lodash.chunk'
 import range from 'lodash.range'
-import { Barre, Chord, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from 'svguitar'
+import { Barre, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from 'svguitar'
+import { EditableChord, HiddenString } from '../domain/chart'
 
 export enum CellState {
   ACTIVE, // single finger
@@ -58,7 +59,7 @@ export class ChordMatrix {
     private emptyStringsStates: EmptyStringCell[] = Array(numStrings).fill({ state: EmptyStringState.O })
   ) {}
 
-  static fromChart({ chord, settings }: { chord: Chord; settings: ChordSettings }): ChordMatrix {
+  static fromChart({ chord, settings }: { chord: EditableChord; settings: ChordSettings }): ChordMatrix {
     if (!settings.frets || !settings.strings) {
       throw new Error('Cannot create matrix if frets or strings is not known')
     }
@@ -67,6 +68,13 @@ export class ChordMatrix {
 
     const cells: Cell[] = Array(numFrets * numStrings).fill({ state: CellState.INACTIVE })
     const emptyStringsStates: EmptyStringCell[] = Array(numStrings).fill({ state: EmptyStringState.O })
+
+    // Older diagrams have no hiddenStrings metadata; missing markers still default to O.
+    chord.hiddenStrings?.forEach(({ string, text, strokeColor, textColor }) => {
+      if (Number.isInteger(string) && string >= 1 && string <= numStrings) {
+        emptyStringsStates[numStrings - string] = { state: EmptyStringState.NONE, text, color: strokeColor, textColor }
+      }
+    })
 
     chord.fingers.forEach(([string, fret, textOrOptions]: Finger) => {
       const stringIndex = Math.abs(string - numStrings)
@@ -559,10 +567,22 @@ export class ChordMatrix {
     }, [] as Barre[])
   }
 
-  toVexchord(): Chord {
+  toVexchord(): EditableChord {
+    const hiddenStrings = this.emptyStringsStates.flatMap<HiddenString>((cell, stringIndex) =>
+      cell.state === EmptyStringState.NONE
+        ? [{
+            string: this.numStrings - stringIndex,
+            ...(cell.text ? { text: cell.text } : {}),
+            ...(cell.color ? { strokeColor: cell.color } : {}),
+            ...(cell.textColor ? { textColor: cell.textColor } : {})
+          }]
+        : []
+    )
+
     return {
       fingers: this.toChord(),
-      barres: this.toBarres()
+      barres: this.toBarres(),
+      ...(hiddenStrings.length ? { hiddenStrings } : {})
     }
   }
 

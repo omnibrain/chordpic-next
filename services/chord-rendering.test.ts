@@ -68,4 +68,37 @@ describe("Open/silent string rendering", () => {
       ]);
     },
   );
+
+  test.each([Orientation.vertical, Orientation.horizontal])(
+    "keeps hidden markers out of the result after reloading a %s diagram",
+    (orientation) => {
+      const matrix = new ChordMatrix(3, 4);
+      matrix.toggleEmptyState(0).toggleEmptyState(0);
+      matrix.toggleEmptyState(2).toggleEmptyState(2);
+      matrix.emptyStringColor(1, "#0000ff");
+      const settings = { strings: 4, frets: 3, orientation };
+      const restored = ChordMatrix.fromChart({
+        chord: JSON.parse(JSON.stringify(matrix.toVexchord())),
+        settings,
+      });
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.id = "test-chord-diagram";
+      document.body.appendChild(svg);
+
+      new SVGuitarChord("#test-chord-diagram")
+        .configure(settings)
+        .chord(restored.toVexchord())
+        .draw();
+
+      expect(svg.querySelector(".open-string-0")).toBeNull();
+      expect(svg.querySelector(".open-string-2")).toBeNull();
+      expect(svg.querySelectorAll(".open-string")).toHaveLength(2);
+      expect(svg.querySelector(".open-string-1")?.getAttribute("stroke")).toBe(
+        "#0000ff",
+      );
+      expect(svg.querySelector(".open-string-3")?.getAttribute("stroke")).toBe(
+        "#000000",
+      );
+    },
+  );
 });

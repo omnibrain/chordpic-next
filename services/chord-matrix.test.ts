@@ -1,5 +1,8 @@
 import { CellState, ChordMatrix, EmptyStringState } from "./chord-matrix";
 import { FingerOptions, OPEN, SILENT } from "svguitar";
+import { Chart } from "../domain/chart";
+import { decompress } from "../hooks/compressed-state";
+import { getLink } from "../hooks/url-state";
 
 describe("Chord Matrix", () => {
   const numStrings = 3;
@@ -663,6 +666,180 @@ describe("Chord Matrix", () => {
           settings,
         }).toVexchord()
       );
+    });
+  });
+
+  describe("Hidden string persistence", () => {
+    const settings = { frets: numFrets, strings: numStrings };
+
+    function reload(matrixToSave: ChordMatrix) {
+      return ChordMatrix.fromChart({
+        chord: JSON.parse(JSON.stringify(matrixToSave.toVexchord())),
+        settings: {
+          frets: matrixToSave.numFrets,
+          strings: matrixToSave.numStrings,
+        },
+      });
+    }
+
+    it.each([
+      { hidden: [0, 2] },
+      { hidden: [0, 1, 2] },
+    ])("Should preserve hidden strings $hidden after saving and reloading", ({ hidden }) => {
+      hidden.forEach((string) => {
+        matrix.toggleEmptyState(string).toggleEmptyState(string);
+      });
+
+      const restored = reload(matrix);
+
+      expect(restored.getEmptyStringStates()).toEqual(
+        matrix.getEmptyStringStates()
+      );
+      expect(restored.toVexchord()).toEqual(matrix.toVexchord());
+      expect(restored.toChord()).toHaveLength(numStrings - hidden.length);
+    });
+
+    it("Should restore a hidden marker's customization when it is made visible again", () => {
+      matrix = ChordMatrix.fromChart({
+        chord: {
+          fingers: [
+            [3, OPEN, { text: "R", strokeColor: "blue", textColor: "white" }],
+          ],
+          barres: [],
+        },
+        settings,
+      });
+      matrix.toggleEmptyState(0).toggleEmptyState(0);
+
+      const restored = reload(matrix);
+      expect(restored.getEmptyStringCells()[0]).toEqual({
+        state: EmptyStringState.NONE,
+        text: "R",
+        color: "blue",
+        textColor: "white",
+      });
+
+      restored.toggleEmptyState(0);
+      expect(restored.toChord()).toContainEqual([
+        3,
+        OPEN,
+        { text: "R", strokeColor: "blue", textColor: "white" },
+      ]);
+      expect(restored.toVexchord()).not.toHaveProperty("hiddenStrings");
+    });
+
+    it("Should preserve hidden strings when reopening a compressed sharing link for editing", () => {
+      matrix.emptyStringText(1, "b3").emptyStringColor(1, "red");
+      matrix.toggleEmptyState(1).toggleEmptyState(1);
+      const chart: Chart = { chord: matrix.toVexchord(), settings };
+      const link = getLink(chart, "/chord");
+      const loaded = decompress<Chart>(link.slice(link.lastIndexOf("/") + 1));
+
+      expect(loaded).toEqual(chart);
+      const restored = ChordMatrix.fromChart(loaded!);
+      expect(restored.getEmptyStringCells()[1]).toEqual({
+        state: EmptyStringState.NONE,
+        text: "b3",
+        color: "red",
+      });
+      expect(restored.toVexchord()).toEqual(chart.chord);
+    });
+
+    it.each([undefined, OPEN, SILENT])(
+      "Should keep legacy missing markers open and preserve explicit markers (%s)",
+      (value) => {
+        const restored = ChordMatrix.fromChart({
+          chord: {
+            fingers: value === undefined ? [] : [[2, value]],
+            barres: [],
+          },
+          settings,
+        });
+
+        expect(restored.getEmptyStringStates()).toEqual([
+          EmptyStringState.O,
+          value === SILENT ? EmptyStringState.X : EmptyStringState.O,
+          EmptyStringState.O,
+        ]);
+        expect(restored.toVexchord()).toEqual({
+          fingers: [[3, OPEN], [2, value ?? OPEN], [1, OPEN]],
+          barres: [],
+        });
+      }
+    );
+
+    it.each([OPEN, SILENT])(
+      "Should prefer explicit visible markers over conflicting hidden metadata (%s)",
+      (value) => {
+        const chart = {
+          chord: {
+            fingers: [
+              [2, value, { text: "E", strokeColor: "blue" }],
+            ] as Chart["chord"]["fingers"],
+            barres: [],
+            hiddenStrings: [{ string: 2, text: "R", strokeColor: "red" }],
+          },
+          settings,
+        };
+
+        const restored = ChordMatrix.fromChart(chart);
+
+        expect(restored.getEmptyStringCells()[1]).toEqual({
+          state: value === OPEN ? EmptyStringState.O : EmptyStringState.X,
+          text: "E",
+          color: "blue",
+        });
+        expect(restored.toVexchord()).not.toHaveProperty("hiddenStrings");
+      }
+    );
+
+    it("Should remember a hidden marker beneath a fretted note after reloading", () => {
+      matrix.toggleEmptyState(0).toggleEmptyState(0);
+      matrix.toggle(0, 1);
+
+      const restored = reload(matrix);
+      expect(restored.getEmptyStringStates()[0]).toBe(EmptyStringState.NOT_EMPTY);
+      restored.toggle(0, 1);
+
+      expect(restored.getEmptyStringStates()[0]).toBe(EmptyStringState.NONE);
+      expect(restored.toChord().some(([string]) => string === 3)).toBe(false);
+    });
+
+    it("Should preserve retained hidden markers when resizing and discard removed strings", () => {
+      matrix.toggleEmptyState(0).toggleEmptyState(0);
+      matrix.toggleEmptyState(2).toggleEmptyState(2);
+      matrix.setNumStrings(5);
+
+      const expanded = reload(matrix);
+      expect(expanded.getEmptyStringStates()).toEqual([
+        EmptyStringState.NONE,
+        EmptyStringState.O,
+        EmptyStringState.NONE,
+        EmptyStringState.O,
+        EmptyStringState.O,
+      ]);
+      expect(expanded.toVexchord()).toEqual(
+        expect.objectContaining({
+          hiddenStrings: [{ string: 5 }, { string: 3 }],
+        })
+      );
+
+      expanded.setNumStrings(2);
+      const reduced = reload(expanded);
+      expect(reduced.getEmptyStringStates()).toEqual([
+        EmptyStringState.NONE,
+        EmptyStringState.O,
+      ]);
+      expect(reduced.toVexchord()).toEqual(
+        expect.objectContaining({ hiddenStrings: [{ string: 2 }] })
+      );
+
+      reduced.setNumStrings(3);
+      expect(reload(reduced).getEmptyStringStates()).toEqual([
+        EmptyStringState.NONE,
+        EmptyStringState.O,
+        EmptyStringState.O,
+      ]);
     });
   });
 });
