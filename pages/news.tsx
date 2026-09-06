@@ -75,7 +75,8 @@ const HelpPage = () => {
       <p>
         <T>
           Want to leave a marker out? In &quot;Edit Fingers&quot; mode, click it
-          to cycle through open, silent, and hidden. Handy for scale diagrams!
+          to cycle through open, silent, and hidden. You can still add text to
+          a hidden marker using &quot;Edit Text&quot;. Handy for scale diagrams!
         </T>
       </p>
       <p>

@@ -26,7 +26,7 @@ const stateClassNames: Partial<Record<EmptyStringState, string>> = {
  *
  * A second, transparent grid is layered on top for editing: while the global edit mode is
  * "Edit Text"/"Edit Colors", it captures clicks so you can attach a text label (note name,
- * scale degree, ...) or a custom color to an open/silent marker, using the exact same text
+ * scale degree, ...) to any empty string, or a custom color to an open/silent marker, using the same text
  * input / color picker as the fretted notes (see ChordTextInput / ChordColorInput). It lives
  * outside the .string-cell's `overflow: hidden` so the color picker popover isn't clipped.
  */
@@ -87,21 +87,22 @@ export const SilentStringsInput = ({
         }}
       >
         {cells.map((cell, i) => {
-          const editable =
+          const hasMarker =
             cell.state === EmptyStringState.O ||
             cell.state === EmptyStringState.X;
+          const canEditText = hasMarker || cell.state === EmptyStringState.NONE;
 
           return (
             <div
               key={i}
               className="relative flex items-stretch justify-center"
               onClick={
-                (editingText || editingColor) && !editable
+                (editingText && !canEditText) || (editingColor && !hasMarker)
                   ? () => onEditModeChange(EditMode.EDIT_NOTES)
                   : undefined
               }
             >
-              {editable && editingText && (
+              {canEditText && editingText && (
                 <input
                   type="text"
                   className="h-2/5 w-full self-center rounded-[3px] border-2 border-[color:var(--fg)] bg-background p-0 text-center text-base leading-normal text-foreground"
@@ -111,12 +112,12 @@ export const SilentStringsInput = ({
                   }
                 />
               )}
-              {editable && !editingText && cell.text && (
+              {canEditText && !editingText && cell.text && (
                 <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[#b3b3b3]">
                   {cell.text}
                 </span>
               )}
-              {editable && editingColor && (
+              {hasMarker && editingColor && (
                 <ColorInput
                   render={(renderProps) => (
                     <button

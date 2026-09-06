@@ -164,8 +164,8 @@
 }
 
 /* Marker explicitly hidden by the user (e.g. for scale/pattern diagrams). Rendered as a
-   faint dashed circle in the editor only, so it stays discoverable/clickable - nothing is
-   drawn for it in the final chord diagram. */
+   faint dashed circle in the editor only, so it stays discoverable/clickable. The final
+   chord diagram shows its text, if any, without the circle. */
 .string-cell.none::before {
   content: "";
   border-radius: calc(var(--circle-size) / 2);
