@@ -78,6 +78,19 @@ const HelpPage = () => {
           to cycle through open, silent, and hidden. Handy for scale diagrams!
         </T>
       </p>
+      <p>
+        <T>
+          This feature was requested by a user. Feature requests are always
+          welcome, so don&apos;t hesitate to{" "}
+          <a
+            href="mailto:incoming+voellmy-chordpic-13938802-issue-@incoming.gitlab.com"
+            style={{ textDecoration: "underline" }}
+          >
+            write us an email
+          </a>{" "}
+          with your ideas!
+        </T>
+      </p>
 
       <h2 id="a-fresh-new-look">
         <T>A fresh new look for ChordPic ✨</T>
