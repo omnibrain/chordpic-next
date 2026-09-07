@@ -5,7 +5,7 @@ import { ChordMatrix, EmptyStringState } from "../../services/chord-matrix";
 import { EditMode } from "../../domain/edit-mode";
 
 // Color picking is independent of editing a hidden marker's text.
-jest.mock("./ColorInput", () => ({ ColorInput: () => null }));
+jest.mock("../ColorInput", () => ({ ColorInput: () => null }));
 
 it("edits and previews a dotted circle's text without making the marker visible", () => {
   const matrix = new ChordMatrix(3, 3);

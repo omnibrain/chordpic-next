@@ -10,6 +10,8 @@ interface Props {
   onChange: (color: string) => void;
   value?: string;
   render?: (props: ChildProps) => React.ReactNode;
+  /** Where the picker pops up relative to the trigger. Defaults to "down". */
+  direction?: "up" | "down";
 }
 
 interface ChildProps {
@@ -17,18 +19,20 @@ interface ChildProps {
   onClick: () => void;
 }
 
-export const ColorInput = (props: Props) => {
+export const ColorInput = ({ direction = "down", ...props }: Props) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
   useOutsideHandler(ref, () => setVisible(false));
+
   const escHandler = useCallback(() => setVisible(false), []);
   useEscHandler(escHandler);
 
   const onColorChange = ({ rgb }: ColorResult) => {
-    const rgba = rgb.a
-      ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`
-      : `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-    props.onChange(rgba);
+    const color =
+      typeof rgb.a === "number" && rgb.a < 1
+        ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`
+        : `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    props.onChange(color);
   };
 
   return (
@@ -54,7 +58,12 @@ export const ColorInput = (props: Props) => {
       )}
 
       {visible && (
-        <div ref={ref} className="absolute bottom-[60px] z-10">
+        <div
+          ref={ref}
+          className={`absolute z-10 ${
+            direction === "up" ? "bottom-[60px]" : "top-[60px]"
+          }`}
+        >
           <SketchPicker color={props.value} onChangeComplete={onColorChange} />
         </div>
       )}

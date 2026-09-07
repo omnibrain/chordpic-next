@@ -2,7 +2,7 @@ import React from "react";
 import { ChordMatrix, EmptyStringState } from "../../services/chord-matrix";
 import { IChordInputSettings } from "./ChordEditor";
 import { EditMode } from "../../domain/edit-mode";
-import { ColorInput } from "./ColorInput";
+import { ColorInput } from "../ColorInput";
 
 interface IProps {
   settings: IChordInputSettings;
