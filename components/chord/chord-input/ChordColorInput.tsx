@@ -1,7 +1,7 @@
 import { EditMode } from "../../../domain/edit-mode";
 import { ChordMatrix } from "../../../services/chord-matrix";
 import { IChordInputSettings } from "../ChordEditor";
-import { ColorInput } from "../ColorInput";
+import { ColorInput } from "../../ColorInput";
 import { ClickCellContainer } from "./ClickCellContainer";
 
 export interface IChordTextInputProps {
