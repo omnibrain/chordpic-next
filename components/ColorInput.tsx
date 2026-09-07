@@ -25,10 +25,14 @@ export const ColorInput = (props: Props) => {
   useEscHandler(escHandler);
 
   const onColorChange = ({ rgb }: ColorResult) => {
-    const rgba = rgb.a
-      ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`
-      : `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-    props.onChange(rgba);
+    // rgb.a is 0..1. Only emit rgba() when there is actual transparency - the old
+    // `rgb.a ? ... : ...` check treated a fully transparent color (a === 0) as
+    // falsy and emitted an opaque rgb() instead.
+    const color =
+      typeof rgb.a === "number" && rgb.a < 1
+        ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`
+        : `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    props.onChange(color);
   };
 
   return (
