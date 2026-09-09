@@ -75,7 +75,12 @@ const Home: NextPage = () => {
           href="/pricing"
           className="font-medium underline underline-offset-4"
         >
-          <T>Get the Pro version (no ads, no watermark)</T>
+          <span className="[.ads-off_&]:hidden">
+            <T>Get the Pro version (no ads, no watermark)</T>
+          </span>
+          <span className="hidden [.ads-off_&]:inline">
+            <T>Get the Pro version (no watermark)</T>
+          </span>
         </NextLink>
       </p>
       {isClient && (

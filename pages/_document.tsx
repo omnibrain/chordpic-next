@@ -1,6 +1,7 @@
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 import Script from "next/script";
 import { colorModeInitScript } from "../hooks/use-color-mode";
+import { adsInitScript } from "../hooks/use-ads-assignment";
 
 export default class Document extends NextDocument {
   render() {
@@ -37,6 +38,7 @@ export default class Document extends NextDocument {
         </Head>
         <body>
           <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
+          <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
           <Main />
           <NextScript />
           <Script

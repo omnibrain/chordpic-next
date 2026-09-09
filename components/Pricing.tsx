@@ -15,11 +15,20 @@ export default function Pricing({ products }: Props) {
         <T>Pricing Plans</T>
       </h1>
       <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-muted-foreground">
-        <T>
-          Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
-          <strong> without watermark</strong>, <strong>handdrawn style</strong>{" "}
-          and <strong>no ads</strong>.
-        </T>
+        <span className="[.ads-off_&]:hidden">
+          <T>
+            Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
+            <strong> without watermark</strong>,{" "}
+            <strong>handdrawn style</strong> and <strong>no ads</strong>.
+          </T>
+        </span>
+        <span className="hidden [.ads-off_&]:inline">
+          <T>
+            Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
+            <strong> without watermark</strong> and{" "}
+            <strong>handdrawn style</strong>.
+          </T>
+        </span>
       </p>
 
       <Tabs defaultValue="month" className="flex flex-col items-center">
