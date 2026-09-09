@@ -48,7 +48,16 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Pages only. API routes, Next internals and anything with a file extension
-  // are left alone.
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  matcher: [
+    // The home page needs its own entry. `i18n` in next.config.js makes Next
+    // prepend a mandatory locale segment to every matcher, so the pattern below
+    // compiles to `/<locale>/<something>` — and `/` normalises to `/en`, which
+    // leaves nothing for the `<something>`. Every other page matched; the home
+    // page silently did not, so first-time visitors landing there went
+    // unassigned.
+    "/",
+    // Pages only. API routes, Next internals and anything with a file extension
+    // are left alone.
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+  ],
 };
