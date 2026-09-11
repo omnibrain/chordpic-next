@@ -9,6 +9,12 @@ import {
   readAdsAssignment,
   useAdsAssignment,
 } from "../hooks/use-ads-assignment";
+import {
+  DEFAULT_LOCALE,
+  isNoindexPath,
+  localeUrl,
+  SITE_URL,
+} from "../services/seo";
 import { Footer } from "./Footer";
 import { NavBar } from "./NavBar";
 
@@ -31,6 +37,18 @@ export const Layout: React.FunctionComponent<
     cardImage: "/logo.png",
     ...pageMeta,
   };
+
+  const fullTitle = [TITLE_PREFIX, meta.title].join(" | ");
+  const noindex = isNoindexPath(router.asPath);
+  // Skipped on noindex pages, which don't need one — and for the statically
+  // optimised /chord/[...data] the server render has no params yet, so it would
+  // be an URL with a literal "[...data]" in it.
+  const canonical = noindex
+    ? null
+    : localeUrl(router.locale ?? DEFAULT_LOCALE, router.asPath);
+  // Crawlers resolve og:image against nothing, so a site-relative path is a
+  // broken card on every platform that renders one.
+  const cardImage = `${SITE_URL}${meta.cardImage}`;
 
   useEffect(() => {
     // Read straight from the cookie rather than from state: user properties
@@ -56,24 +74,24 @@ export const Layout: React.FunctionComponent<
   return (
     <>
       <Head>
-        <title>{[TITLE_PREFIX, meta.title].join(" | ")}</title>
-        <meta name="robots" content="follow, index" />
+        <title>{fullTitle}</title>
+        <meta
+          name="robots"
+          content={noindex ? "noindex, follow" : "index, follow"}
+        />
+        {canonical && <link rel="canonical" href={canonical} />}
         <link href="/favicon.ico" rel="shortcut icon" />
         <meta content={meta.description} name="description" />
-        <meta
-          property="og:url"
-          content={`https://chordpic.com${router.asPath}`}
-        />
+        {canonical && <meta property="og:url" content={canonical} />}
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content={meta.title} />
+        <meta property="og:site_name" content={TITLE_PREFIX} />
         <meta property="og:description" content={meta.description} />
-        <meta property="og:title" content={meta.title} />
-        <meta property="og:image" content={meta.cardImage} />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:image" content={cardImage} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@vercel" />
-        <meta name="twitter:title" content={meta.title} />
+        <meta name="twitter:title" content={fullTitle} />
         <meta name="twitter:description" content={meta.description} />
-        <meta name="twitter:image" content={meta.cardImage} />
+        <meta name="twitter:image" content={cardImage} />
       </Head>
 
       {subscription === SubscriptionType.FREE && adsAssignment?.arm === "on" && (

@@ -26,6 +26,13 @@ const moduleExports = {
     ],
     defaultLocale: Language.EN,
   },
+  async rewrites() {
+    return [
+      // The handler lives under /api so that `i18n` neither locale-prefixes it
+      // nor redirects it on Accept-Language.
+      { source: "/sitemap.xml", destination: "/api/sitemap" },
+    ];
+  },
 };
 
 const sentryWebpackPluginOptions = {
