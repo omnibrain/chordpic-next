@@ -7,6 +7,7 @@ import {
   PUBLIC_LOCALES,
   PUBLIC_PATHS,
   SITE_URL,
+  sitemapEntries,
 } from "./seo";
 
 describe("canonicalPath", () => {
@@ -69,30 +70,56 @@ describe("localeUrl", () => {
   });
 });
 
-describe("buildSitemap", () => {
-  const sitemap = buildSitemap();
+describe("sitemapEntries", () => {
+  const entries = sitemapEntries();
 
   it("lists every public page in every public locale", () => {
-    const locs = sitemap.match(/<loc>/g) ?? [];
+    expect(entries).toHaveLength(PUBLIC_PATHS.length * PUBLIC_LOCALES.length);
 
-    expect(locs).toHaveLength(PUBLIC_PATHS.length * PUBLIC_LOCALES.length);
-    expect(sitemap).toContain(`<loc>${SITE_URL}/</loc>`);
-    expect(sitemap).toContain(`<loc>${SITE_URL}/es</loc>`);
-    expect(sitemap).toContain(`<loc>${SITE_URL}/pt/pricing</loc>`);
+    const urls = entries.map((entry) => entry.url);
+    expect(urls).toContain(`${SITE_URL}/`);
+    expect(urls).toContain(`${SITE_URL}/es`);
+    expect(urls).toContain(`${SITE_URL}/pt/pricing`);
   });
 
-  it("annotates each entry with a self-referencing hreflang cluster", () => {
-    expect(sitemap).toContain(
-      `<xhtml:link rel="alternate" hreflang="es" href="${SITE_URL}/es"/>`,
+  it("gives each entry a self-referencing hreflang cluster plus x-default", () => {
+    entries.forEach((entry) => {
+      const langs = entry.links?.map((link) => link.lang) ?? [];
+
+      expect(langs).toEqual([...PUBLIC_LOCALES, "x-default"]);
+      // Self-referencing: the entry's own URL is among its own alternates.
+      expect(entry.links?.map((link) => link.url)).toContain(entry.url);
+    });
+  });
+
+  it("points x-default at the default locale of the same page", () => {
+    const pricing = entries.find(
+      (entry) => entry.url === `${SITE_URL}/de/pricing`,
     );
-    expect(sitemap).toContain(
-      `<xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/"/>`,
-    );
+
+    expect(
+      pricing?.links?.find((link) => link.lang === "x-default")?.url,
+    ).toBe(`${SITE_URL}/pricing`);
   });
 
   it("excludes everything marked noindex", () => {
-    expect(sitemap).not.toContain("/signin");
-    expect(sitemap).not.toContain("/account");
-    expect(sitemap).not.toContain("/chord/");
+    entries.forEach((entry) => {
+      expect(isNoindexPath(entry.url.replace(SITE_URL, ""))).toBe(false);
+    });
+  });
+});
+
+describe("buildSitemap", () => {
+  it("renders the entries as a valid urlset", async () => {
+    const sitemap = await buildSitemap();
+
+    expect(sitemap).toContain(
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+    );
+    expect(sitemap).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"');
+    expect(sitemap.match(/<loc>/g)).toHaveLength(sitemapEntries().length);
+    expect(sitemap).toContain(
+      `<xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/"/>`,
+    );
   });
 });

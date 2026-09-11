@@ -1,3 +1,11 @@
+import { Readable } from "node:stream";
+import {
+  ErrorLevel,
+  LinkItem,
+  SitemapItemLoose,
+  SitemapStream,
+  streamToPromise,
+} from "sitemap";
 import { Language } from "@magic-translate/react";
 import { languageMap } from "../utils/translate";
 
@@ -93,33 +101,37 @@ export function localeUrl(locale: string, asPath: string): string {
  * Every public page in every public locale, each entry carrying the full
  * hreflang cluster so the annotations are stated in two places Google reads.
  */
-export function buildSitemap(): string {
-  const urls = PUBLIC_PATHS.flatMap((path) =>
-    PUBLIC_LOCALES.map((locale) => {
-      const alternates = [
-        ...PUBLIC_LOCALES.map(
-          (alternate) =>
-            `    <xhtml:link rel="alternate" hreflang="${alternate}" href="${localeUrl(
-              alternate,
-              path,
-            )}"/>`,
-        ),
-        `    <xhtml:link rel="alternate" hreflang="x-default" href="${localeUrl(
-          DEFAULT_LOCALE,
-          path,
-        )}"/>`,
-      ].join("\n");
+export function sitemapEntries(): SitemapItemLoose[] {
+  return PUBLIC_PATHS.flatMap((path) => {
+    const links: LinkItem[] = [
+      ...PUBLIC_LOCALES.map((locale) => ({
+        lang: locale,
+        url: localeUrl(locale, path),
+      })),
+      { lang: "x-default", url: localeUrl(DEFAULT_LOCALE, path) },
+    ];
 
-      return `  <url>\n    <loc>${localeUrl(
-        locale,
-        path,
-      )}</loc>\n${alternates}\n  </url>`;
-    }),
+    return PUBLIC_LOCALES.map((locale) => ({
+      url: localeUrl(locale, path),
+      links,
+    }));
+  });
+}
+
+export async function buildSitemap(): Promise<string> {
+  const stream = new SitemapStream({
+    hostname: SITE_URL,
+    // Only the namespace the hreflang annotations need; the defaults also
+    // declare news, video and image, none of which we emit.
+    xmlns: { news: false, video: false, image: false, xhtml: true },
+    // A malformed URL should fail the request rather than quietly ship a
+    // sitemap Search Console will reject.
+    level: ErrorLevel.THROW,
+  });
+
+  const xml = await streamToPromise(
+    Readable.from(sitemapEntries()).pipe(stream),
   );
 
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urls.join("\n")}
-</urlset>
-`;
+  return xml.toString();
 }
