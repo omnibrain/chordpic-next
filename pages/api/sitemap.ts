@@ -10,8 +10,11 @@ import { buildSitemap } from "../../services/seo";
  * Generated rather than checked in as a static file so it stays in step with
  * PUBLIC_PATHS and PUBLIC_LOCALES instead of quietly rotting.
  */
-export default function sitemap(_req: NextApiRequest, res: NextApiResponse) {
+export default async function sitemap(
+  _req: NextApiRequest,
+  res: NextApiResponse,
+) {
   res.setHeader("Content-Type", "application/xml; charset=utf-8");
   res.setHeader("Cache-Control", "public, max-age=0, s-maxage=86400");
-  res.status(200).send(buildSitemap());
+  res.status(200).send(await buildSitemap());
 }
