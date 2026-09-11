@@ -19,8 +19,12 @@ import {
 } from "@magic-translate/react";
 import { useLanguage } from "../utils/use-language";
 import Head from "next/head";
-import { getURL } from "../utils/helpers";
-import { languageMap } from "../utils/translate";
+import {
+  DEFAULT_LOCALE,
+  isNoindexPath,
+  localeUrl,
+  PUBLIC_LOCALES,
+} from "../services/seo";
 import { applyHashReferral } from "../services/rewardful";
 
 // unregister all previous service workers
@@ -69,16 +73,28 @@ function MyApp({
         apiKey={process.env.NEXT_PUBLIC_MAGIC_TRANSLATE_API_KEY!!}
       >
         <Head>
-          {Object.keys(languageMap)
-            .filter((lang) => lang !== language)
-            .map((lang) => (
+          {/*
+            Emitted for indexable pages only, and including the current locale:
+            Google requires an hreflang cluster to be self-referencing, and had
+            been discarding this one for listing only the *other* languages.
+          */}
+          {!isNoindexPath(router.asPath) && (
+            <>
+              {PUBLIC_LOCALES.map((lang) => (
+                <link
+                  key={lang}
+                  rel="alternate"
+                  hrefLang={lang}
+                  href={localeUrl(lang, router.asPath)}
+                />
+              ))}
               <link
-                key={lang}
                 rel="alternate"
-                hrefLang={lang}
-                href={`${getURL()}/${lang}${router.asPath}`}
+                hrefLang="x-default"
+                href={localeUrl(DEFAULT_LOCALE, router.asPath)}
               />
-            ))}
+            </>
+          )}
         </Head>
         <TooltipProvider>
           <UserProvider supabaseClient={supabaseClient}>

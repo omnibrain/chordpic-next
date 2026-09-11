@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Auth, account and /chord/* sharing links are excluded with a noindex meta tag
+# instead of a Disallow here: a disallowed URL is never fetched, so Google would
+# never see the noindex and anything already indexed would stay indexed.
+
+Sitemap: https://chordpic.com/sitemap.xml

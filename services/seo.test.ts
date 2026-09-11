@@ -1,0 +1,98 @@
+import {
+  buildSitemap,
+  canonicalPath,
+  DEFAULT_LOCALE,
+  isNoindexPath,
+  localeUrl,
+  PUBLIC_LOCALES,
+  PUBLIC_PATHS,
+  SITE_URL,
+} from "./seo";
+
+describe("canonicalPath", () => {
+  it("drops the query string and the hash", () => {
+    expect(canonicalPath("/pricing?utm_source=x")).toBe("/pricing");
+    expect(canonicalPath("/#N4IgbiBcoM5QdgcwLYFMDOAXA9g")).toBe("/");
+    expect(canonicalPath("/help?a=1#b")).toBe("/help");
+  });
+
+  it("normalises the trailing slash but keeps the root", () => {
+    expect(canonicalPath("/help/")).toBe("/help");
+    expect(canonicalPath("/")).toBe("/");
+  });
+});
+
+describe("isNoindexPath", () => {
+  it("excludes auth, account and the sharing links", () => {
+    expect(isNoindexPath("/signin")).toBe(true);
+    expect(isNoindexPath("/account")).toBe(true);
+    expect(isNoindexPath("/new-password")).toBe(true);
+    expect(isNoindexPath("/playground")).toBe(true);
+    expect(isNoindexPath("/chord/N4IgbiBcoM5QdgcwLYFMDOAXA9g")).toBe(true);
+  });
+
+  it("leaves the pages we want ranking alone", () => {
+    PUBLIC_PATHS.forEach((path) => {
+      expect(isNoindexPath(path)).toBe(false);
+    });
+  });
+
+  it("does not match a prefix that is only a substring", () => {
+    expect(isNoindexPath("/chords/c-major")).toBe(false);
+    expect(isNoindexPath("/signing-up")).toBe(false);
+  });
+});
+
+describe("localeUrl", () => {
+  it("serves the default locale unprefixed", () => {
+    expect(localeUrl(DEFAULT_LOCALE, "/")).toBe(`${SITE_URL}/`);
+    expect(localeUrl(DEFAULT_LOCALE, "/pricing")).toBe(`${SITE_URL}/pricing`);
+  });
+
+  it("prefixes every other locale", () => {
+    expect(localeUrl("de", "/")).toBe(`${SITE_URL}/de`);
+    expect(localeUrl("de", "/pricing")).toBe(`${SITE_URL}/de/pricing`);
+  });
+
+  it("never emits a locale root with a trailing slash, which 308s", () => {
+    PUBLIC_LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).forEach(
+      (locale) => {
+        expect(localeUrl(locale, "/")).not.toMatch(/\/$/);
+      },
+    );
+  });
+
+  it("is stable across the query strings and hashes asPath carries", () => {
+    expect(localeUrl("es", "/pricing?utm_source=x")).toBe(
+      localeUrl("es", "/pricing"),
+    );
+  });
+});
+
+describe("buildSitemap", () => {
+  const sitemap = buildSitemap();
+
+  it("lists every public page in every public locale", () => {
+    const locs = sitemap.match(/<loc>/g) ?? [];
+
+    expect(locs).toHaveLength(PUBLIC_PATHS.length * PUBLIC_LOCALES.length);
+    expect(sitemap).toContain(`<loc>${SITE_URL}/</loc>`);
+    expect(sitemap).toContain(`<loc>${SITE_URL}/es</loc>`);
+    expect(sitemap).toContain(`<loc>${SITE_URL}/pt/pricing</loc>`);
+  });
+
+  it("annotates each entry with a self-referencing hreflang cluster", () => {
+    expect(sitemap).toContain(
+      `<xhtml:link rel="alternate" hreflang="es" href="${SITE_URL}/es"/>`,
+    );
+    expect(sitemap).toContain(
+      `<xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/"/>`,
+    );
+  });
+
+  it("excludes everything marked noindex", () => {
+    expect(sitemap).not.toContain("/signin");
+    expect(sitemap).not.toContain("/account");
+    expect(sitemap).not.toContain("/chord/");
+  });
+});

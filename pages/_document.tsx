@@ -5,8 +5,13 @@ import { adsInitScript } from "../hooks/use-ads-assignment";
 
 export default class Document extends NextDocument {
   render() {
+    // Was hardcoded to "en", so /de, /es and the rest all claimed to be
+    // English. The body text is still translated client-side; this only fixes
+    // the declaration browsers and screen readers act on.
+    const locale = this.props.__NEXT_DATA__.locale ?? "en";
+
     return (
-      <Html lang="en">
+      <Html lang={locale}>
         <Head>
           <Script
             id="cookieyes"
