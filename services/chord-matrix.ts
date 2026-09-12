@@ -143,22 +143,27 @@ export class ChordMatrix {
       return this
     } else if (numStrings < numStringsBefore) {
       // reduce strings
-      this.cells = this.cells.reduce<Cell[]>((acc, val, i) => {
-        if (i % numStringsBefore >= numStrings) {
-          // reduce the fret to this length if this is a fret
-          if (val.state === CellState.RIGHT || val.state === CellState.MIDDLE) {
-            acc[i - 1] = { state: CellState.RIGHT }
+      this.cells = chunk(this.cells, numStringsBefore).flatMap((row) => {
+        const kept = row.slice(0, numStrings)
+        const last = kept[kept.length - 1]
+
+        // A barre that reached into the dropped strings has to end on the last
+        // string that survives. If only its LEFT end survives there is no barre
+        // left to draw, so it degrades to a single finger.
+        if (last && row.slice(numStrings).some((cell) => this.isBarreState(cell.state))) {
+          if (last.state === CellState.MIDDLE) {
+            kept[kept.length - 1] = { ...last, state: CellState.RIGHT }
+          } else if (last.state === CellState.MIDDLE_HL) {
+            kept[kept.length - 1] = { ...last, state: CellState.RIGHT_HL }
+          } else if (last.state === CellState.LEFT || last.state === CellState.LEFT_HL) {
+            kept[kept.length - 1] = { ...last, state: CellState.ACTIVE }
           }
-
-          return acc
-        } else {
-          acc.push(val)
-
-          return acc
         }
-      }, [])
 
-      this.emptyStringsStates = this.emptyStringsStates.splice(0, numStrings)
+        return kept
+      })
+
+      this.emptyStringsStates = this.emptyStringsStates.slice(0, numStrings)
     } else {
       // increase strings
       this.cells = this.cells.reduce<Cell[]>((acc, val, i) => {
@@ -560,7 +565,13 @@ export class ChordMatrix {
       if (cell.state === CellState.LEFT) {
         barres = [...barres, { fromString: vexString, toString: vexString, fret: vexFret, text: cell.text, color: cell.color }]
       } else if (cell.state === CellState.RIGHT) {
-        barres[barres.length - 1].toString = vexString
+        // A RIGHT with no LEFT before it is a corrupt barre; drop it instead of
+        // taking the whole diagram down.
+        const open = barres[barres.length - 1]
+
+        if (open) {
+          open.toString = vexString
+        }
       }
 
       return barres

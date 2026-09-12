@@ -102,6 +102,62 @@ describe("Chord Matrix", () => {
     ]);
   });
 
+  it("Should not leave holes in the matrix when a barre below the first fret is cut off", () => {
+    // when
+    matrix.connect(2, 0, 2);
+    matrix.setNumStrings(2);
+
+    // then
+    expect(matrix.rows).toHaveLength(numFrets);
+    matrix.rows.forEach((row) => {
+      expect(row).toHaveLength(2);
+      expect(row.filter((cell) => cell === undefined)).toEqual([]);
+    });
+    expect(() => matrix.getSections(2)).not.toThrow();
+  });
+
+  it("Should not create a barre end when the whole barre is cut off", () => {
+    // given
+    const wide = new ChordMatrix(1, 5);
+
+    // when
+    wide.connect(0, 2, 4);
+    wide.setNumStrings(2);
+
+    // then
+    expect(wide.rows[0].map(({ state }) => state)).toEqual([
+      CellState.INACTIVE,
+      CellState.INACTIVE,
+    ]);
+    expect(wide.toBarres()).toEqual([]);
+  });
+
+  it("Should degrade a barre to a single finger when only its start survives", () => {
+    // given
+    const wide = new ChordMatrix(1, 4);
+
+    // when
+    wide.connect(0, 1, 3);
+    wide.setNumStrings(2);
+
+    // then
+    expect(wide.rows[0].map(({ state }) => state)).toEqual([
+      CellState.INACTIVE,
+      CellState.ACTIVE,
+    ]);
+  });
+
+  it("Should ignore a barre end that has no start instead of throwing", () => {
+    // given
+    const corrupt = new ChordMatrix(1, 2, [
+      { state: CellState.INACTIVE },
+      { state: CellState.RIGHT },
+    ]);
+
+    // then
+    expect(corrupt.toBarres()).toEqual([]);
+  });
+
   it("Should correctly compute empty strings after increasing the number of strings", () => {
     // when
     matrix.setNumStrings(4);
