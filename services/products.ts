@@ -1,34 +1,25 @@
+import { backOff, BackoffOptions } from "exponential-backoff";
 import { ProductWithPrice } from "../types";
 import { getActiveProductsWithPrices } from "../utils/supabase-client";
 
 /**
- * Long enough to outlast a cold start on the nano instance, not just a blip:
- * the timeouts show up in bursts and clear on the next deploy, and the build
- * can afford ~17s far more easily than a lost deploy.
+ * Sized for a cold start on the nano instance rather than a blip: the timeouts
+ * arrive in a burst and clear on the very next deploy.
  */
-export const RETRY_DELAYS_MS = [2_000, 5_000, 10_000];
+export const RETRY_OPTIONS: BackoffOptions = {
+  numOfAttempts: 4,
+  startingDelay: 2_000,
+  timeMultiple: 2.5,
+  jitter: "full",
+  retry: (error: unknown, attemptNumber: number) => {
+    console.warn(
+      `Loading products for /pricing failed (attempt ${attemptNumber}), retrying:`,
+      error instanceof Error ? error.message : error,
+    );
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-async function fetchWithRetry(): Promise<ProductWithPrice[]> {
-  for (let attempt = 0; ; attempt++) {
-    try {
-      return await getActiveProductsWithPrices();
-    } catch (error) {
-      const wait = RETRY_DELAYS_MS[attempt];
-
-      if (wait === undefined) {
-        throw error;
-      }
-
-      console.warn(
-        `Loading products for /pricing failed, retrying in ${wait}ms:`,
-        error instanceof Error ? error.message : error,
-      );
-      await delay(wait);
-    }
-  }
-}
+    return true;
+  },
+};
 
 let inFlight: Promise<ProductWithPrice[]> | null = null;
 
@@ -43,9 +34,11 @@ let inFlight: Promise<ProductWithPrice[]> | null = null;
  */
 export function loadProducts(): Promise<ProductWithPrice[]> {
   if (!inFlight) {
-    inFlight = fetchWithRetry().finally(() => {
-      inFlight = null;
-    });
+    inFlight = backOff(getActiveProductsWithPrices, RETRY_OPTIONS).finally(
+      () => {
+        inFlight = null;
+      },
+    );
   }
 
   return inFlight;
