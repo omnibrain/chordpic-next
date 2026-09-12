@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { buildSitemap } from "../../services/seo";
+import { buildSitemap } from "../../services/sitemap";
 
 /**
  * Served at /sitemap.xml via a rewrite in next.config.js. It lives under /api
