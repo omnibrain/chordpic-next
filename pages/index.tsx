@@ -1,5 +1,9 @@
 import { T, useT } from "@magic-translate/react";
-import type { NextPage } from "next";
+import type {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
 import React, { useCallback } from "react";
 import { RotateCw } from "lucide-react";
 import { Orientation } from "svguitar";
@@ -20,9 +24,25 @@ import {
 import { useIsClient } from "@/hooks/use-is-client";
 import { useResizeHandler } from "@/hooks/use-resize-handler";
 import { GA } from "@/services/google-analytics";
+import { localizedMeta, PageMetaProps } from "@/services/page-meta";
 
 const panelHeading =
   "inline-block font-heading text-lg font-semibold tracking-tight";
+
+// The home page had no getStaticProps at all, so it fell through to Layout's
+// English defaults — on every locale, including the /es and /pt pages that
+// between them take a third of our organic traffic.
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<PageMetaProps>> {
+  return {
+    props: await localizedMeta(locale, {
+      title: "Free guitar chord diagram creator",
+      description:
+        "It has never been easier to create beautiful chord diagrams.",
+    }),
+  };
+}
 
 const Home: NextPage = () => {
   const t = useT();

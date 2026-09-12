@@ -1,4 +1,5 @@
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -11,21 +12,20 @@ import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { updateUserName } from "../utils/supabase-client";
-import { GetStaticPropsResult } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { T, useT } from "@magic-translate/react";
 
-interface Props {
-  title: string;
-  description: string;
-}
+type Props = PageMetaProps;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> {
   return {
-    props: {
+    props: await localizedMeta(locale, {
       title: "Sign up",
       description:
         "Sign up for ChordPic to create beautiful guitar chord charts.",
-    },
+    }),
   };
 }
 

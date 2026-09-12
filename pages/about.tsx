@@ -1,19 +1,19 @@
-import { GetStaticPropsResult } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import NextLink from "next/link";
 import { T } from "@magic-translate/react";
 
-interface Props {
-  title: string;
-  description: string;
-}
+type Props = PageMetaProps;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> {
   return {
-    props: {
+    props: await localizedMeta(locale, {
       title: "About",
       description:
         "ChordPic is a free guitar chord diagram creator. You can create beautiful chord diagrams for free. If you want to use ChordPic for commercial purposes, you can upgrade to a paid plan.",
-    },
+    }),
   };
 }
 
