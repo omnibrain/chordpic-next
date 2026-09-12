@@ -65,7 +65,7 @@ export const ShareButtons = ({ chart }: IProps) => {
           <div className="relative mt-3">
             <Input
               ref={inputRef}
-              className="pr-20"
+              className="pe-20"
               aria-label="Sharing Link"
               readOnly={true}
               value={link}
@@ -73,7 +73,7 @@ export const ShareButtons = ({ chart }: IProps) => {
             />
             <Button
               size="sm"
-              className="absolute right-1 top-1 h-7"
+              className="absolute end-1 top-1 h-7"
               onClick={copyLink}
             >
               <T>Copy</T>

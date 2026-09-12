@@ -79,7 +79,7 @@ const Field: React.FunctionComponent<{
 const HelpTooltip: React.FunctionComponent<{ label: string }> = ({ label }) => (
   <Tooltip>
     <TooltipTrigger asChild>
-      <CircleHelp className="ml-1.5 inline h-4 w-4 text-muted-foreground" />
+      <CircleHelp className="ms-1.5 inline h-4 w-4 text-muted-foreground" />
     </TooltipTrigger>
     <TooltipContent className="max-w-64">{label}</TooltipContent>
   </Tooltip>

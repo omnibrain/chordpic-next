@@ -16,10 +16,10 @@ export const SITE_URL = "https://chordpic.com";
 export const DEFAULT_LOCALE = Language.EN;
 
 /**
- * The locales we actually offer in the language switcher. `next.config.js` also
- * routes `ar`, `fa` and `ur`, which have no entry here — they stay crawlable but
- * are deliberately left out of the hreflang cluster and the sitemap until
- * they're either finished or dropped.
+ * The locales we offer in the language switcher, and so also the hreflang
+ * cluster and the sitemap. `i18n.locales` in next.config.js must route exactly
+ * these — seo.test.ts asserts it, because the two drifting apart is what left
+ * `ar`, `fa` and `ur` indexable but referenced by nothing.
  */
 export const PUBLIC_LOCALES = Object.keys(languageMap) as Language[];
 
