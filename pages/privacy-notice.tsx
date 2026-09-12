@@ -1,15 +1,16 @@
-import { GetStaticPropsResult } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import { T } from "@magic-translate/react";
 
-interface Props {
-  title: string;
-}
+type Props = PageMetaProps;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> {
   return {
-    props: {
+    props: await localizedMeta(locale, {
       title: "Privacy Notice",
-    },
+    }),
   };
 }
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { localizedMeta, PageMetaProps } from "../services/page-meta";
 
 import barreAndFingerSameFret from "../public/images/barre-and-finger-same-fret.png";
 import exampleHorizontalChord from "../public/images/example-horizontal-chord.png";
@@ -7,24 +8,23 @@ import orientationToggle from "../public/images/orientation-toggle.png";
 import sampleChordWithText from "../public/images/sample-chord-with-text.png";
 import fretMarkers from "../public/images/fret-markers.png";
 
-import { GetStaticPropsResult } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import sliders from "../assets/images/sliders.jpg";
 import { T, useT } from "@magic-translate/react";
 import React from "react";
 import Link from "next/link";
 
-interface Props {
-  title: string;
-  description: string;
-}
+type Props = PageMetaProps;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> {
   return {
-    props: {
+    props: await localizedMeta(locale, {
       title: "News",
       description:
         "News about ChordPic, the free guitar chord diagram creator. Learn about new features and updates.",
-    },
+    }),
   };
 }
 
@@ -67,16 +67,16 @@ const HelpPage = () => {
       <p>
         <T>
           You can now add text and custom colors to the O and X markers above
-          the fretboard! Just use &quot;Edit Text&quot; or &quot;Edit Colors&quot;
-          to label note names or highlight an open string, just like you do
-          with fretted notes.
+          the fretboard! Just use &quot;Edit Text&quot; or &quot;Edit
+          Colors&quot; to label note names or highlight an open string, just
+          like you do with fretted notes.
         </T>
       </p>
       <p>
         <T>
           Want to leave a marker out? In &quot;Edit Fingers&quot; mode, click it
-          to cycle through open, silent, and hidden. You can still add text to
-          a hidden marker using &quot;Edit Text&quot;. Handy for scale diagrams!
+          to cycle through open, silent, and hidden. You can still add text to a
+          hidden marker using &quot;Edit Text&quot;. Handy for scale diagrams!
         </T>
       </p>
       <p>

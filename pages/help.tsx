@@ -1,4 +1,5 @@
-import { GetStaticPropsResult } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import Image from "next/image";
 
 import barreGif from "../public/images/barre.gif";
@@ -11,18 +12,17 @@ import silentstringsGif from "../public/images/silentstrings.gif";
 import toggleGif from "../public/images/toggle.gif";
 import { T, useT } from "@magic-translate/react";
 
-interface Props {
-  title: string;
-  description: string;
-}
+type Props = PageMetaProps;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> {
   return {
-    props: {
+    props: await localizedMeta(locale, {
       title: "Help",
       description:
         "Learn how to create guitar chord diagrams with ChordPic. Don't worry, it's super easy!",
-    },
+    }),
   };
 }
 

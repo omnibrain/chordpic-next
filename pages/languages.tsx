@@ -1,20 +1,20 @@
-import { GetStaticPropsResult } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import { Language, T } from "@magic-translate/react";
 import { languageMap } from "../utils/translate";
 import Link from "next/link";
 import { SUPPORT_EMAIL } from "../global";
 
-interface Props {
-  title: string;
-  description: string;
-}
+type Props = PageMetaProps;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> {
   return {
-    props: {
+    props: await localizedMeta(locale, {
       title: "Languages",
       description: "Chose your preferred ChordPic language",
-    },
+    }),
   };
 }
 

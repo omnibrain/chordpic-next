@@ -1,4 +1,5 @@
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -12,20 +13,19 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getURL } from "../utils/helpers";
-import { GetStaticPropsResult } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { T, useT } from "@magic-translate/react";
 
-interface Props {
-  title: string;
-  description: string;
-}
+type Props = PageMetaProps;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> {
   return {
-    props: {
+    props: await localizedMeta(locale, {
       title: "Sign in",
       description: "Sign in to your ChordPic account.",
-    },
+    }),
   };
 }
 
@@ -101,7 +101,9 @@ const SignIn = () => {
           <form onSubmit={handleSignin}>
             <div className="flex flex-col gap-4">
               <div>
-                <Label className="mb-2 block" htmlFor="email">Email</Label>
+                <Label className="mb-2 block" htmlFor="email">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   name="email"
@@ -128,7 +130,9 @@ const SignIn = () => {
           <form onSubmit={handleSignin}>
             <div className="flex flex-col gap-4">
               <div>
-                <Label className="mb-2 block" htmlFor="email">Email</Label>
+                <Label className="mb-2 block" htmlFor="email">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   name="email"
@@ -140,7 +144,9 @@ const SignIn = () => {
                 />
               </div>
               <div>
-                <Label className="mb-2 block" htmlFor="password">Password</Label>
+                <Label className="mb-2 block" htmlFor="password">
+                  Password
+                </Label>
                 <Input
                   id="password"
                   name="password"
