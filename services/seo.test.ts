@@ -8,6 +8,30 @@ import {
   SITE_URL,
   sitemapEntries,
 } from "./seo";
+import { isRtl } from "../utils/translate";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const nextConfig = require("../next.config.js");
+
+describe("next.config.js routing", () => {
+  const { locales, defaultLocale } = nextConfig.i18n;
+
+  it("routes exactly the locales we advertise", () => {
+    // These two lists drifting apart is what left /ar, /fa and /ur serving
+    // English at index,follow while no hreflang cluster and no sitemap entry
+    // mentioned them. Adding a locale to either list alone should fail here.
+    expect([...locales].sort()).toEqual([...PUBLIC_LOCALES].sort());
+    expect(defaultLocale).toBe(DEFAULT_LOCALE);
+  });
+
+  it("declares the right-to-left locales as such", () => {
+    // A mirrored language rendered left to right is worse than an untranslated
+    // one, so every RTL locale we route must be flagged.
+    expect(locales.filter(isRtl).sort()).toEqual(["ar", "fa", "ur"]);
+    expect(isRtl("en")).toBe(false);
+    expect(isRtl(undefined)).toBe(false);
+  });
+});
 
 describe("canonicalPath", () => {
   it("drops the query string and the hash", () => {

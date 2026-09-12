@@ -2,6 +2,7 @@ import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 import Script from "next/script";
 import { colorModeInitScript } from "../hooks/use-color-mode";
 import { adsInitScript } from "../hooks/use-ads-assignment";
+import { isRtl } from "../utils/translate";
 
 export default class Document extends NextDocument {
   render() {
@@ -11,7 +12,11 @@ export default class Document extends NextDocument {
     const locale = this.props.__NEXT_DATA__.locale ?? "en";
 
     return (
-      <Html lang={locale}>
+      // Arabic, Persian and Urdu read right to left, so the layout has to be
+      // mirrored and not merely translated. Tailwind's logical properties (ms-,
+      // me-, text-start) follow this automatically; any remaining left/right
+      // utility will not.
+      <Html lang={locale} dir={isRtl(locale) ? "rtl" : "ltr"}>
         <Head>
           <Script
             id="cookieyes"
