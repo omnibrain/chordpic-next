@@ -1,4 +1,4 @@
-import { loadProducts, RETRY_OPTIONS } from "./products";
+import { loadProducts, NUM_OF_ATTEMPTS } from "./products";
 import { getActiveProductsWithPrices } from "../utils/supabase-client";
 
 jest.mock("../utils/supabase-client", () => ({
@@ -15,6 +15,7 @@ describe("loadProducts", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, "warn").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
     // Run the backoff instantly; the delays themselves are not under test.
     jest
       .spyOn(global, "setTimeout")
@@ -37,38 +38,26 @@ describe("loadProducts", () => {
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 
-  it("throws once the retries are exhausted, rather than shipping no prices", async () => {
+  it("throws once the attempts are exhausted, rather than shipping no prices", async () => {
     mockFetch.mockRejectedValue(new Error("Gateway Timeout"));
 
     await expect(loadProducts()).rejects.toThrow("Gateway Timeout");
-    expect(mockFetch).toHaveBeenCalledTimes(RETRY_OPTIONS.numOfAttempts!);
+    expect(mockFetch).toHaveBeenCalledTimes(NUM_OF_ATTEMPTS);
   });
 
-  it("coalesces the concurrent per-locale calls into one query", async () => {
-    mockFetch.mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve(PRODUCTS), 5)),
-    );
-
-    const results = await Promise.all(
-      Array.from({ length: 13 }, () => loadProducts()),
-    );
-
-    expect(mockFetch).toHaveBeenCalledTimes(1);
-    results.forEach((result) => expect(result).toEqual(PRODUCTS));
-  });
-
-  it("rejects every coalesced caller when the query fails", async () => {
+  it("logs the give-up at error level, not as another retry", async () => {
     mockFetch.mockRejectedValue(new Error("Gateway Timeout"));
 
-    const results = await Promise.allSettled(
-      Array.from({ length: 13 }, () => loadProducts()),
-    );
+    await expect(loadProducts()).rejects.toThrow();
 
-    expect(mockFetch).toHaveBeenCalledTimes(RETRY_OPTIONS.numOfAttempts!);
-    results.forEach((result) => expect(result.status).toBe("rejected"));
+    expect(console.warn).toHaveBeenCalledTimes(NUM_OF_ATTEMPTS - 1);
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining(`failed after ${NUM_OF_ATTEMPTS} attempts`),
+      "Gateway Timeout",
+    );
   });
 
-  it("does not cache the resolved value, so ISR still refetches", async () => {
+  it("fetches fresh on every call, so ISR revalidation is not stuck", async () => {
     mockFetch.mockResolvedValue(PRODUCTS);
     await loadProducts();
 
@@ -76,5 +65,6 @@ describe("loadProducts", () => {
     mockFetch.mockResolvedValue(updated);
 
     await expect(loadProducts()).resolves.toEqual(updated);
+    expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 });
