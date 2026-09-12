@@ -1,25 +1,31 @@
 import { ProductWithPrice } from "../types";
 import { getActiveProductsWithPrices } from "../utils/supabase-client";
 
-export const MAX_ATTEMPTS = 3;
-export const RETRY_BASE_DELAY_MS = 500;
+/**
+ * Long enough to outlast a cold start on the nano instance, not just a blip:
+ * the timeouts show up in bursts and clear on the next deploy, and the build
+ * can afford ~17s far more easily than a lost deploy.
+ */
+export const RETRY_DELAYS_MS = [2_000, 5_000, 10_000];
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function fetchWithRetry(): Promise<ProductWithPrice[]> {
-  for (let attempt = 1; ; attempt++) {
+  for (let attempt = 0; ; attempt++) {
     try {
       return await getActiveProductsWithPrices();
     } catch (error) {
-      if (attempt >= MAX_ATTEMPTS) {
+      const wait = RETRY_DELAYS_MS[attempt];
+
+      if (wait === undefined) {
         throw error;
       }
 
       console.warn(
-        `Loading products for /pricing failed (attempt ${attempt}/${MAX_ATTEMPTS}), retrying:`,
+        `Loading products for /pricing failed, retrying in ${wait}ms:`,
         error instanceof Error ? error.message : error,
       );
-      await delay(RETRY_BASE_DELAY_MS * attempt);
+      await delay(wait);
     }
   }
 }

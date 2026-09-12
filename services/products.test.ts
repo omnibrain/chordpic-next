@@ -1,4 +1,4 @@
-import { loadProducts, MAX_ATTEMPTS } from "./products";
+import { loadProducts, RETRY_DELAYS_MS } from "./products";
 import { getActiveProductsWithPrices } from "../utils/supabase-client";
 
 jest.mock("../utils/supabase-client", () => ({
@@ -15,6 +15,10 @@ describe("loadProducts", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, "warn").mockImplementation(() => {});
+    // Run the backoff instantly; the delays themselves are not under test.
+    jest
+      .spyOn(global, "setTimeout")
+      .mockImplementation(((fn: () => void) => fn()) as never);
   });
 
   it("returns the products when Supabase answers", async () => {
@@ -37,7 +41,7 @@ describe("loadProducts", () => {
     mockFetch.mockRejectedValue(new Error("Gateway Timeout"));
 
     await expect(loadProducts()).rejects.toThrow("Gateway Timeout");
-    expect(mockFetch).toHaveBeenCalledTimes(MAX_ATTEMPTS);
+    expect(mockFetch).toHaveBeenCalledTimes(RETRY_DELAYS_MS.length + 1);
   });
 
   it("coalesces the concurrent per-locale calls into one query", async () => {
@@ -60,7 +64,7 @@ describe("loadProducts", () => {
       Array.from({ length: 13 }, () => loadProducts()),
     );
 
-    expect(mockFetch).toHaveBeenCalledTimes(MAX_ATTEMPTS);
+    expect(mockFetch).toHaveBeenCalledTimes(RETRY_DELAYS_MS.length + 1);
     results.forEach((result) => expect(result.status).toBe("rejected"));
   });
 
