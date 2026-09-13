@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require("@sentry/nextjs/config");
 const { Language } = require("@magic-translate/react");
 
 const moduleExports = {
   reactStrictMode: true,
-  swcMinify: true,
   // geist ships ESM that breaks Node's resolver during prerendering
   transpilePackages: ["geist"],
   i18n: {

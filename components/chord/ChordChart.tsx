@@ -5,7 +5,7 @@ import { SubscriptionType } from "../../types";
 import { useSubscription } from "../../utils/useSubscription";
 import { useChart } from "./useChart";
 import { toSvguitarChord } from "../../services/chord-rendering";
-import * as Sentry from "@sentry/react";
+import * as Sentry from "@sentry/nextjs";
 
 const defaultSVGuitarSettings: Partial<ChordSettings> = {
   fretSize: 1.75,

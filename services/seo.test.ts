@@ -10,7 +10,6 @@ import {
 } from "./seo";
 import { isRtl } from "../utils/translate";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const nextConfig = require("../next.config.js");
 
 describe("next.config.js routing", () => {
