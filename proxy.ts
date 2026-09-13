@@ -19,7 +19,7 @@ function readAdsMode() {
   return parseAdsMode(process.env.NEXT_PUBLIC_ADS_MODE);
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
   // Set-Cookie from the server, never document.cookie: Safari's ITP caps
