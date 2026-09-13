@@ -2,6 +2,7 @@ import {
   canonicalPath,
   DEFAULT_LOCALE,
   isNoindexPath,
+  localePath,
   localeUrl,
   PUBLIC_LOCALES,
   PUBLIC_PATHS,
@@ -23,6 +24,39 @@ describe("locale routing", () => {
     expect(locales).toContain(DEFAULT_LOCALE);
     expect(localeUrl(DEFAULT_LOCALE, "/about")).toBe(`${SITE_URL}/about`);
     expect(localeUrl("de", "/about")).toBe(`${SITE_URL}/de/about`);
+  });
+
+  describe("localePath", () => {
+    // Every internal link goes through this. `i18n` used to prefix hrefs by
+    // itself, and when it went away the nav kept pointing at "/news" — so from
+    // /de/about every link dropped the reader back into English.
+    it("keeps the reader in their locale", () => {
+      expect(localePath("de", "/news")).toBe("/de/news");
+      expect(localePath("de", "/")).toBe("/de");
+      expect(localePath(DEFAULT_LOCALE, "/news")).toBe("/news");
+      expect(localePath(DEFAULT_LOCALE, "/")).toBe("/");
+    });
+
+    it("leaves routes that live outside app/[locale] alone", () => {
+      // Prefixing these gave a 404: signing out and the OAuth callback are not
+      // locale segments.
+      expect(localePath("de", "/auth/logout")).toBe("/auth/logout");
+      expect(localePath("de", "/api/webhooks")).toBe("/api/webhooks");
+      expect(localePath("de", "/sitemap.xml")).toBe("/sitemap.xml");
+    });
+
+    it("leaves anything that is not a site-relative page path alone", () => {
+      expect(localePath("de", "https://example.com")).toBe(
+        "https://example.com",
+      );
+      expect(localePath("de", "#editor")).toBe("#editor");
+      expect(localePath("de", "mailto:a@b.c")).toBe("mailto:a@b.c");
+    });
+
+    it("keeps the query and the hash on the end", () => {
+      expect(localePath("de", "/signin?error=x")).toBe("/de/signin?error=x");
+      expect(localePath("de", "/help#barre")).toBe("/de/help#barre");
+    });
   });
 
   it("declares the right-to-left locales as such", () => {

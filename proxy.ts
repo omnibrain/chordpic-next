@@ -146,9 +146,12 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Pages only. API routes, Next internals and anything with a file extension
-    // are left alone. Unlike under `i18n`, `/` needs no separate entry: nothing
-    // prepends a locale segment to the pattern any more.
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+    // Pages only. API routes, the auth handlers, Next internals and anything
+    // with a file extension are left alone — `auth` in particular because it
+    // lives outside app/[locale], so rewriting it onto the default locale gave
+    // a 404 for the OAuth callback and for signing out. Unlike under `i18n`,
+    // `/` needs no separate entry: nothing prepends a locale segment to the
+    // pattern any more.
+    "/((?!api|auth|_next/static|_next/image|favicon.ico|.*\\..*).*)",
   ],
 };

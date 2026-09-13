@@ -10,6 +10,7 @@ import { ChartProvider } from "../components/chord/useChart";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { applyHashReferral } from "../services/rewardful";
+import { localePath } from "../services/seo";
 import { createClient } from "../utils/supabase/browser";
 import { LanguageContext } from "../utils/use-language";
 import { MyUserContextProvider } from "../utils/useUser";
@@ -34,12 +35,12 @@ export function Providers({
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
-        router.replace("/new-password");
+        router.replace(localePath(language, "/new-password"));
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [router]);
+  }, [router, language]);
 
   useEffect(() => {
     applyHashReferral();

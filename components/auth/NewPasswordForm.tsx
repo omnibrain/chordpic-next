@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { createClient } from "../../utils/supabase/browser";
 import { T, useT } from "@magic-translate/react";
+import { useLocalePath } from "../../utils/use-language";
 
 const useUpdatePasswordMutation = () =>
   // v1 took the access token explicitly (`auth.api.updateUser(token, …)`); v2
@@ -23,6 +24,7 @@ const useUpdatePasswordMutation = () =>
 
 export const NewPasswordForm = () => {
   const router = useRouter();
+  const localePath = useLocalePath();
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const mutation = useUpdatePasswordMutation();
@@ -67,7 +69,7 @@ export const NewPasswordForm = () => {
           description: "Use the new password for logging in from now on.",
           duration: 9000,
         });
-        router.push("/account");
+        router.push(localePath("/account"));
       }
     } catch (err) {
       console.error("Failed set new password", err);

@@ -1,6 +1,6 @@
 "use client";
 
-import NextLink from "next/link";
+import { LocaleLink as NextLink } from "../LocaleLink";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { createClient } from "../../utils/supabase/browser";
 import { updateUserName } from "../../utils/supabase-client";
+import { useLocalePath } from "../../utils/use-language";
 import { useUser } from "../../utils/useUser";
 import { T, useT } from "@magic-translate/react";
 
@@ -26,6 +27,7 @@ export const SignUpForm = () => {
     content: "",
   });
   const router = useRouter();
+  const localePath = useLocalePath();
   const { user } = useUser();
   const { toast } = useToast();
   const t = useT();
@@ -62,9 +64,9 @@ export const SignUpForm = () => {
 
   useEffect(() => {
     if (newUser || user) {
-      router.replace("/account");
+      router.replace(localePath("/account"));
     }
-  }, [newUser, user, router]);
+  }, [newUser, user, router, localePath]);
 
   return (
     <AuthBox title={t("Sign up for Chordpic")}>

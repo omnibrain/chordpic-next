@@ -1,6 +1,6 @@
 "use client";
 
-import NextLink from "next/link";
+import { LocaleLink as NextLink } from "../components/LocaleLink";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";

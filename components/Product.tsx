@@ -24,6 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useLocalePath } from "../utils/use-language";
 
 export interface ProductProps {
   billingInterval: "year" | "month";
@@ -42,6 +43,7 @@ export const Product: React.FunctionComponent<
   PropsWithChildren<ProductProps>
 > = ({ product, billingInterval }) => {
   const router = useRouter();
+  const localePath = useLocalePath();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const { user, isLoading, subscription } = useUser();
 
@@ -50,10 +52,10 @@ export const Product: React.FunctionComponent<
     setPriceIdLoading(price.id);
 
     if (!user) {
-      return router.push("/signin");
+      return router.push(localePath("/signin"));
     }
     if (subscription) {
-      return router.push("/account");
+      return router.push(localePath("/account"));
     }
 
     const gaTimeout = 1000; // 1 seconds

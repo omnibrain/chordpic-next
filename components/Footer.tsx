@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink as Link } from "./LocaleLink";
 import { FacebookIcon, RedditIcon } from "react-share";
 import { serverT } from "../utils/server-translate";
 

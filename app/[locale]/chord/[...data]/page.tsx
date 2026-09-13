@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "../../../../components/LocaleLink";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChordResult } from "../../../../components/chord/ChordResult";

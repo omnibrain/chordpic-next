@@ -1,4 +1,5 @@
-import NextLink from "next/link";
+import { LocaleLink as NextLink } from "../../../components/LocaleLink";
+import { localePath } from "../../../services/seo";
 import { pageMetadata } from "../../../services/page-meta";
 import { serverT } from "../../../utils/server-translate";
 
@@ -69,8 +70,7 @@ export default async function AboutPage({ params }: PageProps) {
       </h2>
       <p>
         {/* this is not a next link on purpose: The cookiefirst stuff will not load when routed with next */}
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href="/cookie-policy">
+        <a href={localePath(locale, "/cookie-policy")}>
           <T>
             Read ChordPic&apos;s cookie policy or adjust your settings here.
           </T>

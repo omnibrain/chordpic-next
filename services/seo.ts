@@ -78,15 +78,39 @@ export function isNoindexPath(asPath: string): boolean {
 }
 
 /**
+ * Route prefixes that exist outside `app/[locale]` and so must never be
+ * locale-prefixed: the auth handlers, the API and the sitemap.
+ */
+const UNLOCALISED_PREFIXES = ["/auth", "/api"];
+
+/**
  * Site-relative path for `path` in `locale`, following the same unprefixed
- * default as `localeUrl`. `<Link locale>` was Pages-Router only, so every
- * cross-locale link has to build its own href now.
+ * default as `localeUrl`.
+ *
+ * Under `i18n`, `next/link` prefixed every href with the active locale by
+ * itself. Nothing does that in the App Router, so without this a link from
+ * /de/about to "/news" drops the reader back into English.
+ *
+ * Anything that is not a site-relative page path — an external URL, a fragment,
+ * a query, /auth, /api — is returned untouched.
  */
 export function localePath(locale: string, asPath: string): string {
+  if (
+    !asPath.startsWith("/") ||
+    asPath.startsWith("//") ||
+    asPath.includes(".") ||
+    UNLOCALISED_PREFIXES.some(
+      (prefix) => asPath === prefix || asPath.startsWith(`${prefix}/`),
+    )
+  ) {
+    return asPath;
+  }
+
   const path = canonicalPath(asPath);
+  const suffix = asPath.slice(path.length); // ?query and #hash
   const prefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
 
-  return path === "/" ? prefix || "/" : `${prefix}${path}`;
+  return `${path === "/" ? prefix || "/" : `${prefix}${path}`}${suffix}`;
 }
 
 /**

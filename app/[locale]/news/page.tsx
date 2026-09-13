@@ -11,7 +11,7 @@ import fretMarkers from "../../../public/images/fret-markers.png";
 
 import sliders from "../../../assets/images/sliders.jpg";
 import React from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "../../../components/LocaleLink";
 
 type PageProps = { params: Promise<{ locale: string }> };
 

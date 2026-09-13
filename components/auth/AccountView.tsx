@@ -1,6 +1,6 @@
 "use client";
 
-import NextLink from "next/link";
+import { LocaleLink as NextLink } from "../LocaleLink";
 import { ReactNode, useState } from "react";
 
 import { Loader2 } from "lucide-react";

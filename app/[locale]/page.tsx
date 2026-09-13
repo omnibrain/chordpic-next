@@ -1,4 +1,4 @@
-import NextLink from "next/link";
+import { LocaleLink as NextLink } from "../../components/LocaleLink";
 import { HomeEditor } from "../../components/HomeEditor";
 import { pageMetadata } from "../../services/page-meta";
 import { serverT, serverTranslator } from "../../utils/server-translate";
