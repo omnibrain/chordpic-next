@@ -10,17 +10,19 @@ import {
 } from "./seo";
 import { isRtl } from "../utils/translate";
 
-const nextConfig = require("../next.config.js");
+describe("locale routing", () => {
+  // This used to compare next.config.js's `i18n.locales` against
+  // PUBLIC_LOCALES, because the two drifting apart is what left /ar, /fa and
+  // /ur serving English at index,follow while no hreflang cluster and no
+  // sitemap entry mentioned them. There is only one list now — app/[locale]'s
+  // generateStaticParams and proxy.ts both read PUBLIC_LOCALES — so the drift
+  // this guarded against is no longer expressible.
+  const locales = PUBLIC_LOCALES;
 
-describe("next.config.js routing", () => {
-  const { locales, defaultLocale } = nextConfig.i18n;
-
-  it("routes exactly the locales we advertise", () => {
-    // These two lists drifting apart is what left /ar, /fa and /ur serving
-    // English at index,follow while no hreflang cluster and no sitemap entry
-    // mentioned them. Adding a locale to either list alone should fail here.
-    expect([...locales].sort()).toEqual([...PUBLIC_LOCALES].sort());
-    expect(defaultLocale).toBe(DEFAULT_LOCALE);
+  it("serves the default locale unprefixed and the rest prefixed", () => {
+    expect(locales).toContain(DEFAULT_LOCALE);
+    expect(localeUrl(DEFAULT_LOCALE, "/about")).toBe(`${SITE_URL}/about`);
+    expect(localeUrl("de", "/about")).toBe(`${SITE_URL}/de/about`);
   });
 
   it("declares the right-to-left locales as such", () => {

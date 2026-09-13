@@ -1,8 +1,16 @@
-import { useRouter } from "next/router";
-import { utsLocaleToLanguage } from "@magic-translate/react";
+"use client";
 
-export function useLanguage() {
-  const router = useRouter();
+import { Language, utsLocaleToLanguage } from "@magic-translate/core";
+import { createContext, useContext } from "react";
 
-  return utsLocaleToLanguage(router.locale);
+/**
+ * The App Router has no `router.locale`, so the locale comes down from the
+ * `[locale]` segment through Providers instead of being read off the router.
+ */
+export const LanguageContext = createContext<`${Language}`>(
+  utsLocaleToLanguage(undefined),
+);
+
+export function useLanguage(): `${Language}` {
+  return useContext(LanguageContext);
 }

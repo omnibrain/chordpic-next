@@ -1,4 +1,8 @@
-import { Language, setupT } from "@magic-translate/react";
+// @magic-translate/react is marked "use client" since 1.17, so importing
+// Language or setupT from it makes this module unusable in a server component —
+// and page metadata, the sitemap and every <T> on the server go through here.
+// @magic-translate/core is the same code without the React layer.
+import { Language, setupT } from "@magic-translate/core";
 
 export const languageMap: Partial<
   Record<Language, { name: string; icon: string }>

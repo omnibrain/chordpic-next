@@ -1,10 +1,25 @@
-import { Language, utsLocaleToLanguage } from "@magic-translate/react";
+import { Language, utsLocaleToLanguage } from "@magic-translate/core";
+import type { Metadata } from "next";
 import { translate } from "../utils/translate";
+import {
+  DEFAULT_LOCALE,
+  isNoindexPath,
+  localeUrl,
+  PUBLIC_LOCALES,
+  SITE_URL,
+} from "./seo";
+
+export const TITLE_PREFIX = "ChordPic";
+
+export const DEFAULT_DESCRIPTION =
+  "It has never been easier to create beautiful chord diagrams.";
 
 export interface PageMetaProps {
   title: string;
-  /** Omitted by the legal pages, which fall back to Layout's default. */
+  /** Omitted by the legal pages, which fall back to the default above. */
   description?: string;
+  /** Site-relative; made absolute for og:image and twitter:image. */
+  cardImage?: string;
 }
 
 /**
@@ -57,4 +72,62 @@ export async function localizedMeta(
 
     return meta;
   }
+}
+
+/**
+ * The document metadata Layout used to render into `<Head>`, as a Next
+ * `Metadata` object: title and description translated for the locale, plus the
+ * canonical and the full hreflang cluster.
+ *
+ * Google requires an hreflang cluster to be self-referencing, and had been
+ * discarding this one for listing only the *other* languages — so the current
+ * locale is included, alongside x-default.
+ */
+export async function pageMetadata(
+  locale: string,
+  path: string,
+  meta: PageMetaProps,
+): Promise<Metadata> {
+  const { title, description } = await localizedMeta(locale, {
+    description: DEFAULT_DESCRIPTION,
+    ...meta,
+  });
+
+  const fullTitle = `${TITLE_PREFIX} | ${title}`;
+  const noindex = isNoindexPath(path);
+  const canonical = noindex ? undefined : localeUrl(locale, path);
+  // Crawlers resolve og:image against nothing, so a site-relative path is a
+  // broken card on every platform that renders one.
+  const cardImage = `${SITE_URL}${meta.cardImage ?? "/logo.png"}`;
+
+  return {
+    title: fullTitle,
+    description,
+    robots: noindex ? "noindex, follow" : "index, follow",
+    alternates: canonical
+      ? {
+          canonical,
+          languages: {
+            ...Object.fromEntries(
+              PUBLIC_LOCALES.map((lang) => [lang, localeUrl(lang, path)]),
+            ),
+            "x-default": localeUrl(DEFAULT_LOCALE, path),
+          },
+        }
+      : undefined,
+    openGraph: {
+      type: "website",
+      siteName: TITLE_PREFIX,
+      title: fullTitle,
+      description,
+      images: [cardImage],
+      ...(canonical ? { url: canonical } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+      images: [cardImage],
+    },
+  };
 }

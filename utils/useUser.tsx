@@ -1,11 +1,17 @@
-import { SupabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
-import {
-  User,
-  useUser as useSupaUser,
-} from "@supabase/supabase-auth-helpers/react";
+"use client";
+
+import type { Session, User } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Subscription, UserDetails } from "../types";
+import { createClient } from "./supabase/browser";
 
 type UserContextType = {
   accessToken: string | null;
@@ -16,43 +22,55 @@ type UserContextType = {
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
-  undefined
+  undefined,
 );
 
-export interface Props {
-  supabaseClient: SupabaseClient;
-  [propName: string]: any;
-}
+/**
+ * Replaces the auth-helpers `UserProvider`. `onAuthStateChange` fires once on
+ * subscribe with the restored session, so it doubles as the initial read and
+ * there is no separate getSession() race to handle.
+ */
+export const MyUserContextProvider = ({ children }: PropsWithChildren) => {
+  const supabase = useMemo(() => createClient(), []);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
-export const MyUserContextProvider = (props: Props) => {
-  const { supabaseClient: supabase } = props;
-  const { user, accessToken, isLoading: isLoadingUser } = useSupaUser();
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+      setIsLoadingUser(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
+  const user = session?.user ?? null;
 
   const {
     data: subscription,
     isLoading: subscriptionIsLoading,
     isFetching: subscriptionIsFetching,
   } = useQuery(
-    ["subscription"],
-    () =>
-      new Promise<Subscription>((resolve, reject) =>
-        supabase
-          .from<Subscription>("subscriptions")
-          .select("*, prices(*, products(*))")
-          .in("status", ["trialing", "active"])
-          .single()
-          .then((res) => {
-            if (res.error) {
-              reject(res.error);
-            } else {
-              resolve(res.data);
-            }
-          })
-      ),
+    ["subscription", user?.id],
+    async () => {
+      const { data, error } = await supabase
+        .from("subscriptions")
+        .select("*, prices(*, products(*))")
+        .in("status", ["trialing", "active"])
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return data as Subscription;
+    },
     {
       enabled: !isLoadingUser && !!user,
       retry: 0,
-    }
+    },
   );
 
   const {
@@ -60,29 +78,24 @@ export const MyUserContextProvider = (props: Props) => {
     isLoading: userDetailsIsLoading,
     isFetching: userDetailsIsFetching,
   } = useQuery(
-    ["user"],
-    () =>
-      new Promise<UserDetails>((resolve, reject) =>
-        supabase
-          .from<UserDetails>("users")
-          .select("*")
-          .single()
-          .then((res) => {
-            if (res.error) {
-              reject(res.error);
-            } else {
-              resolve(res.data);
-            }
-          })
-      ),
+    ["user", user?.id],
+    async () => {
+      const { data, error } = await supabase.from("users").select("*").single();
+
+      if (error) {
+        throw error;
+      }
+
+      return data as UserDetails;
+    },
     {
       enabled: !isLoadingUser && !!user,
       retry: 0,
-    }
+    },
   );
 
   const value = {
-    accessToken,
+    accessToken: session?.access_token ?? null,
     user,
     isLoading:
       (subscriptionIsLoading && subscriptionIsFetching) ||
@@ -92,7 +105,7 @@ export const MyUserContextProvider = (props: Props) => {
     subscription: subscription ?? null,
   };
 
-  return <UserContext.Provider value={value} {...props} />;
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => {

@@ -2,6 +2,9 @@ import { localizedMeta } from "./page-meta";
 import { translate } from "../utils/translate";
 
 jest.mock("../utils/translate", () => ({
+  // page-meta now reaches seo.ts, which derives PUBLIC_LOCALES from
+  // languageMap, so the module cannot be replaced wholesale any more.
+  ...jest.requireActual("../utils/translate"),
   translate: jest.fn(),
 }));
 

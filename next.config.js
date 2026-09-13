@@ -1,37 +1,16 @@
 /** @type {import('next').NextConfig} */
 
 const { withSentryConfig } = require("@sentry/nextjs/config");
-const { Language } = require("@magic-translate/react");
+const { Language } = require("@magic-translate/core");
 
 const moduleExports = {
   reactStrictMode: true,
   // geist ships ESM that breaks Node's resolver during prerendering
   transpilePackages: ["geist"],
-  i18n: {
-    locales: [
-      Language.EN,
-      Language.ZH,
-      Language.HI,
-      Language.ES,
-      Language.FR,
-      Language.AR,
-      Language.RU,
-      Language.PT,
-      Language.IT,
-      Language.UR,
-      Language.DE,
-      Language.FA,
-      Language.NL,
-    ],
-    defaultLocale: Language.EN,
-  },
-  async rewrites() {
-    return [
-      // The handler lives under /api so that `i18n` neither locale-prefixes it
-      // nor redirects it on Accept-Language.
-      { source: "/sitemap.xml", destination: "/api/sitemap" },
-    ];
-  },
+  // No `i18n` block: it is Pages-Router only, and with an app/ directory
+  // present Next fails the static export outright ("provided export path
+  // '/x' doesn't match the '/[locale]/x' page"). Locale routing now lives in
+  // app/[locale] plus the rewrite in proxy.ts.
 };
 
 const sentryWebpackPluginOptions = {

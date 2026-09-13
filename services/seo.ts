@@ -3,7 +3,7 @@
 // node:stream/promises, which webpack cannot resolve for the browser. The
 // rendering half lives in ./sitemap.ts, which only the API route imports.
 import type { LinkItem, SitemapItemLoose } from "sitemap";
-import { Language } from "@magic-translate/react";
+import { Language } from "@magic-translate/core";
 import { languageMap } from "../utils/translate";
 
 /**

@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React, { PropsWithChildren, useState } from "react";
 import { GA4_ID } from "../global";
 import { Price, ProductWithPrice } from "../types";

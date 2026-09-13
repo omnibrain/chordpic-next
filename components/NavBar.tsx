@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { T } from "@magic-translate/react";
@@ -62,7 +62,7 @@ const MenuLinks: React.FunctionComponent<{
   onCloseMenu(): void;
 }> = ({ onCloseMenu }) => {
   const { user } = useUser();
-  const { pathname } = useRouter();
+  const pathname = usePathname();
   const subscription = useSubscription();
   const language = useLanguage();
 
