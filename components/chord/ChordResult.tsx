@@ -4,7 +4,7 @@ import { SUPPORT_EMAIL } from "../../global";
 import { defaultValues } from "../ChordForm";
 import { ChordChart } from "./ChordChart";
 import { useChart } from "./useChart";
-import * as Sentry from "@sentry/react";
+import * as Sentry from "@sentry/nextjs";
 import { CircleAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";

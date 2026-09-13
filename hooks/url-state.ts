@@ -35,7 +35,7 @@ function loadWithDefault<T>(defaultValue: T): T {
 
   try {
     const decompressed = decompressFromEncodedURIComponent(compressed)
-    return decompressed ? JSON.parse(decompressed) : null
+    return decompressed ? JSON.parse(decompressed) : defaultValue
   } catch (err) {
     // decompression failed -> return default value
     return defaultValue
