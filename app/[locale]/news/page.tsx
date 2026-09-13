@@ -18,7 +18,7 @@ type PageProps = { params: Promise<{ locale: string }> };
 const META = {
   title: "News",
   description:
-  "News about ChordPic, the free guitar chord diagram creator. Learn about new features and updates.",
+    "News about ChordPic, the free guitar chord diagram creator. Learn about new features and updates.",
 };
 
 export async function generateMetadata({ params }: PageProps) {
@@ -31,6 +31,25 @@ export default async function NewsPage({ params }: PageProps) {
   const { locale } = await params;
   const T = serverT(locale);
   const t = serverTranslator(locale);
+
+  // Resolved up front rather than awaited inside the JSX: the loader
+  // behind `translate` batches calls made in the same tick, and an await
+  // per attribute would serialise them into one request each.
+  const [
+    chordDiagramWithFretAlt,
+    slidersWithNumericalValuesAlt,
+    exampleHorizontalChordAlt,
+    exampleChordWithColorsAlt,
+    exampleChordWithTextAlt,
+    exampleChordChartAlt,
+  ] = await Promise.all([
+    t("Chord diagram with fret markers"),
+    t("Sliders with numerical values"),
+    t("Example horizontal chord"),
+    t("Example chord with colors"),
+    t("Example chord with text"),
+    t("Example chord chart"),
+  ]);
 
   return (
     <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-heading prose-a:underline-offset-4">
@@ -144,7 +163,7 @@ export default async function NewsPage({ params }: PageProps) {
         <T>The fret markers look like this:</T>{" "}
       </p>
       <div className="flex justify-center">
-        <Image src={fretMarkers} alt={await t("Chord diagram with fret markers")} />
+        <Image src={fretMarkers} alt={chordDiagramWithFretAlt} />
       </div>
       <p>
         <T>
@@ -236,7 +255,7 @@ export default async function NewsPage({ params }: PageProps) {
         <T>Here&apos;s what this looks like in action:</T>
       </p>
       <div className="flex justify-center">
-        <Image src={sliders} alt={await t("Sliders with numerical values")} />
+        <Image src={sliders} alt={slidersWithNumericalValuesAlt} />
       </div>
       <p>
         <T>
@@ -397,10 +416,7 @@ export default async function NewsPage({ params }: PageProps) {
         <T>Here&apos;s an example of a horizontal chord diagram:</T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={exampleHorizontalChord}
-          alt={await t("Example horizontal chord")}
-        />
+        <Image src={exampleHorizontalChord} alt={exampleHorizontalChordAlt} />
       </div>
       <h2 id="barre-chords-on-firefox-fixed-">
         <T>Barre Chords on Firefox Fixed!</T>
@@ -504,10 +520,7 @@ export default async function NewsPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={sampleChordWithColors}
-          alt={await t("Example chord with colors")}
-        />
+        <Image src={sampleChordWithColors} alt={exampleChordWithColorsAlt} />
       </div>
       <p>
         <T>
@@ -541,7 +554,7 @@ export default async function NewsPage({ params }: PageProps) {
         <Image
           width={4}
           src={sampleChordWithText}
-          alt={await t("Example chord with text")}
+          alt={exampleChordWithTextAlt}
         />
       </div>
       <p>
@@ -580,7 +593,7 @@ export default async function NewsPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image src={barreAndFingerSameFret} alt={await t("Example chord chart")} />
+        <Image src={barreAndFingerSameFret} alt={exampleChordChartAlt} />
       </div>
       <p>
         <T>Special thanks to everyone that reported this issue.</T>
@@ -632,5 +645,5 @@ export default async function NewsPage({ params }: PageProps) {
         </T>
       </p>
     </article>
-    );
+  );
 }

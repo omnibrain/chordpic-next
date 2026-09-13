@@ -15,9 +15,9 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function Terms() {
   return (
-  <div
-    dangerouslySetInnerHTML={{
-      __html: `
+    <div
+      dangerouslySetInnerHTML={{
+        __html: `
 <style>
 [data-custom-class='body'], [data-custom-class='body'] * {
         background: transparent !important;
@@ -146,7 +146,7 @@ Calibri;color:#595959;mso-themecolor:text1;mso-themetint:166;"><bdt class="block
   </style>
     </div>
 `,
-    }}
-  ></div>
+      }}
+    ></div>
   );
 }

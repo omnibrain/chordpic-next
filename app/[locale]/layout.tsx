@@ -3,18 +3,55 @@ import Script from "next/script";
 import { GeistSans } from "geist/font/sans";
 import { utsLocaleToLanguage } from "@magic-translate/core";
 import { PropsWithChildren } from "react";
-import {
-  adsInitScript,
-  colorModeInitScript,
-} from "../../hooks/init-scripts";
+import { adsInitScript, colorModeInitScript } from "../../hooks/init-scripts";
+import { Footer } from "../../components/Footer";
+import type { NavLabels } from "../../components/NavBar";
 import { SiteChrome } from "../../components/SiteChrome";
 import { PUBLIC_LOCALES } from "../../services/seo";
 import { isRtl } from "../../utils/translate";
+import { serverTranslator } from "../../utils/server-translate";
 import { Providers } from "../providers";
 import "../../styles/globals.css";
 
 export function generateStaticParams() {
   return PUBLIC_LOCALES.map((locale) => ({ locale }));
+}
+
+async function navLabels(locale: string): Promise<NavLabels> {
+  const t = serverTranslator(locale);
+
+  // One batch: the loader behind `translate` coalesces calls made in the same
+  // tick into a single request.
+  const [
+    language,
+    help,
+    news,
+    pricing,
+    account,
+    signOut,
+    signIn,
+    createChordDiagram,
+  ] = await Promise.all([
+    t("Language"),
+    t("Help"),
+    t("News"),
+    t("Pricing"),
+    t("Account"),
+    t("Sign out"),
+    t("Sign in"),
+    t("Create chord diagram"),
+  ]);
+
+  return {
+    language,
+    help,
+    news,
+    pricing,
+    account,
+    signOut,
+    signIn,
+    createChordDiagram,
+  };
 }
 
 export const metadata: Metadata = {
@@ -25,7 +62,9 @@ export const metadata: Metadata = {
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
     apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
-    other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#000000" }],
+    other: [
+      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#000000" },
+    ],
   },
   manifest: "/site.webmanifest",
   other: {
@@ -57,7 +96,12 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
         <Providers language={utsLocaleToLanguage(locale)}>
-          <SiteChrome>{children}</SiteChrome>
+          <SiteChrome
+            navLabels={await navLabels(locale)}
+            footer={<Footer locale={locale} />}
+          >
+            {children}
+          </SiteChrome>
         </Providers>
         <Script
           id="cookieyes"

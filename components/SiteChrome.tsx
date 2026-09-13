@@ -9,17 +9,16 @@ import {
   readAdsAssignment,
   useAdsAssignment,
 } from "../hooks/use-ads-assignment";
-import { Footer } from "./Footer";
-import { NavBar } from "./NavBar";
+import { NavBar, type NavLabels } from "./NavBar";
 
 /**
  * What Layout used to be, minus its `<Head>`: the document metadata is now
  * `generateMetadata` on each page, and only the parts that need browser state
  * — the subscription, the ads arm, analytics — are left on the client.
  */
-export const SiteChrome: React.FunctionComponent<PropsWithChildren> = ({
-  children,
-}) => {
+export const SiteChrome: React.FunctionComponent<
+  PropsWithChildren<{ navLabels: NavLabels; footer: React.ReactNode }>
+> = ({ children, navLabels, footer }) => {
   const subscription = useSubscription();
   const adsAssignment = useAdsAssignment();
 
@@ -46,14 +45,15 @@ export const SiteChrome: React.FunctionComponent<PropsWithChildren> = ({
 
   return (
     <>
-      {subscription === SubscriptionType.FREE && adsAssignment?.arm === "on" && (
-        <Script
-          data-ad-client="ca-pub-5764824207547220"
-          async
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-        />
-      )}
+      {subscription === SubscriptionType.FREE &&
+        adsAssignment?.arm === "on" && (
+          <Script
+            data-ad-client="ca-pub-5764824207547220"
+            async
+            strategy="afterInteractive"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          />
+        )}
 
       {subscription && (
         <>
@@ -76,11 +76,11 @@ export const SiteChrome: React.FunctionComponent<PropsWithChildren> = ({
       )}
 
       <div className="flex min-h-screen flex-col">
-        <NavBar />
+        <NavBar labels={navLabels} />
         <main className="mx-auto mb-24 mt-10 w-full max-w-content flex-1 px-4 sm:px-6">
           {children}
         </main>
-        <Footer />
+        {footer}
       </div>
     </>
   );

@@ -80,7 +80,10 @@ function localeResponse(request: NextRequest): NextResponse {
       const url = request.nextUrl.clone();
       url.pathname = pathname.slice(DEFAULT_LOCALE.length + 1) || "/";
 
-      return NextResponse.redirect(url);
+      // 308 and not the default 307: this one is permanent, and a temporary
+      // redirect would leave /en/* eligible for indexing alongside its
+      // canonical.
+      return NextResponse.redirect(url, 308);
     }
 
     return NextResponse.next();

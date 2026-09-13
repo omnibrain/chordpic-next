@@ -16,7 +16,7 @@ type PageProps = { params: Promise<{ locale: string }> };
 const META = {
   title: "Help",
   description:
-  "Learn how to create guitar chord diagrams with ChordPic. Don't worry, it's super easy!",
+    "Learn how to create guitar chord diagrams with ChordPic. Don't worry, it's super easy!",
 };
 
 export async function generateMetadata({ params }: PageProps) {
@@ -29,6 +29,25 @@ export default async function HelpPage({ params }: PageProps) {
   const { locale } = await params;
   const T = serverT(locale);
   const t = serverTranslator(locale);
+
+  // Resolved up front rather than awaited inside the JSX: the loader
+  // behind `translate` batches calls made in the same tick, and an await
+  // per attribute would serialise them into one request each.
+  const [
+    addRemoveFingersAlt,
+    toggleStringsAlt,
+    barreChordAlt,
+    editTextAlt,
+    fingerShapeAlt,
+    exampleChordChartAlt,
+  ] = await Promise.all([
+    t("Example of adding and removing fingers"),
+    t("Example of toggling strings from do not play to open"),
+    t("Example of adding and removing a barre chord"),
+    t("Example of adding and editing text on fingers and barre chords"),
+    t("Example of changing the shape of a finger"),
+    t("Example chord chart"),
+  ]);
 
   return (
     <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-heading prose-a:underline-offset-4">
@@ -75,10 +94,7 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={toggleGif}
-          alt={await t("Example of adding and removing fingers")}
-        />
+        <Image src={toggleGif} alt={addRemoveFingersAlt} />
       </div>
       <p>
         <T>
@@ -91,10 +107,7 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={silentstringsGif}
-          alt={await t("Example of toggling strings from do not play to open")}
-        />
+        <Image src={silentstringsGif} alt={toggleStringsAlt} />
       </div>
       <p>
         <T>
@@ -106,10 +119,7 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={barreGif}
-          alt={await t("Example of adding and removing a barre chord")}
-        />
+        <Image src={barreGif} alt={barreChordAlt} />
       </div>
       <p>
         <T>
@@ -123,12 +133,7 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={editTextGif}
-          alt={await t(
-            "Example of adding and editing text on fingers and barre chords",
-          )}
-        />
+        <Image src={editTextGif} alt={editTextAlt} />
       </div>
       <p>
         <T>
@@ -141,12 +146,7 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={editColorsGif}
-          alt={await t(
-            "Example of adding and editing text on fingers and barre chords",
-          )}
-        />
+        <Image src={editColorsGif} alt={editTextAlt} />
       </div>
       <p>
         <T>
@@ -158,10 +158,7 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image
-          src={editShapesGif}
-          alt={await t("Example of changing the shape of a finger")}
-        />
+        <Image src={editShapesGif} alt={fingerShapeAlt} />
       </div>
       <p>
         <T>
@@ -172,10 +169,7 @@ export default async function HelpPage({ params }: PageProps) {
       </p>
 
       <div className="flex justify-center">
-        <Image
-          src={labelsGif}
-          alt={await t("Example of adding and removing a barre chord")}
-        />
+        <Image src={labelsGif} alt={barreChordAlt} />
       </div>
       <h2 id="the-result-section">
         <T>The Result Section</T>
@@ -188,7 +182,7 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image src={samplechordGif} alt={await t("Example chord chart")} />
+        <Image src={samplechordGif} alt={exampleChordChartAlt} />
       </div>
       <h2 id="the-download-sharing-section">
         <T>The Download &amp; Sharing Section</T>
@@ -212,5 +206,5 @@ export default async function HelpPage({ params }: PageProps) {
         </T>
       </p>
     </article>
-    );
+  );
 }

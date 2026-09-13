@@ -4,7 +4,6 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
-import { T } from "@magic-translate/react";
 import { useColorMode } from "../hooks/use-color-mode";
 import { useLanguage } from "../utils/use-language";
 import { useSubscription } from "../utils/useSubscription";
@@ -14,6 +13,22 @@ import { languageMap } from "../utils/translate";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+/**
+ * Translated on the server and handed down, because the nav renders on every
+ * page: doing it here with <T> meant every indexed page shipped an English nav
+ * and swapped it after hydration.
+ */
+export interface NavLabels {
+  language: string;
+  help: string;
+  news: string;
+  pricing: string;
+  account: string;
+  signOut: string;
+  signIn: string;
+  createChordDiagram: string;
+}
 
 const Logo: React.FunctionComponent = () => {
   const subscription = useSubscription();
@@ -62,7 +77,8 @@ const ColorModeToggle: React.FunctionComponent = () => {
 
 const MenuLinks: React.FunctionComponent<{
   onCloseMenu(): void;
-}> = ({ onCloseMenu }) => {
+  labels: NavLabels;
+}> = ({ onCloseMenu, labels }) => {
   const { user } = useUser();
   const pathname = usePathname();
   const subscription = useSubscription();
@@ -71,31 +87,31 @@ const MenuLinks: React.FunctionComponent<{
   return (
     <>
       <NavbarMenuItem onNavigate={onCloseMenu} to="/languages">
-        <T>Language</T> {languageMap[language]?.icon}
+        {labels.language} {languageMap[language]?.icon}
       </NavbarMenuItem>
       <NavbarMenuItem onNavigate={onCloseMenu} to="/help">
-        <T>Help</T>
+        {labels.help}
       </NavbarMenuItem>
       <NavbarMenuItem onNavigate={onCloseMenu} to="/news">
-        <T>News</T>
+        {labels.news}
       </NavbarMenuItem>
       {subscription === SubscriptionType.FREE && (
         <NavbarMenuItem onNavigate={onCloseMenu} to="/pricing">
-          <T>Pricing</T>
+          {labels.pricing}
         </NavbarMenuItem>
       )}
       {user ? (
         <>
           <NavbarMenuItem onNavigate={onCloseMenu} to="/account">
-            <T>Account</T>
+            {labels.account}
           </NavbarMenuItem>
           <NavbarMenuItem onNavigate={onCloseMenu} to="/auth/logout">
-            <T>Sign out</T>
+            {labels.signOut}
           </NavbarMenuItem>
         </>
       ) : (
         <NavbarMenuItem to="/signin" onNavigate={onCloseMenu}>
-          <T>Sign in</T>
+          {labels.signIn}
         </NavbarMenuItem>
       )}
       {pathname !== "/" && (
@@ -104,14 +120,14 @@ const MenuLinks: React.FunctionComponent<{
           onClick={onCloseMenu}
           className={cn(buttonVariants(), "text-base")}
         >
-          <T>Create chord diagram</T>
+          {labels.createChordDiagram}
         </NextLink>
       )}
     </>
   );
 };
 
-export const NavBar = () => {
+export const NavBar = ({ labels }: { labels: NavLabels }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -119,7 +135,7 @@ export const NavBar = () => {
       <nav className="mx-auto flex h-16 w-full max-w-content items-center justify-between gap-4 px-4 sm:px-6">
         <Logo />
         <div className="hidden items-center gap-6 md:flex">
-          <MenuLinks onCloseMenu={() => setIsOpen(false)} />
+          <MenuLinks onCloseMenu={() => setIsOpen(false)} labels={labels} />
           <ColorModeToggle />
         </div>
         <div className="flex items-center gap-1 md:hidden">
@@ -137,7 +153,7 @@ export const NavBar = () => {
       {isOpen && (
         <div className="border-t px-4 pb-6 pt-4 md:hidden">
           <div className="flex flex-col items-start gap-4">
-            <MenuLinks onCloseMenu={() => setIsOpen(false)} />
+            <MenuLinks onCloseMenu={() => setIsOpen(false)} labels={labels} />
           </div>
         </div>
       )}

@@ -14,7 +14,14 @@ export default [
     },
   },
   {
-    files: ["app/**/page.tsx"],
+    // Server components, listed rather than globbed so a client component can
+    // never pick this up by accident.
+    files: [
+      "app/**/page.tsx",
+      "components/Footer.tsx",
+      "components/FreeProduct.tsx",
+      "components/Pricing.tsx",
+    ],
     rules: {
       // `const T = serverT(locale)` reads as creating a component during
       // render, and the rule is right to flag that in a client component: a new

@@ -19,8 +19,9 @@ export async function generateMetadata({ params }: PageProps) {
   return pageMetadata(locale, "/pricing", META);
 }
 
-export default async function PricingPage() {
+export default async function PricingPage({ params }: PageProps) {
+  const { locale } = await params;
   const products = await loadProducts();
 
-  return <Pricing products={products} />;
+  return <Pricing products={products} locale={locale} />;
 }

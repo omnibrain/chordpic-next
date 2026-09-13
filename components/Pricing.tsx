@@ -1,14 +1,17 @@
 import { ProductWithPrice } from "../types";
 import { FreeProduct } from "./FreeProduct";
 import { Product } from "./Product";
-import { T } from "@magic-translate/react";
+import { serverT } from "../utils/server-translate";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   products: ProductWithPrice[];
+  locale: string;
 }
 
-export default function Pricing({ products }: Props) {
+export default function Pricing({ products, locale }: Props) {
+  const T = serverT(locale);
+
   return (
     <section>
       <h1 className="mb-6 text-center font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -41,13 +44,13 @@ export default function Pricing({ products }: Props) {
           </TabsTrigger>
         </TabsList>
         {(["month", "year"] as const).map((interval) => (
-          <TabsContent
-            key={interval}
-            value={interval}
-            className="mt-10 w-full"
-          >
+          <TabsContent key={interval} value={interval} className="mt-10 w-full">
             <div className="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
-              <FreeProduct billingInterval={interval} product={products[0]} />
+              <FreeProduct
+                billingInterval={interval}
+                product={products[0]}
+                locale={locale}
+              />
               <Product billingInterval={interval} product={products[0]} />
             </div>
           </TabsContent>

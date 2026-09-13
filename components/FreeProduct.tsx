@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { ProductWithPrice } from "../types";
-import { T } from "@magic-translate/react";
+import { serverT } from "../utils/server-translate";
 import {
   Card,
   CardContent,
@@ -12,13 +12,16 @@ import {
 export interface FreeProductProps {
   billingInterval: "year" | "month";
   product: ProductWithPrice;
+  locale: string;
 }
 
 export const FreeProduct: React.FunctionComponent<
   PropsWithChildren<FreeProductProps>
-> = ({ product, billingInterval }) => {
+> = ({ product, billingInterval, locale }) => {
+  const T = serverT(locale);
+
   const price = product?.prices?.find(
-    (price) => price.interval === billingInterval
+    (price) => price.interval === billingInterval,
   );
 
   if (!price) {
