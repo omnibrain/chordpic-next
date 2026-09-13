@@ -1,3 +1,5 @@
+"use client";
+
 import { Download } from "lucide-react";
 import { ImageService } from "../services/image-service";
 import { useChart } from "./chord/useChart";

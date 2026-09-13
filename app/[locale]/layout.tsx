@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { GeistSans } from "geist/font/sans";
 import { utsLocaleToLanguage } from "@magic-translate/core";
 import { PropsWithChildren } from "react";
+import {
+  adsInitScript,
+  colorModeInitScript,
+} from "../../hooks/init-scripts";
 import { SiteChrome } from "../../components/SiteChrome";
 import { PUBLIC_LOCALES } from "../../services/seo";
 import { isRtl } from "../../utils/translate";
@@ -46,9 +51,33 @@ export default async function RootLayout({
       style={{ ["--font-geist-sans" as string]: GeistSans.style.fontFamily }}
     >
       <body>
+        {/* Both have to run before paint, so they stay inline scripts rather
+            than next/script — a flash of the wrong theme or of ads that should
+            be hidden is exactly what they exist to prevent. */}
+        <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
         <Providers language={utsLocaleToLanguage(locale)}>
           <SiteChrome>{children}</SiteChrome>
         </Providers>
+        <Script
+          id="cookieyes"
+          type="text/javascript"
+          strategy="lazyOnload"
+          src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
+        />
+        <Script
+          id="rewardful-queue"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`,
+          }}
+        />
+        <Script
+          id="rewardful"
+          strategy="beforeInteractive"
+          src="https://r.wdfl.co/rw.js"
+          data-rewardful="014828"
+        />
       </body>
     </html>
   );

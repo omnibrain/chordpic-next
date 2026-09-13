@@ -1,3 +1,5 @@
+"use client";
+
 import React, { forwardRef, useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import {

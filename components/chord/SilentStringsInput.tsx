@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ChordMatrix, EmptyStringState } from "../../services/chord-matrix";
 import { IChordInputSettings } from "./ChordEditor";

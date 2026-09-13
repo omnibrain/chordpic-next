@@ -1,3 +1,5 @@
+"use client";
+
 import { EditMode } from "../../../domain/edit-mode";
 import { ChordMatrix } from "../../../services/chord-matrix";
 import { IChordInputSettings } from "../ChordEditor";

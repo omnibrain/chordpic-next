@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 
 function setAndPersistValue<T>(key: string, setter: (v: T) => void) {

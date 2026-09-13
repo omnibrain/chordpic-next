@@ -17,7 +17,32 @@ import { translate } from "./translate";
  * Note the library's own constraint: `<T>` may not contain React components,
  * only text and plain HTML elements. It throws if it does.
  */
-const RawT = createT(translate);
+/**
+ * Unbound: takes an explicit `lang`. Only /languages needs it, to render each
+ * language's name in that language rather than in the page's.
+ */
+export const T = createT(translate);
+
+const RawT = T;
+
+/**
+ * The server counterpart to `useT()`, for strings that are not renderable
+ * markup — an `alt`, a `title`, a `placeholder`. Awaited at the call site:
+ * `alt={await t("Example chord chart")}`.
+ */
+export function serverTranslator(locale: string) {
+  const lang = utsLocaleToLanguage(locale);
+
+  return async (text: string): Promise<string> => {
+    try {
+      return (await translate(lang, text)) || text;
+    } catch {
+      // Same bargain as page metadata: an alt attribute is not worth failing a
+      // build over, and English is a reasonable floor.
+      return text;
+    }
+  };
+}
 
 /**
  * Binds `<T>` to the page's locale, so pages read `<T>text</T>` the way they

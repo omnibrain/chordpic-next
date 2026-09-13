@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FaTelegram, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { MdFacebook, MdShare, MdEmail } from "react-icons/md";

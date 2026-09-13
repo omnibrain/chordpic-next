@@ -6,10 +6,15 @@ import { Product, Price, Customer, UserDetails } from "../types";
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin priviliges and overwrites RLS policies!
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+//
+// Built per call rather than at import: supabase-js v2 throws on an empty key
+// where v1 shrugged, and this module is reachable from route handlers whose
+// config Next collects at build time, where the service key is not present.
+const supabaseAdmin = () =>
+  createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+  );
 
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
@@ -21,7 +26,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     metadata: product.metadata,
   };
 
-  const { error } = await supabaseAdmin
+  const { error } = await supabaseAdmin()
     .from("products")
     .upsert([productData]);
   if (error) throw error;
@@ -43,7 +48,7 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
     metadata: price.metadata,
   };
 
-  const { error } = await supabaseAdmin
+  const { error } = await supabaseAdmin()
     .from("prices")
     .upsert([priceData]);
   if (error) throw error;
@@ -57,7 +62,7 @@ const createOrRetrieveCustomer = async ({
   email: string;
   uuid: string;
 }) => {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await supabaseAdmin()
     .from("customers")
     .select("stripe_customer_id")
     .eq("id", uuid)
@@ -73,7 +78,7 @@ const createOrRetrieveCustomer = async ({
     if (email) customerData.email = email;
     const customer = await stripe.customers.create(customerData);
     // Now insert the customer ID into our Supabase mapping table.
-    const { error: supabaseError } = await supabaseAdmin
+    const { error: supabaseError } = await supabaseAdmin()
       .from("customers")
       .insert([{ id: uuid, stripe_customer_id: customer.id }]);
     if (supabaseError) throw supabaseError;
@@ -96,7 +101,7 @@ const copyBillingDetailsToCustomer = async (
   if (!name || !phone || !address) return;
   //@ts-ignore
   await stripe.customers.update(customer, { name, phone, address });
-  const { error } = await supabaseAdmin
+  const { error } = await supabaseAdmin()
     .from("users")
     .update({
       billing_address: address,
@@ -112,7 +117,7 @@ const manageSubscriptionStatusChange = async (
   createAction = false
 ) => {
   // Get customer's UUID from mapping table.
-  const { data: customerData, error: noCustomerError } = await supabaseAdmin
+  const { data: customerData, error: noCustomerError } = await supabaseAdmin()
     .from("customers")
     .select("id")
     .eq("stripe_customer_id", customerId)
@@ -153,7 +158,7 @@ const manageSubscriptionStatusChange = async (
       : null,
   };
 
-  const { error } = await supabaseAdmin
+  const { error } = await supabaseAdmin()
     .from("subscriptions")
     .upsert([subscriptionData]);
   if (error) throw error;

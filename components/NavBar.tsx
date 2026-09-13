@@ -1,3 +1,5 @@
+"use client";
+
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren } from "react";
@@ -87,7 +89,7 @@ const MenuLinks: React.FunctionComponent<{
           <NavbarMenuItem onNavigate={onCloseMenu} to="/account">
             <T>Account</T>
           </NavbarMenuItem>
-          <NavbarMenuItem onNavigate={onCloseMenu} to="/api/auth/logout">
+          <NavbarMenuItem onNavigate={onCloseMenu} to="/auth/logout">
             <T>Sign out</T>
           </NavbarMenuItem>
         </>

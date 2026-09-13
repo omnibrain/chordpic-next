@@ -1,6 +1,8 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 
-const STORAGE_KEY = "color-mode";
+import { COLOR_MODE_STORAGE_KEY as STORAGE_KEY } from "./init-scripts";
 
 export type ColorMode = "light" | "dark";
 
@@ -38,4 +40,3 @@ export function useColorMode() {
 
 // Light is the default regardless of the OS preference; dark is applied
 // only when the user explicitly toggled it.
-export const colorModeInitScript = `(function(){try{if(localStorage.getItem("${STORAGE_KEY}")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})()`;

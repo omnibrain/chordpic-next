@@ -1,3 +1,5 @@
+"use client";
+
 import { T } from "@magic-translate/react";
 import * as React from "react";
 import { EditMode } from "../../domain/edit-mode";

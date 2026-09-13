@@ -69,6 +69,7 @@ export default async function AboutPage({ params }: PageProps) {
       </h2>
       <p>
         {/* this is not a next link on purpose: The cookiefirst stuff will not load when routed with next */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a href="/cookie-policy">
           <T>
             Read ChordPic&apos;s cookie policy or adjust your settings here.

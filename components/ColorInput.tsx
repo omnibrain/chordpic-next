@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useRef, useState } from "react";
 import { ColorResult } from "react-color";
 import SketchPicker from "react-color/lib/components/sketch/Sketch";

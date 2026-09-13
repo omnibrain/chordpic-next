@@ -1,4 +1,5 @@
-import { adsInitScript, readAdsAssignment } from "./use-ads-assignment";
+import { adsInitScript } from "./init-scripts";
+import { readAdsAssignment } from "./use-ads-assignment";
 
 const EXPIRED = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
 

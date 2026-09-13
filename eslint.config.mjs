@@ -13,4 +13,15 @@ export default [
       "react-hooks/refs": "warn",
     },
   },
+  {
+    files: ["app/**/page.tsx"],
+    rules: {
+      // `const T = serverT(locale)` reads as creating a component during
+      // render, and the rule is right to flag that in a client component: a new
+      // identity every render remounts the subtree and loses its state. A
+      // server component renders once and holds no state, so neither can
+      // happen here.
+      "react-hooks/static-components": "off",
+    },
+  },
 ];

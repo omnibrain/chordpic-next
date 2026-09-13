@@ -78,6 +78,18 @@ export function isNoindexPath(asPath: string): boolean {
 }
 
 /**
+ * Site-relative path for `path` in `locale`, following the same unprefixed
+ * default as `localeUrl`. `<Link locale>` was Pages-Router only, so every
+ * cross-locale link has to build its own href now.
+ */
+export function localePath(locale: string, asPath: string): string {
+  const path = canonicalPath(asPath);
+  const prefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
+
+  return path === "/" ? prefix || "/" : `${prefix}${path}`;
+}
+
+/**
  * Absolute URL for `path` in `locale`. The default locale is served unprefixed.
  *
  * The trailing slash matters: `https://chordpic.com/de/` answers with a 308 to

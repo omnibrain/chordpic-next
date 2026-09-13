@@ -1,3 +1,5 @@
+"use client";
+
 import { MutableRefObject, useEffect } from 'react'
 
 const handleClick = (ref: MutableRefObject<HTMLElement | null | undefined>, callback: () => void) => (e: MouseEvent) => {

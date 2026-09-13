@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import React, { PropsWithChildren, useState } from "react";
 import { GA4_ID } from "../global";
