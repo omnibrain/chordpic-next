@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { ProductWithPrice } from "../types";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import {
   Card,
   CardContent,

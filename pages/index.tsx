@@ -1,4 +1,4 @@
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 import type {
   GetStaticPropsContext,
   GetStaticPropsResult,

@@ -10,7 +10,7 @@ import labelsGif from "../public/images/labels.gif";
 import samplechordGif from "../public/images/samplechord.png";
 import silentstringsGif from "../public/images/silentstrings.gif";
 import toggleGif from "../public/images/toggle.gif";
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 
 type Props = PageMetaProps;
 

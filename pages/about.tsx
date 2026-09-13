@@ -1,7 +1,7 @@
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import NextLink from "next/link";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 
 type Props = PageMetaProps;
 

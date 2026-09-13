@@ -1,6 +1,7 @@
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { localizedMeta, PageMetaProps } from "../services/page-meta";
-import { Language, T } from "@magic-translate/react";
+import { Language } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { languageMap } from "../utils/translate";
 import Link from "next/link";
 import { SUPPORT_EMAIL } from "../global";

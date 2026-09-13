@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { Logo } from "./Logo";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export interface AuthBoxProps {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FacebookIcon, RedditIcon } from "react-share";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 
 const footerLink =
   "text-sm text-muted-foreground transition-colors hover:text-foreground";

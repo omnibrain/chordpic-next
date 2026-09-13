@@ -1,14 +1,37 @@
-import NextDocument, { Head, Html, Main, NextScript } from "next/document";
+import NextDocument, {
+  DocumentContext,
+  DocumentInitialProps,
+  Head,
+  Html,
+  Main,
+  NextScript,
+} from "next/document";
 import Script from "next/script";
 import { colorModeInitScript } from "../hooks/use-color-mode";
 import { adsInitScript } from "../hooks/use-ads-assignment";
 import { isRtl } from "../utils/translate";
+import {
+  prepareSsrTranslations,
+  SsrTranslations,
+  SsrTranslationsScript,
+} from "../utils/ssr-translate";
 
-export default class Document extends NextDocument {
+interface Props {
+  ssrTranslations?: SsrTranslations;
+}
+
+export default class Document extends NextDocument<Props> {
+  static async getInitialProps(
+    ctx: DocumentContext,
+  ): Promise<DocumentInitialProps & Props> {
+    const ssrTranslations = await prepareSsrTranslations(ctx);
+
+    return { ...(await NextDocument.getInitialProps(ctx)), ssrTranslations };
+  }
+
   render() {
     // Was hardcoded to "en", so /de, /es and the rest all claimed to be
-    // English. The body text is still translated client-side; this only fixes
-    // the declaration browsers and screen readers act on.
+    // English.
     const locale = this.props.__NEXT_DATA__.locale ?? "en";
 
     return (
@@ -50,6 +73,7 @@ export default class Document extends NextDocument {
           <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
           <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
           <Main />
+          <SsrTranslationsScript translations={this.props.ssrTranslations} />
           <NextScript />
           <Script
             id="rewardful-queue"

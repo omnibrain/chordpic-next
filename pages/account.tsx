@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { postData } from "../utils/helpers";
 import { useUser } from "../utils/useUser";
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 
 interface Props {
   title: string;

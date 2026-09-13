@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { ColorResult } from "react-color";
 import SketchPicker from "react-color/lib/components/sketch/Sketch";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { useOutsideHandler } from "../hooks/use-outside-click";
 import { useEscHandler } from "../hooks/use-esc-handler";
 import { Button } from "@/components/ui/button";

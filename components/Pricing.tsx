@@ -1,7 +1,7 @@
 import { ProductWithPrice } from "../types";
 import { FreeProduct } from "./FreeProduct";
 import { Product } from "./Product";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {

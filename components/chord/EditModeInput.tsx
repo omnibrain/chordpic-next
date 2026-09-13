@@ -1,4 +1,4 @@
-import { T } from "@magic-translate/react";
+import { T } from "../../utils/ssr-translate";
 import * as React from "react";
 import { EditMode } from "../../domain/edit-mode";
 import { Button } from "@/components/ui/button";

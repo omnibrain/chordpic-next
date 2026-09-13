@@ -2,7 +2,7 @@ import { Download } from "lucide-react";
 import { ImageService } from "../services/image-service";
 import { useChart } from "./chord/useChart";
 import { GA } from "../services/google-analytics";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { Button } from "@/components/ui/button";
 
 const downloadPng =

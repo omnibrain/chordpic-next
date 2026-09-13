@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { updateUserName } from "../utils/supabase-client";
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 
 type Props = PageMetaProps;
 

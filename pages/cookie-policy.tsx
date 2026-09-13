@@ -1,4 +1,4 @@
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { localizedMeta, PageMetaProps } from "../services/page-meta";
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 

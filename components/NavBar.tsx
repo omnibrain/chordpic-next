@@ -2,7 +2,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { useColorMode } from "../hooks/use-color-mode";
 import { useLanguage } from "../utils/use-language";
 import { useSubscription } from "../utils/useSubscription";

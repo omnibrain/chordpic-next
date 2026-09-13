@@ -2,7 +2,7 @@ import React, { useDeferredValue, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ChordSettings, ChordStyle, Orientation } from "svguitar";
 import { ChevronDown, ChevronUp, CircleHelp, Trash2 } from "lucide-react";
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 import { SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
 import { ColorInput } from "./ColorInput";

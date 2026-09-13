@@ -10,7 +10,7 @@ import fretMarkers from "../public/images/fret-markers.png";
 
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import sliders from "../assets/images/sliders.jpg";
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 import React from "react";
 import Link from "next/link";
 

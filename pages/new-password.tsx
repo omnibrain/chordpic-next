@@ -10,7 +10,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "../utils/supabase-client";
 import { useUser } from "../utils/useUser";
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 
 const useUpdatePasswordMutation = () => {
   const { accessToken } = useUser();

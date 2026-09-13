@@ -11,7 +11,7 @@ import {
 import { Chart } from "../domain/chart";
 import { getLink } from "../hooks/url-state";
 import { GA } from "../services/google-analytics";
-import { T } from "@magic-translate/react";
+import { T } from "../utils/ssr-translate";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 

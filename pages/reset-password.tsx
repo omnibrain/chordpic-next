@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getURL } from "../utils/helpers";
 import { supabase } from "../utils/supabase-client";
-import { T, useT } from "@magic-translate/react";
+import { T, useT } from "../utils/ssr-translate";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
