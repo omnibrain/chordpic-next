@@ -1,5 +1,7 @@
-// This file configures the initialization of Sentry in the edge runtime, which
-// is where middleware.ts runs.
+// This file configures the initialization of Sentry in the edge runtime.
+// Nothing runs there today — proxy.ts is nodejs — but the branch in
+// instrumentation.ts used to load the browser config, which is wrong for any
+// edge route somebody adds later.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';

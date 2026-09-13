@@ -2,11 +2,11 @@
  * Ad serving is controlled by one global mode plus a stable per-visitor bucket.
  *
  * The mode lives in NEXT_PUBLIC_ADS_MODE, so changing it needs a redeploy. Moving
- * it to Vercel Edge Config later means rewriting readAdsMode() in middleware.ts
+ * it to Vercel Edge Config later means rewriting readAdsMode() in proxy.ts
  * and nothing else: the cookie contract below is what the client reads, and it
  * stays the same either way.
  *
- * This module runs in the edge runtime as well as the browser, so it must stay
+ * This module runs in the browser as well as on the server, so it must stay
  * free of DOM and Node APIs.
  */
 
