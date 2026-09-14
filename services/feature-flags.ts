@@ -41,8 +41,33 @@ export function parseBucket(raw: string | undefined): number | null {
     : null;
 }
 
+export function parseAdsArm(raw: string | undefined): AdsArm | null {
+  return raw === "on" || raw === "off" ? raw : null;
+}
+
 export function randomBucket(): number {
   return Math.floor(Math.random() * BUCKET_COUNT);
+}
+
+/**
+ * Stamped onto anything a visitor buys, so a paid conversion can be traced back
+ * to the arm without a join through GA4 — which has no key for it.
+ *
+ * The arm is read rather than recomputed on purpose: it is derived per request
+ * from the current mode, so this records what the buyer actually saw, not what
+ * the mode happens to say when the number is read back. The bucket rides along
+ * because it is the stable unit and survives a lost `cp_ads`.
+ */
+export function adsAssignmentMetadata(
+  cookies: Record<string, string | undefined>,
+): Record<string, string> {
+  const arm = parseAdsArm(cookies[ADS_COOKIE]);
+  const bucket = parseBucket(cookies[BUCKET_COOKIE]);
+
+  return {
+    ...(arm === null ? {} : { adsArm: arm }),
+    ...(bucket === null ? {} : { adsBucket: String(bucket) }),
+  };
 }
 
 export function resolveAdsArm(mode: AdsMode, bucket: number): AdsArm {

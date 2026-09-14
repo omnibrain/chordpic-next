@@ -3,6 +3,7 @@ import {
   withAuthRequired,
 } from "@supabase/supabase-auth-helpers/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
+import { adsAssignmentMetadata } from "../../services/feature-flags";
 import { getURL } from "../../utils/helpers";
 import { stripe } from "../../utils/stripe";
 import { createOrRetrieveCustomer } from "../../utils/supabase-admin";
@@ -13,6 +14,7 @@ const createCheckoutSession = async (
 ) => {
   if (req.method === "POST") {
     const { price, quantity = 1, metadata = {}, referral, coupon } = req.body;
+    const assignment = adsAssignmentMetadata(req.cookies);
 
     try {
       const { user } = await getUser({ req, res });
@@ -61,12 +63,13 @@ const createCheckoutSession = async (
           : { allow_promotion_codes: true }),
         subscription_data: {
           trial_from_plan: true,
-          metadata,
+          metadata: { ...metadata, ...assignment },
         },
         success_url: `${getURL()}/account`,
         cancel_url: `${getURL()}/`,
         metadata: {
           analyticsClientId: req.body.analyticsClientId,
+          ...assignment,
         },
       });
 
