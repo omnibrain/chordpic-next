@@ -1,6 +1,10 @@
 import {
+  ADS_COOKIE,
   ADS_ON_BUCKETS,
+  BUCKET_COOKIE,
   BUCKET_COUNT,
+  adsAssignmentMetadata,
+  parseAdsArm,
   parseAdsMode,
   parseBucket,
   randomBucket,
@@ -42,6 +46,49 @@ describe("bucket parsing", () => {
       const bucket = randomBucket();
       expect(parseBucket(String(bucket))).toBe(bucket);
     }
+  });
+});
+
+describe("arm parsing", () => {
+  it("accepts both arms", () => {
+    expect(parseAdsArm("on")).toBe("on");
+    expect(parseAdsArm("off")).toBe("off");
+  });
+
+  it("rejects anything else rather than inventing an assignment", () => {
+    expect(parseAdsArm(undefined)).toBeNull();
+    expect(parseAdsArm("")).toBeNull();
+    expect(parseAdsArm("ON")).toBeNull();
+    expect(parseAdsArm("split")).toBeNull();
+  });
+});
+
+describe("assignment metadata", () => {
+  it("records the arm the buyer was on, and the bucket behind it", () => {
+    expect(
+      adsAssignmentMetadata({ [ADS_COOKIE]: "off", [BUCKET_COOKIE]: "73" }),
+    ).toEqual({ adsArm: "off", adsBucket: "73" });
+  });
+
+  it("omits what it cannot vouch for instead of guessing", () => {
+    expect(adsAssignmentMetadata({})).toEqual({});
+    expect(
+      adsAssignmentMetadata({ [ADS_COOKIE]: "yes", [BUCKET_COOKIE]: "999" }),
+    ).toEqual({});
+    expect(adsAssignmentMetadata({ [BUCKET_COOKIE]: "0" })).toEqual({
+      adsBucket: "0",
+    });
+  });
+
+  it("only ever yields strings, which is all Stripe metadata holds", () => {
+    const metadata = adsAssignmentMetadata({
+      [ADS_COOKIE]: "on",
+      [BUCKET_COOKIE]: "0",
+    });
+
+    Object.values(metadata).forEach((value) =>
+      expect(typeof value).toBe("string"),
+    );
   });
 });
 
