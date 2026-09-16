@@ -4,7 +4,8 @@ import {
   DEFAULT_LOCALE,
   isNoindexPath,
   localeUrl,
-  PUBLIC_LOCALES,
+  pageLocales,
+  canonicalLocale,
   SITE_URL,
 } from "./seo";
 
@@ -27,7 +28,9 @@ export async function createPageMetadata(
   const title = `ChordPic | ${translated.title}`;
   const description = translated.description ?? defaultMeta.description;
   const noindex = isNoindexPath(path);
-  const canonical = noindex ? undefined : localeUrl(locale, path);
+  const canonical = noindex
+    ? undefined
+    : localeUrl(canonicalLocale(locale, path), path);
   const image = `${SITE_URL}/logo.png`;
 
   return {
@@ -37,13 +40,15 @@ export async function createPageMetadata(
     ...(!noindex && {
       alternates: {
         canonical,
-        languages: Object.fromEntries([
-          ...PUBLIC_LOCALES.map((language) => [
-            language,
-            localeUrl(language, path),
+        ...(pageLocales(path).length > 1 && {
+          languages: Object.fromEntries([
+            ...pageLocales(path).map((language) => [
+              language,
+              localeUrl(language, path),
+            ]),
+            ["x-default", localeUrl(DEFAULT_LOCALE, path)],
           ]),
-          ["x-default", localeUrl(DEFAULT_LOCALE, path)],
-        ]),
+        }),
       },
     }),
     openGraph: {
