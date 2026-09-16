@@ -5,7 +5,7 @@ const STORAGE_KEY = "color-mode";
 export type ColorMode = "light" | "dark";
 
 /**
- * Dark mode via the `dark` class on <html>. An inline script in _document
+ * Dark mode via the `dark` class on <html>. An inline script in the root layout
  * applies the persisted value before hydration to avoid flashing.
  *
  * State starts as "light" on both server and client so hydration matches;
@@ -38,4 +38,4 @@ export function useColorMode() {
 
 // Light is the default regardless of the OS preference; dark is applied
 // only when the user explicitly toggled it.
-export const colorModeInitScript = `(function(){try{if(localStorage.getItem("${STORAGE_KEY}")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})()`;
+export { colorModeInitScript } from "../services/document-scripts";

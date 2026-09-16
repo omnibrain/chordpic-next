@@ -10,15 +10,15 @@ import {
 } from "./seo";
 import { isRtl } from "../utils/translate";
 
-const nextConfig = require("../next.config.js");
+import { locales, defaultLocale } from "./i18n";
+import { languageMap } from "../utils/translate";
 
-describe("next.config.js routing", () => {
-  const { locales, defaultLocale } = nextConfig.i18n;
-
+describe("App Router locales", () => {
   it("routes exactly the locales we advertise", () => {
     // These two lists drifting apart is what left /ar, /fa and /ur serving
     // English at index,follow while no hreflang cluster and no sitemap entry
     // mentioned them. Adding a locale to either list alone should fail here.
+    expect([...locales].sort()).toEqual(Object.keys(languageMap).sort());
     expect([...locales].sort()).toEqual([...PUBLIC_LOCALES].sort());
     expect(defaultLocale).toBe(DEFAULT_LOCALE);
   });
@@ -119,9 +119,9 @@ describe("sitemapEntries", () => {
       (entry) => entry.url === `${SITE_URL}/de/pricing`,
     );
 
-    expect(
-      pricing?.links?.find((link) => link.lang === "x-default")?.url,
-    ).toBe(`${SITE_URL}/pricing`);
+    expect(pricing?.links?.find((link) => link.lang === "x-default")?.url).toBe(
+      `${SITE_URL}/pricing`,
+    );
   });
 
   it("excludes everything marked noindex", () => {

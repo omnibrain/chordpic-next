@@ -1,4 +1,6 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useLocalizedRouter } from "../utils/use-localized-router";
 import React, { PropsWithChildren, useState } from "react";
 import { GA4_ID } from "../global";
 import { Price, ProductWithPrice } from "../types";
@@ -39,7 +41,7 @@ function wait<T>(ms: number, returnValue: T): Promise<T> {
 export const Product: React.FunctionComponent<
   PropsWithChildren<ProductProps>
 > = ({ product, billingInterval }) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const { user, isLoading, subscription } = useUser();
 

@@ -1,34 +1,14 @@
 /** @type {import('next').NextConfig} */
 
 const { withSentryConfig } = require("@sentry/nextjs/config");
-const { Language } = require("@magic-translate/react");
 
 const moduleExports = {
   reactStrictMode: true,
-  // geist ships ESM that breaks Node's resolver during prerendering
-  transpilePackages: ["geist"],
-  i18n: {
-    locales: [
-      Language.EN,
-      Language.ZH,
-      Language.HI,
-      Language.ES,
-      Language.FR,
-      Language.AR,
-      Language.RU,
-      Language.PT,
-      Language.IT,
-      Language.UR,
-      Language.DE,
-      Language.FA,
-      Language.NL,
-    ],
-    defaultLocale: Language.EN,
-  },
+  // Compile the ESM font and translation entry points for prerendering and Jest.
+  transpilePackages: ["geist", "@magic-translate/react"],
   async rewrites() {
     return [
-      // The handler lives under /api so that `i18n` neither locale-prefixes it
-      // nor redirects it on Accept-Language.
+      // Keep the existing XML endpoint while page routes live in app/.
       { source: "/sitemap.xml", destination: "/api/sitemap" },
     ];
   },

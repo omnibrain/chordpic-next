@@ -2115,7 +2115,7 @@
     jose "^4.8.1"
     tslib "^2.3.1"
 
-"@supabase/supabase-js@^1.35.3":
+"@supabase/supabase-js@1.35.4", "@supabase/supabase-js@^1.35.3":
   version "1.35.4"
   resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-1.35.4.tgz#0718b280fe87850559390a1ce3d04a2c016cc527"
   integrity sha512-9krwmuG3hdoS7SfM1UmCIw88aW9V1WW2Zx91tofdnmQraWKfk5e2fIKfp+Wjb9owq7JIkuUIA/qziVs2qX0lLQ==

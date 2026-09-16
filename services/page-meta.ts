@@ -1,26 +1,13 @@
-import { Language, utsLocaleToLanguage } from "@magic-translate/react";
+import { Language } from "@magic-translate/react/dist/domain/language";
+import { utsLocaleToLanguage } from "@magic-translate/react/dist/utils/uts-locale-to-language";
 import { translate } from "../utils/translate";
 
 export interface PageMetaProps {
   title: string;
-  /** Omitted by the legal pages, which fall back to Layout's default. */
   description?: string;
 }
 
-/**
- * `<title>` and `<meta description>` are the one part of a page Magic Translate
- * never reaches: it swaps the text inside `<T>` after hydration, and these live
- * in `<Head>` as plain strings. So every locale was serving the English tags.
- *
- * Google noticed. On chordpic.com/es it discarded our
- * "ChordPic | Free guitar chord diagram creator" and substituted the rendered
- * Spanish `<h1>`; on chordpic.com/pt/news it did not bother, and the Portuguese
- * page sits in Portuguese results titled "ChordPic | News".
- *
- * Translating at build time hands that decision back to us. Call it from
- * getStaticProps and spread the result into props — Layout already reads
- * `title` and `description` off pageProps.
- */
+/** Translate page metadata on the server, retaining English during API outages. */
 export async function localizedMeta(
   locale: string | undefined,
   meta: PageMetaProps,

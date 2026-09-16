@@ -1,5 +1,8 @@
-import NextLink from "next/link";
-import { useRouter } from "next/router";
+"use client";
+
+import NextLink from "./LocalizedLink";
+import { usePathname } from "next/navigation";
+import { stripLocaleFromPathname } from "../services/i18n";
 import React, { PropsWithChildren } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { T } from "@magic-translate/react";
@@ -33,15 +36,19 @@ const Logo: React.FunctionComponent = () => {
 
 const NavbarMenuItem: React.FunctionComponent<
   PropsWithChildren<{ to: string; onNavigate(): void }>
-> = ({ children, onNavigate, to }) => (
-  <NextLink
-    href={to}
-    onClick={onNavigate}
-    className="whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-  >
-    {children}
-  </NextLink>
-);
+> = ({ children, onNavigate, to }) => {
+  // Logout is an API endpoint: navigate normally and never prefetch it.
+  const Link = to.startsWith("/api/") ? "a" : NextLink;
+  return (
+    <Link
+      href={to}
+      onClick={onNavigate}
+      className="whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+    >
+      {children}
+    </Link>
+  );
+};
 
 const ColorModeToggle: React.FunctionComponent = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -62,7 +69,7 @@ const MenuLinks: React.FunctionComponent<{
   onCloseMenu(): void;
 }> = ({ onCloseMenu }) => {
   const { user } = useUser();
-  const { pathname } = useRouter();
+  const pathname = stripLocaleFromPathname(usePathname() ?? "/");
   const subscription = useSubscription();
   const language = useLanguage();
 

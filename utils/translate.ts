@@ -1,4 +1,6 @@
-import { Language, setupT } from "@magic-translate/react";
+// Import the non-React entry points so metadata can run in Server Components.
+import { Language } from "@magic-translate/react/dist/domain/language";
+import { setupT } from "@magic-translate/react/dist/api/setup-translate";
 
 export const languageMap: Partial<
   Record<Language, { name: string; icon: string }>

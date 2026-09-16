@@ -1,8 +1,10 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useParams } from "next/navigation";
 import { utsLocaleToLanguage } from "@magic-translate/react";
 
 export function useLanguage() {
-  const router = useRouter();
+  const params = useParams<{ locale: string }>();
 
-  return utsLocaleToLanguage(router.locale);
+  return utsLocaleToLanguage(params?.locale);
 }

@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import Link from "./LocalizedLink";
 import { FacebookIcon, RedditIcon } from "react-share";
 import { T } from "@magic-translate/react";
 

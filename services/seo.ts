@@ -3,8 +3,7 @@
 // node:stream/promises, which webpack cannot resolve for the browser. The
 // rendering half lives in ./sitemap.ts, which only the API route imports.
 import type { LinkItem, SitemapItemLoose } from "sitemap";
-import { Language } from "@magic-translate/react";
-import { languageMap } from "../utils/translate";
+import { defaultLocale, locales } from "./i18n";
 
 /**
  * Hardcoded rather than derived from `getURL()`: that helper falls back to
@@ -13,15 +12,15 @@ import { languageMap } from "../utils/translate";
  */
 export const SITE_URL = "https://chordpic.com";
 
-export const DEFAULT_LOCALE = Language.EN;
+export const DEFAULT_LOCALE = defaultLocale;
 
 /**
  * The locales we offer in the language switcher, and so also the hreflang
- * cluster and the sitemap. `i18n.locales` in next.config.js must route exactly
+ * cluster and the sitemap. The App Router locale configuration must route exactly
  * these — seo.test.ts asserts it, because the two drifting apart is what left
  * `ar`, `fa` and `ur` indexable but referenced by nothing.
  */
-export const PUBLIC_LOCALES = Object.keys(languageMap) as Language[];
+export const PUBLIC_LOCALES = locales;
 
 /** Indexable pages, without their locale prefix. */
 export const PUBLIC_PATHS = [
@@ -114,4 +113,3 @@ export function sitemapEntries(): SitemapItemLoose[] {
     }));
   });
 }
-
