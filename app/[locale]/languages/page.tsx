@@ -12,6 +12,7 @@ export async function generateMetadata({ params }: LocalizedPageProps) {
   });
 }
 
-export default function Page() {
-  return <PageContent />;
+export default async function Page({ params }: LocalizedPageProps) {
+  const { locale } = await params;
+  return <PageContent locale={locale} />;
 }

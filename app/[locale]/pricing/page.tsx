@@ -16,7 +16,8 @@ export async function generateMetadata({ params }: LocalizedPageProps) {
 
 export const revalidate = 60;
 
-export default async function PricingPage() {
+export default async function PricingPage({ params }: LocalizedPageProps) {
+  const { locale } = await params;
   const products = await loadProducts();
-  return <PageContent products={products} />;
+  return <PageContent products={products} locale={locale} />;
 }
