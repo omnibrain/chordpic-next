@@ -1,6 +1,4 @@
-// Import the non-React entry points so metadata can run in Server Components.
-import { Language } from "@magic-translate/react/dist/domain/language";
-import { setupT } from "@magic-translate/react/dist/api/setup-translate";
+import { Language, setupT } from "@magic-translate/core";
 
 export const languageMap: Partial<
   Record<Language, { name: string; icon: string }>
@@ -22,7 +20,7 @@ export const languageMap: Partial<
 
 /**
  * Languages written right to left. The layout has to be mirrored for these, not
- * just translated — see the `dir` attribute in pages/_document.tsx.
+ * just translated — see the `dir` attribute in app/[locale]/layout.tsx.
  */
 export const RTL_LANGUAGES: readonly Language[] = [
   Language.AR,
