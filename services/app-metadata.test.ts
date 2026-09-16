@@ -77,3 +77,18 @@ it("retains the legal pages' default description when only their title is suppli
     "It has never been easier to create beautiful chord diagrams.",
   );
 });
+
+it.each(PUBLIC_LOCALES)(
+  "consolidates the identical %s terms into the English canonical",
+  async (locale) => {
+    mockTranslate.mockImplementation(
+      async (language, text) => `${language}:${text}`,
+    );
+    const metadata = await createPageMetadata(locale, "/terms?ref=test", {
+      title: "Terms of Use",
+    });
+    expect(metadata.alternates).toEqual({ canonical: `${SITE_URL}/terms` });
+    expect(metadata.openGraph).toMatchObject({ url: `${SITE_URL}/terms` });
+    expect(metadata.robots).toEqual({ index: true, follow: true });
+  },
+);

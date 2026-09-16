@@ -30,7 +30,7 @@ export const Footer = () => (
       <Link href="/about" className={footerLink}>
         <T>About</T>
       </Link>
-      <Link href="/terms" className={footerLink}>
+      <Link href="/terms" locale={false} className={footerLink}>
         <T>Terms of Use</T>
       </Link>
       <Link href="/privacy-notice" className={footerLink}>

@@ -1,5 +1,7 @@
 const Terms = () => (
   <div
+    lang="en"
+    dir="ltr"
     dangerouslySetInnerHTML={{
       __html: `
 <style>

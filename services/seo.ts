@@ -1,9 +1,9 @@
-// Types only. This module is reachable from the client bundle via Layout and
-// _app, and `sitemap`'s runtime entrypoint pulls in node:path, node:readline and
+// Types only: this module can be imported by client components, while
+// `sitemap`'s runtime entrypoint pulls in node:path, node:readline and
 // node:stream/promises, which webpack cannot resolve for the browser. The
 // rendering half lives in ./sitemap.ts, which only the API route imports.
 import type { LinkItem, SitemapItemLoose } from "sitemap";
-import { defaultLocale, locales } from "./i18n";
+import { defaultLocale, locales, stripLocaleFromPathname } from "./i18n";
 
 /**
  * Hardcoded rather than derived from `getURL()`: that helper falls back to
@@ -68,8 +68,17 @@ export function canonicalPath(asPath: string): string {
   return path || "/";
 }
 
+/** Terms have one English body, even when the surrounding navigation is localized. */
+export function pageLocales(path: string): readonly string[] {
+  return canonicalPath(path) === "/terms" ? [DEFAULT_LOCALE] : PUBLIC_LOCALES;
+}
+
+export function canonicalLocale(locale: string, path: string): string {
+  return pageLocales(path).includes(locale) ? locale : DEFAULT_LOCALE;
+}
+
 export function isNoindexPath(asPath: string): boolean {
-  const path = canonicalPath(asPath);
+  const path = canonicalPath(stripLocaleFromPathname(asPath));
 
   return NOINDEX_PREFIXES.some(
     (prefix) => path === prefix || path.startsWith(`${prefix}/`),
@@ -94,22 +103,22 @@ export function localeUrl(locale: string, asPath: string): string {
 }
 
 /**
- * Every public page in every public locale, each entry carrying the full
- * hreflang cluster so the annotations are stated in two places Google reads.
+ * Only canonical public URLs. Translated pages also carry their hreflang
+ * cluster; English-only terms must not advertise duplicate language versions.
  */
 export function sitemapEntries(): SitemapItemLoose[] {
   return PUBLIC_PATHS.flatMap((path) => {
     const links: LinkItem[] = [
-      ...PUBLIC_LOCALES.map((locale) => ({
+      ...pageLocales(path).map((locale) => ({
         lang: locale,
         url: localeUrl(locale, path),
       })),
       { lang: "x-default", url: localeUrl(DEFAULT_LOCALE, path) },
     ];
 
-    return PUBLIC_LOCALES.map((locale) => ({
+    return pageLocales(path).map((locale) => ({
       url: localeUrl(locale, path),
-      links,
+      ...(pageLocales(path).length > 1 && { links }),
     }));
   });
 }

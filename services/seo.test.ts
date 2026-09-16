@@ -7,6 +7,7 @@ import {
   PUBLIC_PATHS,
   SITE_URL,
   sitemapEntries,
+  pageLocales,
 } from "./seo";
 import { isRtl } from "../utils/translate";
 
@@ -96,7 +97,9 @@ describe("sitemapEntries", () => {
   const entries = sitemapEntries();
 
   it("lists every public page in every public locale", () => {
-    expect(entries).toHaveLength(PUBLIC_PATHS.length * PUBLIC_LOCALES.length);
+    expect(entries).toHaveLength(
+      (PUBLIC_PATHS.length - 1) * PUBLIC_LOCALES.length + 1,
+    );
 
     const urls = entries.map((entry) => entry.url);
     expect(urls).toContain(`${SITE_URL}/`);
@@ -108,6 +111,10 @@ describe("sitemapEntries", () => {
     entries.forEach((entry) => {
       const langs = entry.links?.map((link) => link.lang) ?? [];
 
+      if (entry.url === `${SITE_URL}/terms`) {
+        expect(entry.links).toBeUndefined();
+        return;
+      }
       expect(langs).toEqual([...PUBLIC_LOCALES, "x-default"]);
       // Self-referencing: the entry's own URL is among its own alternates.
       expect(entry.links?.map((link) => link.url)).toContain(entry.url);
@@ -130,3 +137,17 @@ describe("sitemapEntries", () => {
     });
   });
 });
+
+it("advertises only the English terms, without nonexistent translations", () => {
+  const terms = sitemapEntries().filter(({ url }) => url.endsWith("/terms"));
+  expect(terms).toEqual([{ url: `${SITE_URL}/terms` }]);
+  expect(pageLocales("/terms?ref=test")).toEqual(["en"]);
+});
+
+it.each([
+  "/de/chord/[...data]",
+  "/en/signin",
+  "/hi/chord/shared-data?ref=test",
+])("recognizes localized exclusions: %s", (path) =>
+  expect(isNoindexPath(path)).toBe(true),
+);
