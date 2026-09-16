@@ -24,8 +24,8 @@ The existing `pages/api` handlers are retained for Supabase authentication, Stri
 checkout/webhooks, and the XML sitemap. Account access is verified on the server,
 with expiring Supabase cookies refreshed in Proxy before rendering.
 
-The news page is an async Server Component using `@magic-translate/react-ssr`.
-Its `<T>` components resolve article text during static generation for each locale;
+The news and help pages are async Server Components using `@magic-translate/react-ssr`.
+Their `<T>` components resolve article text during static generation for each locale;
 `t()` resolves image descriptions. Rich translation blocks contain only text and
 native HTML, with Next links/images kept outside them. English skips translation
 requests. The navigation and other pages still use the client translation provider.
