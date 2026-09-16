@@ -1,5 +1,4 @@
-import { Language } from "@magic-translate/react/dist/domain/language";
-import { utsLocaleToLanguage } from "@magic-translate/react/dist/utils/uts-locale-to-language";
+import { Language, utsLocaleToLanguage } from "@magic-translate/core";
 import { translate } from "../utils/translate";
 
 export interface PageMetaProps {
