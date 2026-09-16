@@ -1,34 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 /**
  * Padding of the container
  */
-const PADDING = 15
+const PADDING = 15;
 
 /**
  * Maximum width of the chord chart
  */
-const MAX_WIDTH = 400
+const MAX_WIDTH = 400;
 
 export const useResizeHandler = () => {
-  let screenWidth = MAX_WIDTH
-
-  if (typeof window !== 'undefined') {
-    screenWidth = window.screen.availWidth
-  }
-
-  const [width, setWidth] = useState(Math.min(screenWidth, MAX_WIDTH - PADDING * 2))
+  // Measured after mount rather than during render: the server has no screen to
+  // read, and a first client render that disagrees with the server's HTML would
+  // break hydration of the editor.
+  const [screenWidth, setScreenWidth] = useState(MAX_WIDTH);
 
   useEffect(() => {
-    const handleResize = () => {
-      window.requestAnimationFrame(() => setWidth(screenWidth))
-    }
+    const measure = () => setScreenWidth(window.screen.availWidth);
+    measure();
 
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  })
+    const handleResize = () => window.requestAnimationFrame(measure);
 
-  const finalWidth = Math.min(width, MAX_WIDTH) - PADDING * 2
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  return { width: finalWidth, height: finalWidth * 1.5 }
-}
+  const finalWidth = Math.min(screenWidth, MAX_WIDTH) - PADDING * 2;
+
+  return { width: finalWidth, height: finalWidth * 1.5 };
+};
