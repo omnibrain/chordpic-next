@@ -37,10 +37,10 @@ export function readAdsAssignment(): AdsAssignment {
 /**
  * Marks <html> with `ads-off` before hydration so copy that advertises the
  * absence of ads can be hidden with CSS instead of swapped in after mount,
- * which would visibly flash. Runs from _document, so it cannot import the
+ * which would visibly flash. Runs from the root layout, so it cannot import the
  * cookie name and repeats it literally — same trade-off as colorModeInitScript.
  */
-export const adsInitScript = `(function(){try{var m=document.cookie.match(/(?:^|; )cp_ads=(on|off)/);if(m&&m[1]==="off"){document.documentElement.classList.add("ads-off")}}catch(e){}})()`;
+export { adsInitScript } from "../services/document-scripts";
 
 /**
  * Null until after hydration. The value lives in a cookie the server set, and

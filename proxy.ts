@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   ADS_COOKIE,
   BUCKET_COOKIE,
@@ -7,6 +7,14 @@ import {
   randomBucket,
   resolveAdsArm,
 } from "./services/feature-flags";
+import { refreshAccountSession } from "./services/auth-session";
+import {
+  defaultLocale,
+  localizePathname,
+  pathnameLocale,
+  preferredLocale,
+  stripLocaleFromPathname,
+} from "./services/i18n";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
@@ -19,8 +27,60 @@ function readAdsMode() {
   return parseAdsMode(process.env.NEXT_PUBLIC_ADS_MODE);
 }
 
-export function proxy(request: NextRequest) {
-  const response = NextResponse.next();
+async function routeRequest(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const locale = pathnameLocale(pathname);
+
+  if (locale === defaultLocale) {
+    const url = request.nextUrl.clone();
+    url.pathname = stripLocaleFromPathname(pathname);
+    const response = NextResponse.redirect(url, 308);
+    // Otherwise /en -> / could immediately redirect back to the browser's
+    // preferred language instead of honoring the explicitly requested English.
+    response.cookies.set("NEXT_LOCALE", defaultLocale, {
+      path: "/",
+      sameSite: "lax",
+      maxAge: ONE_YEAR,
+    });
+    return response;
+  }
+
+  if (pathname === "/") {
+    const preferred = preferredLocale(
+      request.cookies.get("NEXT_LOCALE")?.value,
+      request.headers.get("accept-language"),
+    );
+
+    if (preferred !== defaultLocale) {
+      const url = request.nextUrl.clone();
+      url.pathname = localizePathname(pathname, preferred);
+      return NextResponse.redirect(url);
+    }
+  }
+
+  const sessionCookies =
+    stripLocaleFromPathname(pathname) === "/account"
+      ? await refreshAccountSession(request)
+      : [];
+  const options = sessionCookies.length
+    ? { request: { headers: request.headers } }
+    : undefined;
+  let response: NextResponse;
+
+  if (locale) {
+    response = NextResponse.next(options);
+  } else {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${defaultLocale}${pathname === "/" ? "" : pathname}`;
+    response = NextResponse.rewrite(url, options);
+  }
+
+  sessionCookies.forEach((cookie) => response.cookies.set(cookie));
+  return response;
+}
+
+export async function proxy(request: NextRequest) {
+  const response = await routeRequest(request);
 
   // Set-Cookie from the server, never document.cookie: Safari's ITP caps
   // script-written cookies at seven days, which would re-randomise visitors
@@ -48,16 +108,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // The home page needs its own entry. `i18n` in next.config.js makes Next
-    // prepend a mandatory locale segment to every matcher, so the pattern below
-    // compiles to `/<locale>/<something>` — and `/` normalises to `/en`, which
-    // leaves nothing for the `<something>`. Every other page matched; the home
-    // page silently did not, so first-time visitors landing there went
-    // unassigned.
-    "/",
-    // Pages only. API routes, Next internals and anything with a file extension
-    // are left alone.
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
-  ],
+  matcher: ["/((?!api(?:/|$)|_next(?:/|$)|.*\\..*).*)"],
 };
