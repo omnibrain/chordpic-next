@@ -28,6 +28,13 @@ import {
 export interface ProductProps {
   billingInterval: "year" | "month";
   product: ProductWithPrice;
+  labels: {
+    description: string;
+    month: string;
+    year: string;
+    subscribe: string;
+    manage: string;
+  };
 }
 
 // const wait = <T>(ms: number, returnValue?: T) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -40,7 +47,7 @@ function wait<T>(ms: number, returnValue: T): Promise<T> {
 
 export const Product: React.FunctionComponent<
   PropsWithChildren<ProductProps>
-> = ({ product, billingInterval }) => {
+> = ({ product, billingInterval, labels }) => {
   const router = useLocalizedRouter();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const { user, isLoading, subscription } = useUser();
@@ -163,11 +170,13 @@ export const Product: React.FunctionComponent<
           {product.name}
           <Badge>Pro</Badge>
         </CardTitle>
-        <CardDescription>{product.description}</CardDescription>
+        <CardDescription>{labels.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <span className="text-5xl font-semibold">{priceString}</span>
-        <span className="text-muted-foreground">/{billingInterval}</span>
+        <span className="text-muted-foreground">
+          /{labels[billingInterval]}
+        </span>
       </CardContent>
       <CardFooter>
         <Button
@@ -177,8 +186,8 @@ export const Product: React.FunctionComponent<
         >
           {priceIdLoading === price.id && <Loader2 className="animate-spin" />}
           {product.name === subscription?.prices?.products?.name
-            ? "Manage"
-            : "Subscribe"}
+            ? labels.manage
+            : labels.subscribe}
         </Button>
       </CardFooter>
     </Card>

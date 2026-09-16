@@ -1,9 +1,8 @@
-"use client";
-
 import NextLink from "@/components/LocalizedLink";
-import { T } from "@magic-translate/react";
+import { serverTranslate } from "@/services/server-translate";
 
-const HelpPage = () => {
+const HelpPage = ({ locale }: { locale: string }) => {
+  const { T } = serverTranslate(locale);
   return (
     <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-heading prose-a:underline-offset-4">
       <h1>

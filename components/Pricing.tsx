@@ -1,14 +1,25 @@
 import { ProductWithPrice } from "../types";
 import { FreeProduct } from "./FreeProduct";
 import { Product } from "./Product";
-import { T } from "@magic-translate/react";
+import { serverTranslate } from "@/services/server-translate";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   products: ProductWithPrice[];
+  locale: string;
 }
 
-export default function Pricing({ products }: Props) {
+export default async function Pricing({ products, locale }: Props) {
+  const { T, t } = serverTranslate(locale);
+  const product = products[0];
+  const [description, month, year, subscribe, manage] = await Promise.all([
+    product?.description ? t(product.description) : Promise.resolve(""),
+    t("month"),
+    t("year"),
+    t("Subscribe"),
+    t("Manage"),
+  ]);
+  const labels = { description, month, year, subscribe, manage };
   return (
     <section>
       <h1 className="mb-6 text-center font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -41,14 +52,18 @@ export default function Pricing({ products }: Props) {
           </TabsTrigger>
         </TabsList>
         {(["month", "year"] as const).map((interval) => (
-          <TabsContent
-            key={interval}
-            value={interval}
-            className="mt-10 w-full"
-          >
+          <TabsContent key={interval} value={interval} className="mt-10 w-full">
             <div className="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
-              <FreeProduct billingInterval={interval} product={products[0]} />
-              <Product billingInterval={interval} product={products[0]} />
+              <FreeProduct
+                billingInterval={interval}
+                product={product}
+                locale={locale}
+              />
+              <Product
+                billingInterval={interval}
+                product={product}
+                labels={labels}
+              />
             </div>
           </TabsContent>
         ))}

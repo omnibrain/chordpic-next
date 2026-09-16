@@ -1,8 +1,12 @@
-"use client";
-
 import Pricing from "@/components/Pricing";
-import type { Product } from "@/types";
+import type { ProductWithPrice } from "@/types";
 
-export default function PricingContent({ products }: { products: Product[] }) {
-  return <Pricing products={products} />;
+export default function PricingContent({
+  products,
+  locale,
+}: {
+  products: ProductWithPrice[];
+  locale: string;
+}) {
+  return <Pricing products={products} locale={locale} />;
 }
