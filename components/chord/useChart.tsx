@@ -20,6 +20,8 @@ interface ChartContextType {
   size: { width: number; height: number };
   setSize(size: { width: number; height: number }): void;
   ref: MutableRefObject<HTMLDivElement | null>;
+  /** False until the chart stored in local storage has been applied. */
+  hydrated: boolean;
 }
 
 const defaultSVGuitarSettings: Partial<ChordSettings> = {
@@ -37,13 +39,16 @@ export const ChartProvider: React.FunctionComponent<PropsWithChildren<{}>> = ({
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
-  const [chart, setChart] = usePersistedState<Chart>(LOCALSTORAGE_KEY, {
-    chord: {
-      fingers: [],
-      barres: [],
+  const [chart, setChart, hydrated] = usePersistedState<Chart>(
+    LOCALSTORAGE_KEY,
+    {
+      chord: {
+        fingers: [],
+        barres: [],
+      },
+      settings: defaultSVGuitarSettings,
     },
-    settings: defaultSVGuitarSettings,
-  });
+  );
 
   const [size, setSize] = useState({
     width: 0,
@@ -59,7 +64,7 @@ export const ChartProvider: React.FunctionComponent<PropsWithChildren<{}>> = ({
 
   return (
     <ChartContext.Provider
-      value={{ chart, setChart, size, setSize, ref, resetSettings }}
+      value={{ chart, setChart, size, setSize, ref, resetSettings, hydrated }}
     >
       {children}
     </ChartContext.Provider>
