@@ -26,40 +26,46 @@ export const ChordTextInput = (props: IChordTextInputProps) => {
       {matrix.rows.map((_, fretIndex) =>
         matrix
           .getSections(fretIndex)
-          .map(({ length, empty, string: stringIndex }, sectionIndex) => (
-            <div
-              key={`${fretIndex}-${sectionIndex}`}
-              className="relative flex flex-col items-center justify-center"
-              style={{ gridColumn: `span ${length}` }}
-              onClick={
-                empty
-                  ? () => props.onEditModeChange(EditMode.EDIT_NOTES)
-                  : void 0
-              }
-            >
-              {!empty && props.editMode === EditMode.EDIT_TEXT && (
-                <input
-                  type="text"
-                  className="h-2/5 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-background p-0 text-center text-base leading-normal text-foreground"
-                  value={matrix.get(fretIndex, stringIndex).text ?? ""}
-                  onChange={(e: FormEvent<HTMLInputElement>) =>
-                    props.onMatrixChange(
-                      matrix.text(
-                        stringIndex,
-                        fretIndex,
-                        (e.target as HTMLInputElement).value
+          .map(({ length, empty, string: stringIndex }, sectionIndex) => {
+            // An arc is drawn above the fret, with nowhere to put a label.
+            const labelled =
+              !empty && !matrix.isArcBarre(fretIndex, stringIndex);
+
+            return (
+              <div
+                key={`${fretIndex}-${sectionIndex}`}
+                className="relative flex flex-col items-center justify-center"
+                style={{ gridColumn: `span ${length}` }}
+                onClick={
+                  empty
+                    ? () => props.onEditModeChange(EditMode.EDIT_NOTES)
+                    : void 0
+                }
+              >
+                {labelled && props.editMode === EditMode.EDIT_TEXT && (
+                  <input
+                    type="text"
+                    className="h-2/5 w-full rounded-[3px] border-2 border-[color:var(--fg)] bg-background p-0 text-center text-base leading-normal text-foreground"
+                    value={matrix.get(fretIndex, stringIndex).text ?? ""}
+                    onChange={(e: FormEvent<HTMLInputElement>) =>
+                      props.onMatrixChange(
+                        matrix.text(
+                          stringIndex,
+                          fretIndex,
+                          (e.target as HTMLInputElement).value
+                        )
                       )
-                    )
-                  }
-                />
-              )}
-              {!empty && props.editMode !== EditMode.EDIT_TEXT && (
-                <span className="absolute text-[#b3b3b3]">
-                  {matrix.get(fretIndex, stringIndex).text ?? ""}
-                </span>
-              )}
-            </div>
-          ))
+                    }
+                  />
+                )}
+                {labelled && props.editMode !== EditMode.EDIT_TEXT && (
+                  <span className="absolute text-[#b3b3b3]">
+                    {matrix.get(fretIndex, stringIndex).text ?? ""}
+                  </span>
+                )}
+              </div>
+            );
+          })
       )}
     </ClickCellContainer>
   );

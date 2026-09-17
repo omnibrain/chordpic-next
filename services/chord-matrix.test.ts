@@ -1,5 +1,5 @@
 import { CellState, ChordMatrix, EmptyStringState } from "./chord-matrix";
-import { FingerOptions, OPEN, SILENT } from "svguitar";
+import { BarreChordStyle, FingerOptions, OPEN, SILENT } from "svguitar";
 import { Chart } from "../domain/chart";
 import { decompress } from "../hooks/compressed-state";
 import { getLink } from "../hooks/url-state";
@@ -911,6 +911,46 @@ describe("Chord Matrix", () => {
 
       expect(restored.toVexchord().barres).toEqual([
         expect.objectContaining({ fret: 1, color: "orange" }),
+      ]);
+    });
+
+    it("Should draw a barre as an arc once it is toggled, and drop its label", () => {
+      const restored = ChordMatrix.fromChart({
+        chord: { fingers: [], barres: [{ ...barre, text: "1" }] },
+        settings,
+      });
+
+      expect(restored.toggleBarreStyle(0, 0).toVexchord().barres).toEqual([
+        expect.objectContaining({ style: "arc", color: "orange", text: "" }),
+      ]);
+    });
+
+    it("Should go back to a plain barre on the next click", () => {
+      const restored = ChordMatrix.fromChart({
+        chord: { fingers: [], barres: [barre] },
+        settings,
+      });
+
+      const [plain] = restored
+        .toggleBarreStyle(0, 0)
+        .toggleBarreStyle(0, 0)
+        .toVexchord().barres;
+
+      expect(plain).not.toHaveProperty("style", "arc");
+    });
+
+    it("Should keep the arc when a saved chart is reopened", () => {
+      const restored = ChordMatrix.fromChart({
+        chord: {
+          fingers: [],
+          barres: [{ ...barre, style: BarreChordStyle.ARC }],
+        },
+        settings,
+      });
+
+      expect(restored.isArcBarre(0, 0)).toBe(true);
+      expect(restored.toVexchord().barres).toEqual([
+        expect.objectContaining({ style: "arc" }),
       ]);
     });
 

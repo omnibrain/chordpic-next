@@ -1,6 +1,6 @@
 import chunk from 'lodash.chunk'
 import range from 'lodash.range'
-import { Barre, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from 'svguitar'
+import { Barre, BarreChordStyle, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from 'svguitar'
 import { EditableChord, HiddenString } from '../domain/chart'
 
 export enum CellState {
@@ -20,6 +20,8 @@ export interface Cell {
   color?: string
   textColor?: string
   shape?: Shape
+  // Only barre cells carry this; a single finger has a shape instead.
+  barreStyle?: BarreChordStyle
 }
 
 type CellOptions = Omit<Cell, 'state'>
@@ -102,12 +104,12 @@ export class ChordMatrix {
         }
       }
     })
-    chord.barres.forEach(({ fromString, toString, fret, text, color }: Barre) => {
+    chord.barres.forEach(({ fromString, toString, fret, text, color, style }: Barre) => {
       const fromIndex = Math.abs(fromString - numStrings)
       const toIndex = Math.abs(toString - numStrings)
       // toBarres writes the colour back out, so leaving it behind here loses it
       // on every trip through the editor.
-      const marker = { ...(text ? { text } : {}), ...(color ? { color } : {}) }
+      const marker = { ...(text ? { text } : {}), ...(color ? { color } : {}), ...(style ? { barreStyle: style } : {}) }
 
       cells[(fret - 1) * numStrings + fromIndex] = { state: CellState.LEFT, ...marker }
       cells[(fret - 1) * numStrings + toIndex] = { state: CellState.RIGHT, ...marker }
@@ -378,6 +380,25 @@ export class ChordMatrix {
     return this.set(string, fret, { color })
   }
 
+  /**
+   * Barre chords are drawn either as a bar across the fret or as an arc above it.
+   * The arc leaves SVGuitar nowhere to put a label, so switching to one drops the
+   * text rather than rendering it where nobody can see it.
+   */
+  toggleBarreStyle(string: number, fret: number) {
+    return this.isArcBarre(fret, string)
+      ? this.set(string, fret, { barreStyle: BarreChordStyle.RECTANGLE })
+      : this.set(string, fret, { barreStyle: BarreChordStyle.ARC, text: '' })
+  }
+
+  isArcBarre(fret: number, string: number): boolean {
+    return this.get(fret, string).barreStyle === BarreChordStyle.ARC
+  }
+
+  isBarre(fret: number, string: number): boolean {
+    return this.isBarreState(this.getCellState(fret, string))
+  }
+
   nextShape(string: number, fret: number) {
     const currentShape = this.get(fret, string).shape ?? Shape.CIRCLE
     const shapes = Object.values(Shape)
@@ -566,7 +587,10 @@ export class ChordMatrix {
       const vexFret = fret + 1
 
       if (cell.state === CellState.LEFT) {
-        barres = [...barres, { fromString: vexString, toString: vexString, fret: vexFret, text: cell.text, color: cell.color }]
+        // The style only earns a place in the sharing link when it isn't the default.
+        const style = cell.barreStyle === BarreChordStyle.ARC ? { style: cell.barreStyle } : {}
+
+        barres = [...barres, { fromString: vexString, toString: vexString, fret: vexFret, text: cell.text, color: cell.color, ...style }]
       } else if (cell.state === CellState.RIGHT) {
         // A RIGHT with no LEFT before it is a corrupt barre; drop it instead of
         // taking the whole diagram down.
