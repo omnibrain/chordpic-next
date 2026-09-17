@@ -26,6 +26,9 @@ it("draws a shared chord to standalone SVG markup", async () => {
   const { svg, width, height } = await renderChord(chart);
 
   expect(svg).toMatch(/^<svg[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
+  // The diagram is the root element: a wrapper around it would have no size of
+  // its own, and browsers shrink the diagram into their default box for one.
+  expect(svg.match(/<svg/g)).toHaveLength(1);
   expect(svg).toContain("<title>Chord diagram created with chordpic.com</title>");
   expect(svg).toContain(">Am</tspan>");
   expect(svg).toContain("created with chordpic.com");
