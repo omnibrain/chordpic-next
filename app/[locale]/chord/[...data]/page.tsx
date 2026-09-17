@@ -1,12 +1,9 @@
 import * as Sentry from "@sentry/nextjs";
-import {
-  createPageMetadata,
-  type LocalizedPageProps,
-} from "@/services/app-metadata";
+import { createPageMetadata } from "@/services/app-metadata";
+import { chartName, readChart } from "@/services/chord-link";
 import { localizePathname } from "@/services/i18n";
 import { serverTranslate } from "@/services/server-translate";
 import { renderChord } from "@/services/chord-ssr";
-import { decompress } from "@/hooks/compressed-state";
 import { Chart } from "@/domain/chart";
 import ChordView from "./chord-view";
 
@@ -14,9 +11,13 @@ interface SharedChordProps {
   params: Promise<{ locale: string; data?: string[] }>;
 }
 
-export async function generateMetadata({ params }: LocalizedPageProps) {
-  const { locale } = await params;
-  return createPageMetadata(locale, "/chord");
+export async function generateMetadata({ params }: SharedChordProps) {
+  const { locale, data } = await params;
+
+  return createPageMetadata(locale, "/chord", undefined, {
+    name: chartName(readChart(data?.[0])),
+    generatedImage: true,
+  });
 }
 
 export default async function Page({ params }: SharedChordProps) {
@@ -60,24 +61,6 @@ export default async function Page({ params }: SharedChordProps) {
       editLabel={await t("Edit this chord diagram")}
     />
   );
-}
-
-/**
- * The compressed chart, as the route hands it over.
- *
- * Percent-encoded, which matters: lz-string's alphabet includes `+`, and a `+`
- * reaches this as the three characters `%2B`. Decoding first is what makes the
- * majority of sharing links — any whose payload happens to contain one — work
- * at all.
- */
-function readChart(segment?: string): Chart | null {
-  if (!segment) return null;
-  try {
-    return decompress<Chart>(decodeURIComponent(segment));
-  } catch {
-    // A stray % is not a valid escape; the raw segment is the better guess.
-    return decompress<Chart>(segment);
-  }
 }
 
 /**
