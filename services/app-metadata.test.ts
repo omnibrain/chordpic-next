@@ -92,3 +92,30 @@ it.each(PUBLIC_LOCALES)(
     expect(metadata.robots).toEqual({ index: true, follow: true });
   },
 );
+
+it("leads with a supplied name, untranslated, and leaves the preview to the segment", async () => {
+  mockTranslate.mockImplementation(
+    async (language, text) => `${language}:${text}`,
+  );
+
+  const metadata = await createPageMetadata("de", "/chord", undefined, {
+    name: "F#m7",
+    generatedImage: true,
+  });
+
+  // A chord's title is the visitor's own text, and the half of the tab that
+  // stays legible when it is narrow.
+  expect(metadata.title).toBe("F#m7 | ChordPic");
+  expect(mockTranslate).not.toHaveBeenCalledWith(expect.anything(), "F#m7");
+  expect(metadata.openGraph).not.toHaveProperty("images");
+  expect(metadata.twitter).not.toHaveProperty("images");
+});
+
+it("keeps the house title and the logo when no name is given", async () => {
+  const metadata = await createPageMetadata("en", "/chord");
+
+  expect(metadata.title).toBe("ChordPic | Free guitar chord diagram creator");
+  expect(metadata.openGraph).toMatchObject({
+    images: [`${SITE_URL}/logo.png`],
+  });
+});

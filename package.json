@@ -28,6 +28,7 @@
     "@radix-ui/react-tabs": "^1.1.17",
     "@radix-ui/react-toast": "^1.2.19",
     "@radix-ui/react-tooltip": "^1.2.12",
+    "@resvg/resvg-js": "^2.6.2",
     "@sentry/nextjs": "^10.74.0",
     "@stripe/stripe-js": "^1.32.0",
     "@supabase/supabase-auth-helpers": "^1.4.2",

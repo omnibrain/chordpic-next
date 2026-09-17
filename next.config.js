@@ -7,6 +7,8 @@ const moduleExports = {
   // Compile the ESM font and translation entry points for prerendering and Jest.
   // svgdom is ESM-only and ships no CommonJS build, so it needs the same.
   transpilePackages: ["geist", "@magic-translate/react", "svgdom"],
+  // resvg is a native module; bundling it would strip the binary away.
+  serverExternalPackages: ["@resvg/resvg-js"],
   // The fonts are opened by path at runtime, so nothing traces them on its own.
   outputFileTracingIncludes: {
     "/**": [
