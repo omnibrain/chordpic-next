@@ -9,10 +9,10 @@ export const contentType = "image/png";
 export default async function Image({
   params,
 }: {
-  params: Promise<{ data?: string[] }>;
+  params: Promise<{ data?: string }>;
 }) {
   const { data } = await params;
-  const chart = readChart(data?.[0]);
+  const chart = readChart(data);
 
   if (!chart) {
     // Nothing to draw; the link's own page explains itself.
