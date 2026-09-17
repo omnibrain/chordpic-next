@@ -17,9 +17,9 @@ const fontFiles = [
 /**
  * A chord diagram as a PNG, for the preview a shared link shows.
  *
- * The fonts are passed in and system fonts left switched off on purpose: the
- * host it renders on has no fonts to speak of, and resvg silently draws empty
- * boxes for every label rather than failing when it cannot find one.
+ * The fonts are passed in and system fonts left switched off on purpose. The
+ * host has none worth relying on, and resvg never complains either way: given
+ * a font it cannot find it simply leaves every label out of the drawing.
  */
 export async function renderChordPng(chart: Chart): Promise<Buffer> {
   const { svg } = await renderChord(chart);
