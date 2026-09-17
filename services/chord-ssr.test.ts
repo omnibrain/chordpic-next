@@ -64,6 +64,19 @@ it("draws a barre chord as an arc when the chart asks for one", async () => {
   expect(svg).toContain("barre-arc");
 });
 
+it("draws a barre chord in its own colour", async () => {
+  // SVGuitar 2.5.0 to 2.6.1 painted every rectangle barre black.
+  const { svg } = await renderChord({
+    ...chart,
+    chord: {
+      fingers: [],
+      barres: [{ fromString: 6, toString: 1, fret: 1, color: "#ff0000" }],
+    },
+  });
+
+  expect(svg).toContain('fill="#ff0000"');
+});
+
 it("leaves the Pro watermark out when asked to", async () => {
   const { svg } = await renderChord(chart, "");
 
