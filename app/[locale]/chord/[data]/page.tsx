@@ -13,10 +13,13 @@ interface SharedChordProps {
 
 export async function generateMetadata({ params }: SharedChordProps) {
   const { locale, data } = await params;
+  const chart = readChart(data);
 
   return createPageMetadata(locale, "/chord", undefined, {
-    name: chartName(readChart(data)),
-    generatedImage: true,
+    name: chartName(chart),
+    // A link that decodes to nothing has no diagram to preview, so it keeps
+    // the logo rather than pointing at an image route that answers 404.
+    generatedImage: Boolean(chart),
   });
 }
 
