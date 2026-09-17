@@ -78,6 +78,28 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
         </T>
       </p>
 
+      <h2 id="better-sharing-links">
+        <T>Sharing links got a lot nicer 🔗</T>
+      </h2>
+      <p>
+        <em>
+          <T>September 17th, 2026</T>
+        </em>
+      </p>
+      <p>
+        <T>
+          Share a chord and the link now opens with your diagram already there,
+          your chord&apos;s name in the browser tab. Paste it into a chat or a
+          post and you&apos;ll see a preview of the diagram itself.
+        </T>
+      </p>
+      <p>
+        <T>
+          We also fixed a bug that made some sharing links open the wrong chord.
+          If you have one saved that never quite worked, give it another go!
+        </T>
+      </p>
+
       <h2 id="customize-open-and-silent-strings">
         <T>More options for open and silent strings!</T>
       </h2>
