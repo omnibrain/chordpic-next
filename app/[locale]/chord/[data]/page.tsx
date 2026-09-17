@@ -8,14 +8,14 @@ import { Chart } from "@/domain/chart";
 import ChordView from "./chord-view";
 
 interface SharedChordProps {
-  params: Promise<{ locale: string; data?: string[] }>;
+  params: Promise<{ locale: string; data?: string }>;
 }
 
 export async function generateMetadata({ params }: SharedChordProps) {
   const { locale, data } = await params;
 
   return createPageMetadata(locale, "/chord", undefined, {
-    name: chartName(readChart(data?.[0])),
+    name: chartName(readChart(data)),
     generatedImage: true,
   });
 }
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: SharedChordProps) {
 export default async function Page({ params }: SharedChordProps) {
   const { locale, data } = await params;
   const { T, t } = serverTranslate(locale);
-  const chart = readChart(data?.[0]);
+  const chart = readChart(data);
 
   if (!chart) {
     return (

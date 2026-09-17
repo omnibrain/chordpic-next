@@ -145,7 +145,7 @@ it("advertises only the English terms, without nonexistent translations", () => 
 });
 
 it.each([
-  "/de/chord/[...data]",
+  "/de/chord/[data]",
   "/en/signin",
   "/hi/chord/shared-data?ref=test",
 ])("recognizes localized exclusions: %s", (path) =>
