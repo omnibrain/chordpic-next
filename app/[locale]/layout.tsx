@@ -32,6 +32,11 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#ffffff" };
 
+// next/font's own fallback only covers devices that have Arial; the Roboto face
+// in globals.css picks up the ones that don't. The Tailwind `sans` and `heading`
+// families already append the generic ones after this variable.
+const fontStack = `${GeistSans.style.fontFamily}, "GeistSans Fallback Roboto"`;
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
@@ -53,8 +58,8 @@ export default async function RootLayout({
       suppressHydrationWarning
       style={
         {
-          fontFamily: GeistSans.style.fontFamily,
-          "--font-geist-sans": GeistSans.style.fontFamily,
+          fontFamily: `${fontStack}, system-ui, sans-serif`,
+          "--font-geist-sans": fontStack,
         } as CSSProperties
       }
     >
