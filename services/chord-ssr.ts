@@ -103,7 +103,19 @@ export async function renderChord(
       .chord(toSvguitarChord(chart.chord))
       .draw();
 
-    return { svg: container.outerHTML, width, height };
+    /*
+     * SVGuitar draws into an <svg> of its own inside the container, and only
+     * that one carries the viewBox. Handing out the container instead would
+     * wrap the diagram in an element with no size of its own, which a browser
+     * gives the default 300x150 and the diagram then shrinks to fit.
+     */
+    const drawn = container.querySelector("svg");
+    if (!drawn) {
+      throw new Error("SVGuitar drew no diagram");
+    }
+    drawn.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+    return { svg: drawn.outerHTML, width, height };
   } finally {
     container.remove();
   }

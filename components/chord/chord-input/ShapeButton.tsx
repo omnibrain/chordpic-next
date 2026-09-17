@@ -29,7 +29,6 @@ function ngonPath(x: number, y: number, size: number, edges: number): string {
 }
 
 export interface IShapeButtonProps {
-  length: number;
   circleSize: number;
   color: string;
   shape: Shape;
@@ -37,7 +36,7 @@ export interface IShapeButtonProps {
 }
 
 const baseStyle = (props: IShapeButtonProps): React.CSSProperties => ({
-  width: props.length === 1 ? props.length * props.circleSize : "100%",
+  width: props.circleSize,
   height: props.circleSize,
   border: "none",
   outline: "none",

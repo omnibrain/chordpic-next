@@ -1,5 +1,6 @@
 /** @jest-environment node */
 
+import { BarreChordStyle } from "svguitar";
 import { Chart } from "../domain/chart";
 import { renderChord } from "./chord-ssr";
 
@@ -25,6 +26,9 @@ it("draws a shared chord to standalone SVG markup", async () => {
   const { svg, width, height } = await renderChord(chart);
 
   expect(svg).toMatch(/^<svg[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
+  // The diagram is the root element: a wrapper around it would have no size of
+  // its own, and browsers shrink the diagram into their default box for one.
+  expect(svg.match(/<svg/g)).toHaveLength(1);
   expect(svg).toContain("<title>Chord diagram created with chordpic.com</title>");
   expect(svg).toContain(">Am</tspan>");
   expect(svg).toContain("created with chordpic.com");
@@ -35,15 +39,42 @@ it("draws a shared chord to standalone SVG markup", async () => {
 });
 
 it("lays the diagram out the way a browser would", async () => {
-  // Chromium draws this chord 468.6 high. Server and browser round font
-  // metrics differently, so they agree to about a pixel per text label and
-  // never exactly; a bigger gap means the fonts below assets/fonts were not
-  // found and every label was measured as empty.
+  // Chromium draws this chord 456 high. Server and browser round font metrics
+  // differently, so they agree to about a pixel per text label and never
+  // exactly; a bigger gap means the fonts below assets/fonts were not found and
+  // every label was measured as empty.
   const { width, height } = await renderChord(chart);
 
   expect(width).toBe(400);
-  expect(height).toBeGreaterThan(465);
-  expect(height).toBeLessThan(475);
+  expect(height).toBeGreaterThan(453);
+  expect(height).toBeLessThan(463);
+});
+
+it("draws a barre chord as an arc when the chart asks for one", async () => {
+  const { svg } = await renderChord({
+    ...chart,
+    chord: {
+      fingers: [],
+      barres: [
+        { fromString: 6, toString: 1, fret: 1, style: BarreChordStyle.ARC },
+      ],
+    },
+  });
+
+  expect(svg).toContain("barre-arc");
+});
+
+it("draws a barre chord in its own colour", async () => {
+  // SVGuitar 2.5.0 to 2.6.1 painted every rectangle barre black.
+  const { svg } = await renderChord({
+    ...chart,
+    chord: {
+      fingers: [],
+      barres: [{ fromString: 6, toString: 1, fret: 1, color: "#ff0000" }],
+    },
+  });
+
+  expect(svg).toContain('fill="#ff0000"');
 });
 
 it("leaves the Pro watermark out when asked to", async () => {

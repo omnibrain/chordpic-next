@@ -2,6 +2,7 @@ import * as React from "react";
 import { ClickCellContainer } from "./ClickCellContainer";
 import { IChordInputSettings } from "../ChordEditor";
 import { ShapeButton } from "./ShapeButton";
+import { BarreButton } from "./BarreButton";
 import { Shape } from "svguitar";
 import { ChordMatrix } from "../../../services/chord-matrix";
 import { EditMode } from "../../../domain/edit-mode";
@@ -17,6 +18,7 @@ export interface IChordTextInputProps {
 
 export const ChordNotes = (props: IChordTextInputProps) => {
   const matrix = props.matrix;
+  const stringSpacing = props.settings.width / matrix.numStrings;
 
   return (
     <ClickCellContainer
@@ -39,24 +41,39 @@ export const ChordNotes = (props: IChordTextInputProps) => {
                   : void 0
               }
             >
-              {!empty && (
-                <ShapeButton
-                  shape={
-                    props.matrix.get(fretIndex, stringIndex).shape ??
-                    Shape.CIRCLE
-                  }
-                  onClick={() =>
-                    props.onMatrixChange(
-                      matrix.nextShape(stringIndex, fretIndex)
-                    )
-                  }
-                  circleSize={props.circleSize}
-                  length={length}
-                  color={
-                    matrix.get(fretIndex, stringIndex).color ?? "var(--fg)"
-                  }
-                />
-              )}
+              {!empty &&
+                (matrix.isBarre(fretIndex, stringIndex) ? (
+                  <BarreButton
+                    arc={matrix.isArcBarre(fretIndex, stringIndex)}
+                    width={stringSpacing * length}
+                    stringSpacing={stringSpacing}
+                    circleSize={props.circleSize}
+                    color={
+                      matrix.get(fretIndex, stringIndex).color ?? "var(--fg)"
+                    }
+                    onClick={() =>
+                      props.onMatrixChange(
+                        matrix.toggleBarreStyle(stringIndex, fretIndex)
+                      )
+                    }
+                  />
+                ) : (
+                  <ShapeButton
+                    shape={
+                      props.matrix.get(fretIndex, stringIndex).shape ??
+                      Shape.CIRCLE
+                    }
+                    onClick={() =>
+                      props.onMatrixChange(
+                        matrix.nextShape(stringIndex, fretIndex)
+                      )
+                    }
+                    circleSize={props.circleSize}
+                    color={
+                      matrix.get(fretIndex, stringIndex).color ?? "var(--fg)"
+                    }
+                  />
+                ))}
             </div>
           ))
       )}
