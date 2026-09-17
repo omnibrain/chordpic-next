@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * A metric-matched fallback for Android, which has no Arial.
+ *
+ * next/font already emits a "GeistSans Fallback" face, but it resolves through
+ * local(Arial): Chrome matches local() against real font names rather than
+ * fontconfig aliases, so on Android nothing matches and the fallback is left
+ * with its own metrics. The text then reflows when Geist arrives. The overrides
+ * below are the same calculation next/font makes, against Roboto's metrics
+ * instead of Arial's, so the two fonts occupy the same space.
+ */
+@font-face {
+  font-family: "GeistSans Fallback Roboto";
+  src: local("Roboto"), local("Roboto-Regular");
+  ascent-override: 94.35%;
+  descent-override: 27.7%;
+  line-gap-override: 0%;
+  size-adjust: 106.51%;
+}
+
 @layer base {
   :root {
     color-scheme: light;
