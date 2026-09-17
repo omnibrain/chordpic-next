@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
-import { GeistSans } from "geist/font/sans";
+import localFont from "next/font/local";
 import type { CSSProperties, ReactNode } from "react";
 import Providers from "../providers";
 import { locales, isLocale } from "@/services/i18n";
@@ -32,10 +32,21 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#ffffff" };
 
-// next/font's own fallback only covers devices that have Arial; the Roboto face
-// in globals.css picks up the ones that don't. The Tailwind `sans` and `heading`
-// families already append the generic ones after this variable.
-const fontStack = `${GeistSans.style.fontFamily}, "GeistSans Fallback Roboto"`;
+/*
+ * The same file geist/font/sans loads, declared here to get font-display:
+ * optional, which the package hardcodes to swap.
+ *
+ * With optional the browser either has Geist ready within its block period or
+ * keeps the fallback for the whole page view — it never swaps mid-view, so the
+ * text cannot reflow. A metric-matched fallback only ever narrows that reflow,
+ * and only for devices whose fallback metrics you guessed right.
+ */
+const geistSans = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2",
+  weight: "100 900",
+  display: "optional",
+  fallback: ["system-ui", "arial", "sans-serif"],
+});
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -58,8 +69,8 @@ export default async function RootLayout({
       suppressHydrationWarning
       style={
         {
-          fontFamily: `${fontStack}, system-ui, sans-serif`,
-          "--font-geist-sans": fontStack,
+          fontFamily: geistSans.style.fontFamily,
+          "--font-geist-sans": geistSans.style.fontFamily,
         } as CSSProperties
       }
     >
