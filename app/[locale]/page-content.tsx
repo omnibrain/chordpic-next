@@ -4,7 +4,6 @@ import { T, useT } from "@magic-translate/react";
 import React, { useCallback } from "react";
 import { RotateCw } from "lucide-react";
 import { Orientation } from "svguitar";
-import NextLink from "@/components/LocalizedLink";
 import { ChordEditor } from "@/components/chord/ChordEditor";
 import { ChordResult } from "@/components/chord/ChordResult";
 import { useChart } from "@/components/chord/useChart";
@@ -43,44 +42,6 @@ const Home = () => {
 
   return (
     <>
-      <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
-        <T>Guitar Chord Diagram Creator</T>
-      </h1>
-      <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
-        <T>
-          It&apos;s never been easier to create guitar chord diagrams! Start by
-          clicking anywhere on the{" "}
-          <a className="underline" href="#editor">
-            editor
-          </a>{" "}
-          fret board and immediately see the result on the{" "}
-          <a className="underline" href="#result">
-            result
-          </a>{" "}
-          fret board. Then{" "}
-          <a className="underline" href="#download">
-            download
-          </a>{" "}
-          and{" "}
-          <a className="underline" href="#share">
-            share
-          </a>{" "}
-          your chord diagram.
-        </T>
-      </p>
-      <p className="mt-2">
-        <NextLink
-          href="/pricing"
-          className="font-medium underline underline-offset-4"
-        >
-          <span className="[.ads-off_&]:hidden">
-            <T>Get the Pro version (no ads, no watermark)</T>
-          </span>
-          <span className="hidden [.ads-off_&]:inline">
-            <T>Get the Pro version (no watermark)</T>
-          </span>
-        </NextLink>
-      </p>
       {/*
         Keyed so the editor is rebuilt once the stored chart arrives: ChordForm
         and ChordEditor both copy it into their own state on mount.

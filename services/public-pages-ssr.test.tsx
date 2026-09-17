@@ -3,6 +3,7 @@
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import About from "../app/[locale]/about/page-content";
+import LandingIntro from "../app/[locale]/landing-intro";
 import Languages from "../app/[locale]/languages/page-content";
 import Pricing from "../components/Pricing";
 import { translate } from "../utils/translate";
@@ -87,6 +88,17 @@ it("renders the Languages body in the page locale and each language name in its 
   expect(html).toContain('<a href="/de">de:German</a>');
   expect(html).toContain('<a href="/">English</a>');
   expect(html).toContain('href="https://magictranslate.io"');
+});
+
+it("renders the landing headline and lead in the server response", async () => {
+  const html = await render(<LandingIntro locale="es" />);
+  expect(html).toContain("es:Guitar Chord Diagram Creator");
+  expect(html).toContain("es:It&#x27;s never been easier");
+  expect(html).toContain("es:Get the Pro version (no ads, no watermark)");
+  expect(html).toContain("es:Get the Pro version (no watermark)");
+  expect(html).toContain('href="#editor"');
+  expect(html).toContain('href="#result"');
+  expect(html).toContain('/pricing"');
 });
 
 it("renders pricing text and supplies translated labels without changing checkout product identity", async () => {

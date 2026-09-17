@@ -2,6 +2,7 @@ import {
   createPageMetadata,
   type LocalizedPageProps,
 } from "@/services/app-metadata";
+import LandingIntro from "./landing-intro";
 import PageContent from "./page-content";
 
 export async function generateMetadata({ params }: LocalizedPageProps) {
@@ -12,6 +13,12 @@ export async function generateMetadata({ params }: LocalizedPageProps) {
   });
 }
 
-export default function Page() {
-  return <PageContent />;
+export default async function Page({ params }: LocalizedPageProps) {
+  const { locale } = await params;
+  return (
+    <>
+      <LandingIntro locale={locale} />
+      <PageContent />
+    </>
+  );
 }
