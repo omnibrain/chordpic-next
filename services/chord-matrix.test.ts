@@ -898,4 +898,35 @@ describe("Chord Matrix", () => {
       ]);
     });
   });
+
+  describe("Barre persistence", () => {
+    const settings = { frets: numFrets, strings: numStrings };
+    const barre = { fromString: 3, toString: 1, fret: 1, color: "orange" };
+
+    it("Should keep a barre's colour when a saved chart is reopened", () => {
+      const restored = ChordMatrix.fromChart({
+        chord: { fingers: [], barres: [barre] },
+        settings,
+      });
+
+      expect(restored.toVexchord().barres).toEqual([
+        expect.objectContaining({ fret: 1, color: "orange" }),
+      ]);
+    });
+
+    it("Should keep it across a second round trip, as the editor does on mount", () => {
+      const once = ChordMatrix.fromChart({
+        chord: { fingers: [], barres: [barre] },
+        settings,
+      });
+      const twice = ChordMatrix.fromChart({
+        chord: once.toVexchord(),
+        settings,
+      });
+
+      expect(twice.toVexchord().barres).toEqual([
+        expect.objectContaining({ fret: 1, color: "orange" }),
+      ]);
+    });
+  });
 });

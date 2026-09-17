@@ -102,16 +102,19 @@ export class ChordMatrix {
         }
       }
     })
-    chord.barres.forEach(({ fromString, toString, fret, text }: Barre) => {
+    chord.barres.forEach(({ fromString, toString, fret, text, color }: Barre) => {
       const fromIndex = Math.abs(fromString - numStrings)
       const toIndex = Math.abs(toString - numStrings)
+      // toBarres writes the colour back out, so leaving it behind here loses it
+      // on every trip through the editor.
+      const marker = { ...(text ? { text } : {}), ...(color ? { color } : {}) }
 
-      cells[(fret - 1) * numStrings + fromIndex] = { state: CellState.LEFT, ...(text ? { text } : {}) }
-      cells[(fret - 1) * numStrings + toIndex] = { state: CellState.RIGHT, ...(text ? { text } : {}) }
+      cells[(fret - 1) * numStrings + fromIndex] = { state: CellState.LEFT, ...marker }
+      cells[(fret - 1) * numStrings + toIndex] = { state: CellState.RIGHT, ...marker }
 
       if (toIndex - fromIndex >= 2) {
         for (let i = fromIndex + 1; i < toIndex; i++) {
-          cells[(fret - 1) * numStrings + i] = { state: CellState.MIDDLE, ...(text ? { text } : {}) }
+          cells[(fret - 1) * numStrings + i] = { state: CellState.MIDDLE, ...marker }
         }
       }
     })
