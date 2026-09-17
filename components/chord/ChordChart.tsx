@@ -1,16 +1,14 @@
 import * as React from "react";
 import { useEffect, useRef } from "react";
-import { ChordSettings, SVGuitarChord } from "svguitar";
+import { SVGuitarChord } from "svguitar";
 import { SubscriptionType } from "../../types";
 import { useSubscription } from "../../utils/useSubscription";
 import { useChart } from "./useChart";
-import { toSvguitarChord } from "../../services/chord-rendering";
+import {
+  toSvguitarChord,
+  toSvguitarSettings,
+} from "../../services/chord-rendering";
 import * as Sentry from "@sentry/nextjs";
-
-const defaultSVGuitarSettings: Partial<ChordSettings> = {
-  fretSize: 1.75,
-  barreChordRadius: 0.5,
-};
 
 export const ChordChart: React.FunctionComponent = () => {
   const { chart, ref, setSize } = useChart();
@@ -31,33 +29,7 @@ export const ChordChart: React.FunctionComponent = () => {
     if (svguitarRef.current) {
       try {
         const size = svguitarRef.current
-          .configure({
-            ...defaultSVGuitarSettings,
-            ...chart.settings,
-            fretMarkers: [
-              2,
-              4,
-              6,
-              8,
-              {
-                fret: 11,
-                double: true,
-              },
-              14,
-              16,
-              18,
-              20,
-              {
-                fret: 23,
-                double: true,
-              },
-            ],
-
-            svgTitle: "Chord diagram created with chordpic.com",
-            watermark,
-            watermarkFontSize: 16,
-            watermarkColor: "rgba(0, 0, 0, 0.5)",
-          })
+          .configure(toSvguitarSettings(chart.settings, watermark))
           .chord(toSvguitarChord(chart.chord))
           .draw();
 
