@@ -2,7 +2,9 @@
 
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { compressToEncodedURIComponent } from "lz-string";
 import About from "../app/[locale]/about/page-content";
+import SharedChord from "../app/[locale]/chord/[...data]/page";
 import LandingIntro from "../app/[locale]/landing-intro";
 import Languages from "../app/[locale]/languages/page-content";
 import Pricing from "../components/Pricing";
@@ -29,6 +31,18 @@ jest.mock("../components/ui/tabs", () => {
   const Slot = ({ children }: React.PropsWithChildren) => <div>{children}</div>;
   return { Tabs: Slot, TabsList: Slot, TabsTrigger: Slot, TabsContent: Slot };
 });
+jest.mock("../app/[locale]/chord/[...data]/chord-view", () => ({
+  __esModule: true,
+  default: ({
+    diagram,
+    editHeading,
+    editLabel,
+  }: import("../app/[locale]/chord/[...data]/chord-view").ChordViewProps) => (
+    <div data-edit={`${editHeading}|${editLabel}`}>
+      <div dangerouslySetInnerHTML={{ __html: diagram?.svg ?? "" }} />
+    </div>
+  ),
+}));
 jest.mock("../components/Product", () => ({
   Product: ({
     product,
@@ -99,6 +113,58 @@ it("renders the landing headline and lead in the server response", async () => {
   expect(html).toContain('href="#editor"');
   expect(html).toContain('href="#result"');
   expect(html).toContain('/pricing"');
+});
+
+it("renders a shared chord as SVG in the server response, with translated labels", async () => {
+  const data = compressToEncodedURIComponent(
+    JSON.stringify({
+      chord: { fingers: [[1, 2]], barres: [] },
+      settings: { frets: 4, strings: 6, title: "Am" },
+    }),
+  );
+  const html = await render(
+    await SharedChord({
+      params: Promise.resolve({ locale: "de", data: [data] }),
+    }),
+  );
+
+  expect(html).toContain("<svg");
+  expect(html).toContain(">Am</tspan>");
+  expect(html).toContain('data-edit="de:Edit|de:Edit this chord diagram"');
+});
+
+it("reads a chart whose compressed form contains a plus sign", async () => {
+  // The route percent-encodes the segment, so lz-string's `+` arrives as %2B.
+  const data = compressToEncodedURIComponent(
+    JSON.stringify({
+      chord: { fingers: [[1, 2]], barres: [] },
+      settings: { frets: 4, strings: 6, title: "serfj" },
+    }),
+  );
+  expect(data).toContain("+");
+
+  const html = await render(
+    await SharedChord({
+      params: Promise.resolve({
+        locale: "de",
+        data: [data.replace(/\+/g, "%2B")],
+      }),
+    }),
+  );
+
+  expect(html).toContain(">serfj</tspan>");
+});
+
+it("explains a broken sharing link in the page locale", async () => {
+  const html = await render(
+    await SharedChord({
+      params: Promise.resolve({ locale: "fr", data: ["not-a-chord"] }),
+    }),
+  );
+
+  expect(html).toContain("fr:Invalid sharing link");
+  expect(html).toContain("fr:Sorry but this link does not seem to be a valid");
+  expect(html).toContain('href="/fr"');
 });
 
 it("renders pricing text and supplies translated labels without changing checkout product identity", async () => {
