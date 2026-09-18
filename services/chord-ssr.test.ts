@@ -46,6 +46,22 @@ it("lays the diagram out the way a browser would", async () => {
   expect(height).toBeLessThan(475);
 });
 
+it("draws the starting fret label in the configured size and colour", async () => {
+  const { svg } = await renderChord({
+    ...chart,
+    settings: {
+      ...chart.settings,
+      position: 5,
+      fretLabelFontSize: 50,
+      fretLabelColor: "#00ff00",
+    },
+  });
+
+  const label = svg.match(/<text[^>]*class="fret-position"/)?.[0];
+  expect(label).toContain('font-size="50"');
+  expect(label).toContain('fill="#00ff00"');
+});
+
 it("leaves the Pro watermark out when asked to", async () => {
   const { svg } = await renderChord(chart, "");
 
