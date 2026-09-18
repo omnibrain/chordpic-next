@@ -375,9 +375,7 @@ export const ChordForm: React.FunctionComponent<{
                 <SliderWithTooltip
                   aria-label="Starting fret font size"
                   min={10}
-                  // SVGuitar shrinks the label to fit the space beside the
-                  // diagram, so past this the slider stops having an effect.
-                  max={60}
+                  max={120}
                   step={1}
                   {...field}
                 />
