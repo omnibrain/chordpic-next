@@ -128,13 +128,13 @@ const SignIn = () => {
             <div className="flex flex-col gap-4">
               <div>
                 <Label className="mb-2 block" htmlFor="email">
-                  Email
+                  <T>Email</T>
                 </Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="Email"
+                  placeholder={t("Email")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -146,7 +146,7 @@ const SignIn = () => {
                 disabled={loading || !email.length}
               >
                 {loading && <Loader2 className="animate-spin" />}
-                Send magic link
+                <T>Send magic link</T>
               </Button>
             </div>
           </form>
@@ -157,13 +157,13 @@ const SignIn = () => {
             <div className="flex flex-col gap-4">
               <div>
                 <Label className="mb-2 block" htmlFor="email">
-                  Email
+                  <T>Email</T>
                 </Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="Email"
+                  placeholder={t("Email")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -171,13 +171,13 @@ const SignIn = () => {
               </div>
               <div>
                 <Label className="mb-2 block" htmlFor="password">
-                  Password
+                  <T>Password</T>
                 </Label>
                 <Input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder={t("Password")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -190,7 +190,7 @@ const SignIn = () => {
                 disabled={loading || !password.length || !email.length}
               >
                 {loading && <Loader2 className="animate-spin" />}
-                Sign in
+                <T>Sign in</T>
               </Button>
             </div>
           </form>
@@ -206,7 +206,11 @@ const SignIn = () => {
               setMessage({});
             }}
           >
-            {`Or sign in with ${showPasswordInput ? "magic link" : "password"}`}
+            {showPasswordInput ? (
+              <T>Or sign in with a magic link</T>
+            ) : (
+              <T>Or sign in with a password</T>
+            )}
           </a>
           .
         </div>
