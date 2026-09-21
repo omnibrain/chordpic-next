@@ -11,25 +11,60 @@ import { AuthBox } from "@/components/AuthBox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Loader2, MailCheck } from "lucide-react";
 import { getURL } from "@/utils/helpers";
 import { T, useT } from "@magic-translate/react";
 
 const linkClasses = "font-medium underline underline-offset-4";
+
+const MagicLinkSent: React.FunctionComponent<{
+  email: string;
+  onBack(): void;
+}> = ({ email, onBack }) => {
+  const t = useT();
+
+  return (
+    <AuthBox title={t("Check your email")}>
+      <div
+        role="status"
+        className="flex flex-col items-center gap-4 pb-2 text-center"
+      >
+        <MailCheck className="h-10 w-10 text-primary" />
+        <div className="space-y-1">
+          <p className="font-medium">
+            <T>Magic link sent!</T>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <T>We sent a sign-in link to</T>
+          </p>
+          <p className="break-all text-sm font-medium">{email}</p>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          <T>
+            Open the link on this device to sign in. Nothing after a minute?
+            Have a look in your spam folder.
+          </T>
+        </p>
+        <Button variant="outline" className="w-full" onClick={onBack}>
+          <T>Use a different email</T>
+        </Button>
+      </div>
+    </AuthBox>
+  );
+};
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [magicLinkSentTo, setMagicLinkSentTo] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type?: string; content?: string }>({
     type: "",
     content: "",
   });
   const router = useLocalizedRouter();
   const { user } = useUser();
-  const { toast } = useToast();
   const t = useT();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
@@ -47,11 +82,7 @@ const SignIn = () => {
         setMessage({ type: "error", content: error.message });
       }
       if (!password && !error) {
-        toast({
-          title: "Magic link sent!",
-          description: "Check your email for the magic link.",
-          duration: 9000,
-        });
+        setMagicLinkSentTo(email);
       }
       setLoading(false);
     } catch (err) {
@@ -74,6 +105,14 @@ const SignIn = () => {
       router.replace("/account");
     }
   }, [user, router]);
+
+  if (!user && magicLinkSentTo)
+    return (
+      <MagicLinkSent
+        email={magicLinkSentTo}
+        onBack={() => setMagicLinkSentTo(null)}
+      />
+    );
 
   if (!user)
     return (
