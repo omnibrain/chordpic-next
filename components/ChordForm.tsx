@@ -37,9 +37,11 @@ export type AdjustableChordSettings = Pick<
   | "fingerSize"
   | "fingerTextSize"
   | "titleFontSize"
+  | "fretLabelFontSize"
   | "strokeWidth"
   | "color"
   | "backgroundColor"
+  | "fretLabelColor"
   | "fixedDiagramPosition"
   | "noPosition"
   | "showFretMarkers"
@@ -57,8 +59,11 @@ export const defaultValues: AdjustableChordSettings = {
   fingerTextSize: 24,
   strokeWidth: 2,
   titleFontSize: 48,
+  fretLabelFontSize: 38,
   backgroundColor: undefined,
   color: undefined,
+  // Undefined so the fret label follows the diagram color until it is given one.
+  fretLabelColor: undefined,
   fixedDiagramPosition: false,
   noPosition: false,
   showFretMarkers: false,
@@ -362,6 +367,21 @@ export const ChordForm: React.FunctionComponent<{
               )}
             />
           </Field>
+          <Field label={<T>Starting fret font size</T>}>
+            <Controller
+              control={control}
+              name="fretLabelFontSize"
+              render={({ field }) => (
+                <SliderWithTooltip
+                  aria-label="Starting fret font size"
+                  min={10}
+                  max={120}
+                  step={1}
+                  {...field}
+                />
+              )}
+            />
+          </Field>
           <Field label={<T>Stroke width</T>}>
             <Controller
               control={control}
@@ -399,7 +419,6 @@ export const ChordForm: React.FunctionComponent<{
             </Label>
           </div>
           <div className="hidden lg:block" />
-          <div className="hidden lg:block" />
           <Field label={<T>Color</T>}>
             <Controller
               control={control}
@@ -426,7 +445,19 @@ export const ChordForm: React.FunctionComponent<{
               )}
             />
           </Field>
-          <div className="hidden lg:block" />
+          <Field label={<T>Starting fret color</T>}>
+            <Controller
+              control={control}
+              name="fretLabelColor"
+              render={({ field }) => (
+                <ColorInput
+                  direction="up"
+                  onChange={field.onChange}
+                  value={field.value}
+                />
+              )}
+            />
+          </Field>
           <div className="flex items-end justify-end">
             <Button type="button" variant="outline" onClick={resetSettings}>
               <Trash2 />
