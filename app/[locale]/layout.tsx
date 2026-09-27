@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import localFont from "next/font/local";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { CSSProperties, ReactNode } from "react";
 import Providers from "../providers";
 import { locales, isLocale } from "@/services/i18n";
@@ -78,6 +79,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
         <Providers>{children}</Providers>
+        <SpeedInsights />
         <Script
           id="cookieyes"
           strategy="beforeInteractive"
