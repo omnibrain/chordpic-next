@@ -80,7 +80,7 @@ export default async function RootLayout({
         <Providers>{children}</Providers>
         <Script
           id="cookieyes"
-          strategy="lazyOnload"
+          strategy="beforeInteractive"
           src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
         />
         <Script id="rewardful-queue" strategy="beforeInteractive">
