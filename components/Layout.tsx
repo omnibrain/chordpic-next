@@ -9,12 +9,14 @@ import {
   readAdsAssignment,
   useAdsAssignment,
 } from "../hooks/use-ads-assignment";
+import { useConsentApiReady } from "../hooks/use-consent-api-ready";
 import { Footer } from "./Footer";
 import { NavBar } from "./NavBar";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const subscription = useSubscription();
   const adsAssignment = useAdsAssignment();
+  const consentApiReady = useConsentApiReady();
 
   useEffect(() => {
     // Read straight from the cookie rather than from state: user properties
@@ -40,7 +42,8 @@ export const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       {subscription === SubscriptionType.FREE &&
-        adsAssignment?.arm === "on" && (
+        adsAssignment?.arm === "on" &&
+        consentApiReady && (
           <Script
             data-ad-client="ca-pub-5764824207547220"
             async
