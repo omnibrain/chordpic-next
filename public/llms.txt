@@ -1,0 +1,35 @@
+# ChordPic
+
+> ChordPic (https://chordpic.com) is a free, browser-based guitar chord diagram creator. Click on a fretboard to place fingers, see the diagram update live, then download it as SVG or PNG or share it as a link. No account or install needed. A paid Pro plan removes the watermark and ads and adds a hand-drawn style.
+
+Key facts:
+
+- What it makes: chord diagrams (a.k.a. chord charts, chord boxes, fretboard diagrams) for guitar and other fretted instruments; also works for scale diagrams.
+- Customisable: number of strings, tuning of each string, starting fret, number of frets, title and title font size, optional fret markers.
+- Editor: click to add/remove fingers; drag or swipe across strings for barres; click the O/X markers above strings to cycle open / silent / hidden; per-finger, per-barre and per-marker text labels, colors and shapes; string labels.
+- Export: SVG, or PNG in four sizes (small, medium, large, huge). PNG width is fixed; height depends on the diagram.
+- Sharing: "Generate Sharing Link" encodes the whole diagram in the URL. The link opens with the chord loaded and shows a preview image in chats and social posts.
+- Pricing: Free ($0) includes all editing features, with a watermark and ads. Pro costs $4/month or $30/year and removes the watermark and ads and unlocks a hand-drawn diagram style.
+- Languages: English, Chinese, Hindi, Spanish, French, Arabic, Russian, Portuguese, Italian, Urdu, German, Persian, Dutch (at /{lang}, e.g. /de, /es).
+- Typical users: guitar teachers, lesson worksheets, songbooks and books, blogs and websites, YouTube thumbnails and videos.
+
+## Core pages
+
+- [Chord diagram editor](https://chordpic.com/): The main tool; everything happens on this page
+- [Help](https://chordpic.com/help): How to use the editor, result preview, download and sharing
+- [Pricing](https://chordpic.com/pricing): Free vs Pro
+- [News](https://chordpic.com/news): Changelog of new features
+
+## About
+
+- [About ChordPic](https://chordpic.com/about): What ChordPic is, how to report bugs or request features
+- [Languages](https://chordpic.com/languages): Available translations
+- [Bug reports & feature requests](https://gitlab.com/Voellmy/chordpic/issues): Public issue tracker
+
+## Optional
+
+- [Terms of Use](https://chordpic.com/terms)
+- [Privacy Notice](https://chordpic.com/privacy-notice)
+- [Cookie Policy](https://chordpic.com/cookie-policy)
+- [r/chordpic on Reddit](https://reddit.com/r/chordpic)
+- [ChordPic on Facebook](https://www.facebook.com/chordpic)
