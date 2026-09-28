@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { CSSProperties, ReactNode } from "react";
 import Providers from "../providers";
@@ -79,6 +80,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
         <Providers>{children}</Providers>
+        <Analytics />
         <SpeedInsights />
         <Script
           id="cookieyes"
