@@ -92,7 +92,7 @@ export default async function RootLayout({
         </Script>
         <Script
           id="rewardful"
-          strategy="beforeInteractive"
+          strategy="lazyOnload"
           src="https://r.wdfl.co/rw.js"
           data-rewardful="014828"
         />
