@@ -10,7 +10,7 @@ Key facts:
 - Export: SVG, or PNG in four sizes (small, medium, large, huge). PNG width is fixed; height depends on the diagram.
 - Sharing: "Generate Sharing Link" encodes the whole diagram in the URL. The link opens with the chord loaded and shows a preview image in chats and social posts.
 - Pricing: Free ($0) includes all editing features, with a watermark and ads. Pro costs $4/month or $30/year and removes the watermark and ads and unlocks a hand-drawn diagram style.
-- Languages: English, Chinese, Hindi, Spanish, French, Arabic, Russian, Portuguese, Italian, Urdu, German, Persian, Dutch (at /{lang}, e.g. /de, /es).
+- Languages: English, Chinese, Hindi, Spanish, French, Arabic, Russian, Portuguese, Italian, Urdu, German, Persian, Dutch, Indonesian, Korean (at /{lang}, e.g. /de, /es).
 - Typical users: guitar teachers, lesson worksheets, songbooks and books, blogs and websites, YouTube thumbnails and videos.
 
 ## Core pages

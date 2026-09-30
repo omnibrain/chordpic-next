@@ -13,6 +13,8 @@ export const languageMap: Partial<
   [Language.RU]: { name: "Russian", icon: "🇷🇺" },
   [Language.DE]: { name: "German", icon: "🇩🇪" },
   [Language.NL]: { name: "Dutch", icon: "🇳🇱" },
+  [Language.ID]: { name: "Indonesian", icon: "🇮🇩" },
+  [Language.KO]: { name: "Korean", icon: "🇰🇷" },
   [Language.AR]: { name: "Arabic", icon: "🇸🇦" },
   [Language.FA]: { name: "Persian", icon: "🇮🇷" },
   [Language.UR]: { name: "Urdu", icon: "🇵🇰" },
