@@ -40,6 +40,10 @@ export const MyUserContextProvider = (props: Props) => {
           .from<Subscription>("subscriptions")
           .select("*, prices(*, products(*))")
           .in("status", ["trialing", "active"])
+          // A user can end up with several active subscriptions; `.single()`
+          // alone errors on more than one row and would hide Pro entirely.
+          .order("created", { ascending: false })
+          .limit(1)
           .single()
           .then((res) => {
             if (res.error) {

@@ -24,6 +24,21 @@ const createCheckoutSession = async (
         email: user?.email || "",
       });
 
+      const existing = await stripe.subscriptions.list({
+        customer,
+        status: "all",
+        limit: 20,
+      });
+      if (
+        existing.data.some(
+          (s) => s.status === "active" || s.status === "trialing",
+        )
+      ) {
+        return res.status(409).json({
+          error: { statusCode: 409, message: "Already subscribed" },
+        });
+      }
+
       // Validate the Rewardful coupon against Stripe before applying it, so a
       // stale/invalid coupon id never blocks checkout with a "No such coupon" error.
       let validCoupon: string | undefined;
