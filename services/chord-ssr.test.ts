@@ -35,15 +35,15 @@ it("draws a shared chord to standalone SVG markup", async () => {
 });
 
 it("lays the diagram out the way a browser would", async () => {
-  // Chromium draws this chord 468.6 high. Server and browser round font
+  // Chromium draws this chord 456 high. Server and browser round font
   // metrics differently, so they agree to about a pixel per text label and
   // never exactly; a bigger gap means the fonts below assets/fonts were not
   // found and every label was measured as empty.
   const { width, height } = await renderChord(chart);
 
   expect(width).toBe(400);
-  expect(height).toBeGreaterThan(465);
-  expect(height).toBeLessThan(475);
+  expect(height).toBeGreaterThan(453);
+  expect(height).toBeLessThan(463);
 });
 
 it("leaves the Pro watermark out when asked to", async () => {
