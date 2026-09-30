@@ -90,6 +90,7 @@ export const ChordForm: React.FunctionComponent<{
   settings: AdjustableChordSettings;
 }> = ({ onSettings, settings }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [resets, setResets] = useState(0);
   const subscription = useSubscription();
   const t = useT();
 
@@ -118,9 +119,7 @@ export const ChordForm: React.FunctionComponent<{
         return {
           ...acc,
           [key]:
-            key in errors ||
-            (typeof value === "number" && isNaN(value)) ||
-            value === ""
+            key in errors || (typeof value === "number" && isNaN(value))
               ? defaultValues[key as keyof AdjustableChordSettings]
               : value,
         };
@@ -144,8 +143,9 @@ export const ChordForm: React.FunctionComponent<{
 
   const resetSettings = () => {
     GA()?.("event", "reset_settings");
-    // Controllers keep their last value when reset to undefined, so clear the colors with "" instead
-    reset({ ...defaultValues, color: "", backgroundColor: "" });
+    reset(defaultValues);
+    // A Controller keeps its last value when reset to undefined, so remount the color inputs
+    setResets(resets + 1);
   };
 
   return (
@@ -405,26 +405,28 @@ export const ChordForm: React.FunctionComponent<{
           <div className="hidden lg:block" />
           <Field label={<T>Color</T>}>
             <Controller
+              key={resets}
               control={control}
               name="color"
               render={({ field }) => (
                 <ColorInput
                   direction="up"
                   onChange={field.onChange}
-                  value={field.value || undefined}
+                  value={field.value}
                 />
               )}
             />
           </Field>
           <Field label={<T>Background color</T>}>
             <Controller
+              key={resets}
               control={control}
               name="backgroundColor"
               render={({ field }) => (
                 <ColorInput
                   direction="up"
                   onChange={field.onChange}
-                  value={field.value || undefined}
+                  value={field.value}
                 />
               )}
             />

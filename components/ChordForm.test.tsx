@@ -12,8 +12,10 @@ jest.mock("../utils/useSubscription", () => ({
 }));
 jest.mock("./SliderWithTooltip", () => ({ SliderWithTooltip: () => null }));
 jest.mock("./ColorInput", () => ({
-  ColorInput: ({ value }: { value?: string }) => (
-    <span data-testid="color">{value}</span>
+  ColorInput: (props: { value?: string; onChange(color: string): void }) => (
+    <button data-testid="color" onClick={() => props.onChange("green")}>
+      {props.value}
+    </button>
   ),
 }));
 
@@ -44,4 +46,24 @@ it("keeps custom colors cleared after resetting the settings", async () => {
     "",
     "",
   ]);
+});
+
+it("lets you pick a new color after resetting the settings", async () => {
+  const onSettings = jest.fn();
+  render(
+    <TooltipProvider>
+      <ChordForm
+        settings={{ ...defaultValues, backgroundColor: "blue" }}
+        onSettings={onSettings}
+      />
+    </TooltipProvider>,
+  );
+
+  fireEvent.click(screen.getByText(/Show more/));
+  fireEvent.click(screen.getByText("Reset settings"));
+  fireEvent.click(screen.getAllByTestId("color")[1]);
+  await act(async () => {});
+
+  expect(onSettings.mock.calls.at(-1)[0].backgroundColor).toBe("green");
+  expect(screen.getAllByTestId("color")[1].textContent).toBe("green");
 });
