@@ -118,7 +118,9 @@ export const ChordForm: React.FunctionComponent<{
         return {
           ...acc,
           [key]:
-            key in errors || (typeof value === "number" && isNaN(value))
+            key in errors ||
+            (typeof value === "number" && isNaN(value)) ||
+            value === ""
               ? defaultValues[key as keyof AdjustableChordSettings]
               : value,
         };
@@ -142,7 +144,8 @@ export const ChordForm: React.FunctionComponent<{
 
   const resetSettings = () => {
     GA()?.("event", "reset_settings");
-    reset(defaultValues);
+    // Controllers keep their last value when reset to undefined, so clear the colors with "" instead
+    reset({ ...defaultValues, color: "", backgroundColor: "" });
   };
 
   return (
@@ -408,7 +411,7 @@ export const ChordForm: React.FunctionComponent<{
                 <ColorInput
                   direction="up"
                   onChange={field.onChange}
-                  value={field.value}
+                  value={field.value || undefined}
                 />
               )}
             />
@@ -421,7 +424,7 @@ export const ChordForm: React.FunctionComponent<{
                 <ColorInput
                   direction="up"
                   onChange={field.onChange}
-                  value={field.value}
+                  value={field.value || undefined}
                 />
               )}
             />
