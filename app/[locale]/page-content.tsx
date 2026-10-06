@@ -2,7 +2,7 @@
 
 import { T, useT } from "@magic-translate/react";
 import React, { useCallback } from "react";
-import { RotateCw } from "lucide-react";
+import { Hand, RotateCw } from "lucide-react";
 import { Orientation } from "svguitar";
 import { ChordEditor } from "@/components/chord/ChordEditor";
 import { ChordResult } from "@/components/chord/ChordResult";
@@ -72,7 +72,36 @@ const Home = () => {
               <h2 className={panelHeading}>
                 <T>Result</T>
               </h2>
-              <div className="absolute right-0 top-0 z-10">
+              <div className="absolute right-0 top-0 z-10 flex gap-2">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={
+                        chart.settings.leftHanded ? "default" : "outline"
+                      }
+                      size="icon"
+                      aria-label={t("Left-handed")}
+                      aria-pressed={!!chart.settings.leftHanded}
+                      onClick={() => {
+                        GA()?.("event", "toggle_left_handed");
+                        setChart({
+                          ...chart,
+                          settings: {
+                            ...chart.settings,
+                            leftHanded: !chart.settings.leftHanded,
+                          },
+                        });
+                      }}
+                    >
+                      <Hand />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-64">
+                    {t(
+                      "Left-handed: mirror the chord diagram so it shows the fretboard the way left-handed players see it",
+                    )}
+                  </TooltipContent>
+                </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
