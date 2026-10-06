@@ -7,6 +7,7 @@ import Image from "next/image";
 
 import barreAndFingerSameFret from "@/public/images/barre-and-finger-same-fret.png";
 import exampleHorizontalChord from "@/public/images/example-horizontal-chord.png";
+import exampleLeftHandedChord from "@/public/images/example-left-handed-chord.png";
 import sampleChordWithColors from "@/public/images/sample-chord-with-colors.png";
 import orientationToggle from "@/public/images/orientation-toggle.png";
 import sampleChordWithText from "@/public/images/sample-chord-with-text.png";
@@ -44,6 +45,7 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
     colorsAlt,
     textAlt,
     barreAlt,
+    leftHandedAlt,
   ] = await Promise.all([
     t("Chord diagram with fret markers"),
     t("Sliders with numerical values"),
@@ -51,6 +53,7 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
     t("Example chord with colors"),
     t("Example chord with text"),
     t("Example chord chart"),
+    t("Left-handed C major chord diagram"),
   ]);
 
   return (
@@ -75,6 +78,34 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
             write us an email
           </a>
           , we would love to hear your story and tell other people about it!
+        </T>
+      </p>
+
+      <h2 id="left-handed-chord-diagrams">
+        <T>Chord diagrams for left-handed players 🤚</T>
+      </h2>
+      <p>
+        <em>
+          <T>October 6th, 2026</T>
+        </em>
+      </p>
+      <p>
+        <T>
+          Lefties, this one is for you! Click the new hand button next to the
+          rotate button above your chord diagram, and it flips to show the
+          fretboard the way a left-handed player sees it: the low E string is on
+          the right and all the text stays readable.
+        </T>
+      </p>
+      <div className="flex justify-center">
+        <Image src={exampleLeftHandedChord} alt={leftHandedAlt} />
+      </div>
+      <p>
+        <T>
+          It works with horizontal diagrams too, where the nut moves to the
+          right. Teachers with left-handed students: your downloads and shared
+          links stay left-handed, so you can create a whole set of charts for
+          them in no time.
         </T>
       </p>
 
