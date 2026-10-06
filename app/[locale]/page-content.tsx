@@ -97,9 +97,7 @@ const Home = () => {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent className="max-w-64">
-                    {t(
-                      "Left-handed: mirror the chord diagram so it shows the fretboard the way left-handed players see it",
-                    )}
+                    {t("Left-handed: mirror the chord diagram")}
                   </TooltipContent>
                 </Tooltip>
                 <Tooltip>
