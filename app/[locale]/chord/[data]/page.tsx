@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: SharedChordProps) {
   return createPageMetadata(locale, "/chord", undefined, {
     name: chartName(chart),
     // A link that decodes to nothing has no diagram to preview, so it keeps
-    // the logo rather than pointing at an image route that answers 404.
+    // the default preview image rather than an image route that answers 404.
     generatedImage: Boolean(chart),
   });
 }

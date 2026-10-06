@@ -2,6 +2,13 @@ import { createPageMetadata } from "./app-metadata";
 import { translate } from "../utils/translate";
 import { PUBLIC_LOCALES, SITE_URL } from "./seo";
 
+const previewImage = {
+  url: `${SITE_URL}/og-image.png`,
+  width: 1200,
+  height: 630,
+  alt: "ChordPic",
+};
+
 jest.mock("../utils/translate", () => ({
   ...jest.requireActual("../utils/translate"),
   translate: jest.fn(),
@@ -29,13 +36,13 @@ it("keeps translated titles and descriptions consistent across search and social
     title: metadata.title,
     description: metadata.description,
     url: `${SITE_URL}/es/news`,
-    images: [`${SITE_URL}/logo.png`],
+    images: [previewImage],
   });
   expect(metadata.twitter).toMatchObject({
     card: "summary_large_image",
     title: metadata.title,
     description: metadata.description,
-    images: [`${SITE_URL}/logo.png`],
+    images: [previewImage],
   });
   expect(metadata.robots).toEqual({ index: true, follow: true });
 });
@@ -111,11 +118,11 @@ it("leads with a supplied name, untranslated, and leaves the preview to the segm
   expect(metadata.twitter).not.toHaveProperty("images");
 });
 
-it("keeps the house title and the logo when no name is given", async () => {
+it("keeps the house title and the preview image when no name is given", async () => {
   const metadata = await createPageMetadata("en", "/chord");
 
   expect(metadata.title).toBe("ChordPic | Free guitar chord diagram creator");
   expect(metadata.openGraph).toMatchObject({
-    images: [`${SITE_URL}/logo.png`],
+    images: [previewImage],
   });
 });

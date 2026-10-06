@@ -43,7 +43,14 @@ export async function createPageMetadata(
   const canonical = noindex
     ? undefined
     : localeUrl(canonicalLocale(locale, path), path);
-  const image = generatedImage ? undefined : `${SITE_URL}/logo.png`;
+  const image = generatedImage
+    ? undefined
+    : {
+        url: `${SITE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "ChordPic",
+      };
 
   return {
     title,
