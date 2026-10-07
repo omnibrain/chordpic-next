@@ -7,8 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { ChordSettings } from "svguitar";
-import { Chart } from "@/domain/chart";
+import { Chart, ChartSettings } from "@/domain/chart";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 
 const LOCALSTORAGE_KEY = "chord_v1";
@@ -24,7 +23,7 @@ interface ChartContextType {
   hydrated: boolean;
 }
 
-const defaultSVGuitarSettings: Partial<ChordSettings> = {
+const defaultSVGuitarSettings: ChartSettings = {
   fretSize: 1.75,
   barreChordRadius: 0.5,
   frets: 4,

@@ -1,5 +1,6 @@
 /** @jest-environment node */
 
+import type { FretLabelFormat } from "svguitar";
 import { Chart } from "../domain/chart";
 import { renderChord } from "./chord-ssr";
 
@@ -25,7 +26,9 @@ it("draws a shared chord to standalone SVG markup", async () => {
   const { svg, width, height } = await renderChord(chart);
 
   expect(svg).toMatch(/^<svg[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
-  expect(svg).toContain("<title>Chord diagram created with chordpic.com</title>");
+  expect(svg).toContain(
+    "<title>Chord diagram created with chordpic.com</title>",
+  );
   expect(svg).toContain(">Am</tspan>");
   expect(svg).toContain("created with chordpic.com");
   expect(svg).toContain(`viewBox="0 0 ${width} ${height}"`);
@@ -60,6 +63,19 @@ it("draws the starting fret label in the configured size and colour", async () =
   const label = svg.match(/<text[^>]*class="fret-position"/)?.[0];
   expect(label).toContain('font-size="50"');
   expect(label).toContain('fill="#00ff00"');
+});
+
+it("draws the starting fret label in the configured format", async () => {
+  const { svg } = await renderChord({
+    ...chart,
+    settings: {
+      ...chart.settings,
+      position: 5,
+      fretLabelFormat: "roman" as FretLabelFormat,
+    },
+  });
+
+  expect(svg).toMatch(/class="fret-position"><tspan[^>]*>V</);
 });
 
 it("leaves the Pro watermark out when asked to", async () => {

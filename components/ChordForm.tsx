@@ -1,6 +1,11 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ChordSettings, ChordStyle, Orientation } from "svguitar";
+import {
+  ChordSettings,
+  ChordStyle,
+  FretLabelFormat,
+  Orientation,
+} from "svguitar";
 import { ChevronDown, ChevronUp, CircleHelp, Trash2 } from "lucide-react";
 import { T, useT } from "@magic-translate/react";
 import { SubscriptionType } from "../types";
@@ -45,7 +50,7 @@ export type AdjustableChordSettings = Pick<
   | "fixedDiagramPosition"
   | "noPosition"
   | "showFretMarkers"
->;
+> & { fretLabelFormat?: FretLabelFormat };
 
 export const defaultValues: AdjustableChordSettings = {
   orientation: Orientation.vertical,
@@ -60,6 +65,7 @@ export const defaultValues: AdjustableChordSettings = {
   strokeWidth: 2,
   titleFontSize: 48,
   fretLabelFontSize: 38,
+  fretLabelFormat: FretLabelFormat.FR,
   backgroundColor: undefined,
   color: undefined,
   // Undefined so the fret label follows the diagram color until it is given one.
@@ -370,6 +376,21 @@ export const ChordForm: React.FunctionComponent<{
               )}
             />
           </Field>
+          <Field label={<T>Stroke width</T>}>
+            <Controller
+              control={control}
+              name="strokeWidth"
+              render={({ field }) => (
+                <SliderWithTooltip
+                  aria-label="Stroke width"
+                  min={1}
+                  max={10}
+                  step={0.1}
+                  {...field}
+                />
+              )}
+            />
+          </Field>
           <Field label={<T>Starting fret font size</T>}>
             <Controller
               control={control}
@@ -385,18 +406,30 @@ export const ChordForm: React.FunctionComponent<{
               )}
             />
           </Field>
-          <Field label={<T>Stroke width</T>}>
+          <Field label={<T>Starting fret format</T>}>
             <Controller
               control={control}
-              name="strokeWidth"
+              name="fretLabelFormat"
               render={({ field }) => (
-                <SliderWithTooltip
-                  aria-label="Stroke width"
-                  min={1}
-                  max={10}
-                  step={0.1}
-                  {...field}
-                />
+                <Select
+                  value={field.value ?? FretLabelFormat.FR}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger aria-label={t("Starting fret format")}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={FretLabelFormat.FR}>5fr</SelectItem>
+                    <SelectItem value={FretLabelFormat.NUMBER}>5</SelectItem>
+                    <SelectItem value={FretLabelFormat.ROMAN}>V</SelectItem>
+                    <SelectItem value={FretLabelFormat.ORDINAL}>
+                      5<sup>th</sup>
+                    </SelectItem>
+                    <SelectItem value={FretLabelFormat.ORDINAL_WITH_FR}>
+                      5<sup>th</sup> Fr
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               )}
             />
           </Field>
@@ -421,7 +454,6 @@ export const ChordForm: React.FunctionComponent<{
               />
             </Label>
           </div>
-          <div className="hidden lg:block" />
           <Field label={<T>Color</T>}>
             <Controller
               key={resets}

@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { TuningInput } from "./TuningInput";
 import { ChordInput } from "./chord-input/ChordInput";
 import { SilentStringsInput } from "./SilentStringsInput";
-import { ChordSettings } from "svguitar";
 import { EditModeInput } from "./EditModeInput";
-import { Chart } from "../../domain/chart";
+import { Chart, ChartSettings } from "../../domain/chart";
 import { EditMode } from "../../domain/edit-mode";
 import { ChordMatrix } from "../../services/chord-matrix";
 import { Trash2 } from "lucide-react";
@@ -15,7 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { GA } from '../../services/google-analytics'
+import { GA } from "../../services/google-analytics";
 
 const lineWidth = 3;
 
@@ -30,7 +29,7 @@ interface IProps {
   numFrets: number;
   numStrings: number;
   chord: Chart["chord"];
-  settings: ChordSettings;
+  settings: ChartSettings;
   onChart: (newChart: Chart) => void;
   width: number;
   height: number;
@@ -52,7 +51,7 @@ export const ChordEditor = (props: IProps) => {
     ChordMatrix.fromChart({
       chord: props.chord,
       settings: props.settings,
-    })
+    }),
   );
 
   const [editMode, setEditMode] = useState(EditMode.EDIT_NOTES);
