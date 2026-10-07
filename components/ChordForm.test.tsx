@@ -28,7 +28,12 @@ it("keeps custom colors cleared after resetting the settings", async () => {
   render(
     <TooltipProvider>
       <ChordForm
-        settings={{ ...defaultValues, color: "red", backgroundColor: "blue" }}
+        settings={{
+          ...defaultValues,
+          color: "red",
+          backgroundColor: "blue",
+          fretLabelColor: "green",
+        }}
         onSettings={onSettings}
       />
     </TooltipProvider>,
@@ -46,7 +51,9 @@ it("keeps custom colors cleared after resetting the settings", async () => {
   expect(settings.title).toBe("Am");
   expect(settings.color).toBeUndefined();
   expect(settings.backgroundColor).toBeUndefined();
+  expect(settings.fretLabelColor).toBeUndefined();
   expect(screen.getAllByTestId("color").map((s) => s.textContent)).toEqual([
+    "",
     "",
     "",
   ]);

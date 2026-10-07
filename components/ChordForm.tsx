@@ -452,6 +452,7 @@ export const ChordForm: React.FunctionComponent<{
           </Field>
           <Field label={<T>Starting fret color</T>}>
             <Controller
+              key={resets}
               control={control}
               name="fretLabelColor"
               render={({ field }) => (
