@@ -10,7 +10,11 @@ jest.mock("@magic-translate/react", () => ({
 jest.mock("../utils/useSubscription", () => ({
   useSubscription: () => undefined,
 }));
-jest.mock("./SliderWithTooltip", () => ({ SliderWithTooltip: () => null }));
+jest.mock("./SliderWithTooltip", () => ({
+  SliderWithTooltip: (props: { value?: number; "aria-label"?: string }) => (
+    <output aria-label={props["aria-label"]}>{props.value}</output>
+  ),
+}));
 jest.mock("./ColorInput", () => ({
   ColorInput: (props: { value?: string; onChange(color: string): void }) => (
     <button data-testid="color" onClick={() => props.onChange("green")}>
@@ -66,4 +70,25 @@ it("lets you pick a new color after resetting the settings", async () => {
 
   expect(onSettings.mock.calls.at(-1)[0].backgroundColor).toBe("green");
   expect(screen.getAllByTestId("color")[1].textContent).toBe("green");
+});
+
+it("shows the default values on the sliders of a new chart", () => {
+  render(
+    <TooltipProvider>
+      <ChordForm
+        settings={{ frets: 4, strings: 6, fretSize: 1.75 }}
+        onSettings={jest.fn()}
+      />
+    </TooltipProvider>,
+  );
+
+  fireEvent.click(screen.getByText(/Show more/));
+
+  expect(screen.getByLabelText("Chord chart height").textContent).toBe("1.75");
+  expect(screen.getByLabelText("Chord chart finger size").textContent).toBe(
+    String(defaultValues.fingerSize),
+  );
+  expect(screen.getByLabelText("Stroke width").textContent).toBe(
+    String(defaultValues.strokeWidth),
+  );
 });

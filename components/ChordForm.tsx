@@ -103,7 +103,8 @@ export const ChordForm: React.FunctionComponent<{
     setValue,
   } = useForm<AdjustableChordSettings>({
     mode: "onChange",
-    defaultValues: settings,
+    // A new chart only stores a few settings; without the rest the sliders sit at their minimum
+    defaultValues: { ...defaultValues, ...settings },
   });
   const [data, setData] = useState<AdjustableChordSettings>(settings);
 
