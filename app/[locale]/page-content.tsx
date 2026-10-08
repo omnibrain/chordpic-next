@@ -1,10 +1,11 @@
 "use client";
 
 import { T, useT } from "@magic-translate/react";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Hand, RotateCw } from "lucide-react";
 import { Orientation } from "@svguitar/core";
 import { ChordEditor } from "@/components/chord/ChordEditor";
+import { ChordSearch } from "@/components/chord/ChordSearch";
 import { ChordResult } from "@/components/chord/ChordResult";
 import { useChart } from "@/components/chord/useChart";
 import { AdjustableChordSettings, ChordForm } from "@/components/ChordForm";
@@ -17,6 +18,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { Chart } from "@/domain/chart";
 import { useResizeHandler } from "@/hooks/use-resize-handler";
 import { GA } from "@/services/google-analytics";
 
@@ -27,6 +29,7 @@ const Home = () => {
   const t = useT();
   const { width, height } = useResizeHandler();
   const { setChart, chart, hydrated } = useChart();
+  const [searchedChords, setSearchedChords] = useState(0);
 
   const onSettings = useCallback(
     (newSettings: AdjustableChordSettings) =>
@@ -40,13 +43,26 @@ const Home = () => {
     [chart.chord, chart.settings, setChart],
   );
 
+  const onSearchedChart = useCallback(
+    (newChart: Chart, name: string) => {
+      GA()?.("event", "select_searched_chord", { chord: name });
+      setChart(newChart);
+      setSearchedChords((count) => count + 1);
+    },
+    [setChart],
+  );
+
   return (
     <>
+      <ChordSearch settings={chart.settings} onChart={onSearchedChart} />
       {/*
-        Keyed so the editor is rebuilt once the stored chart arrives: ChordForm
-        and ChordEditor both copy it into their own state on mount.
+        Keyed so the editor is rebuilt once the stored chart arrives or a chord
+        is picked in the search: ChordForm and ChordEditor both copy the chart
+        into their own state on mount.
       */}
-      <React.Fragment key={hydrated ? "stored" : "default"}>
+      <React.Fragment
+        key={`${hydrated ? "stored" : "default"}-${searchedChords}`}
+      >
         <ChordForm settings={chart.settings} onSettings={onSettings} />
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="p-4">
