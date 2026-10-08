@@ -1,6 +1,6 @@
 import chunk from 'lodash.chunk'
 import range from 'lodash.range'
-import { Barre, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from 'svguitar'
+import { Barre, ChordSettings, Finger, FingerOptions, OPEN, OpenString, Shape, SILENT, SilentString } from '@svguitar/core'
 import { EditableChord, HiddenString } from '../domain/chart'
 
 export enum CellState {

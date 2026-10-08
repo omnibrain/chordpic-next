@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef } from "react";
-import { SVGuitarChord } from "svguitar";
+import { SVGuitarChord } from "@svguitar/core";
 import { SubscriptionType } from "../../types";
 import { useSubscription } from "../../utils/useSubscription";
 import { useChart } from "./useChart";

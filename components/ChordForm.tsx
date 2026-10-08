@@ -5,7 +5,7 @@ import {
   ChordStyle,
   FretLabelFormat,
   Orientation,
-} from "svguitar";
+} from "@svguitar/core";
 import { ChevronDown, ChevronUp, CircleHelp, Trash2 } from "lucide-react";
 import { T, useT } from "@magic-translate/react";
 import { SubscriptionType } from "../types";

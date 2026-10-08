@@ -1,4 +1,4 @@
-import { ChordStyle, OPEN, Orientation, SILENT, SVGuitarChord } from "svguitar";
+import { ChordStyle, OPEN, Orientation, SILENT, SVGuitarChord } from "@svguitar/core";
 import { EditableChord } from "../domain/chart";
 import { ChordMatrix } from "./chord-matrix";
 import { toSvguitarChord } from "./chord-rendering";

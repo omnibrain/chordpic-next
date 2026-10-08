@@ -3,7 +3,7 @@
 import { T, useT } from "@magic-translate/react";
 import React, { useCallback } from "react";
 import { Hand, RotateCw } from "lucide-react";
-import { Orientation } from "svguitar";
+import { Orientation } from "@svguitar/core";
 import { ChordEditor } from "@/components/chord/ChordEditor";
 import { ChordResult } from "@/components/chord/ChordResult";
 import { useChart } from "@/components/chord/useChart";
