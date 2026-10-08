@@ -1,4 +1,4 @@
-import type { Chord, ChordSettings, Finger, OpenString } from 'svguitar'
+import type { Chord, ChordSettings, Finger, OpenString } from '@svguitar/core'
 import { EditableChord } from '../domain/chart'
 
 /*

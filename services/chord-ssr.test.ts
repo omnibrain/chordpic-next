@@ -1,6 +1,6 @@
 /** @jest-environment node */
 
-import type { FretLabelFormat } from "svguitar";
+import type { FretLabelFormat } from "@svguitar/core";
 import { Chart } from "../domain/chart";
 import { renderChord } from "./chord-ssr";
 

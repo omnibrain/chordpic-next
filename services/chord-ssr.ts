@@ -2,7 +2,7 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { runInNewContext } from "node:vm";
-import type { SVGuitarChord } from "svguitar";
+import type { SVGuitarChord } from "@svguitar/core";
 import type { Chart } from "../domain/chart";
 import { toSvguitarChord, toSvguitarSettings } from "./chord-rendering";
 
@@ -17,7 +17,7 @@ export const FREE_WATERMARK = "created with chordpic.com";
 const fontDir = path.join(process.cwd(), "assets/fonts");
 const umdBundle = path.join(
   process.cwd(),
-  "node_modules/svguitar/dist/svguitar.umd.js",
+  "node_modules/@svguitar/core/dist/svguitar.umd.js",
 );
 
 /*

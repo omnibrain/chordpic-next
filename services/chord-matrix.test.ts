@@ -1,5 +1,5 @@
 import { CellState, ChordMatrix, EmptyStringState } from "./chord-matrix";
-import { FingerOptions, OPEN, SILENT } from "svguitar";
+import { FingerOptions, OPEN, SILENT } from "@svguitar/core";
 import { Chart } from "../domain/chart";
 import { decompress } from "../hooks/compressed-state";
 import { getLink } from "../hooks/url-state";

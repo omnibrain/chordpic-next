@@ -2226,6 +2226,15 @@
   resolved "https://registry.yarnpkg.com/@svgdotjs/svg.js/-/svg.js-3.2.5.tgz#fbbc56728b2b565f3ae3e3713301ff82abbb45bd"
   integrity sha512-/VNHWYhNu+BS7ktbYoVGrCmsXDh+chFMaONMwGNdIBcFHrWqk2jY8fNyr3DLdtQUIalvkPfM554ZSFa3dm3nxQ==
 
+"@svguitar/core@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@svguitar/core/-/core-2.9.0.tgz#b9daf381163e9862940a459d40fbd16d3eb180ce"
+  integrity sha512-rZ2TnZBSyHKWLWfihkSv7M/37j1Bxub/gWuiCFITIusV51o0kZTbbzA6grORgg6pZ4IoNvkGzRujI9G/lFcFDQ==
+  dependencies:
+    "@svgdotjs/svg.js" "3.2.5"
+    roughjs "^4.5.2"
+    svgdom "^0.1.16"
+
 "@swc/helpers@0.5.23", "@swc/helpers@^0.5.12":
   version "0.5.23"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.23.tgz#19287d0d86d962b111376039a50c792902c9a86a"
@@ -4750,6 +4759,11 @@ graceful-fs@^4.2.9:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
+hachure-fill@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/hachure-fill/-/hachure-fill-0.5.2.tgz#d19bc4cc8750a5962b47fb1300557a85fcf934cc"
+  integrity sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==
+
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/has-bigints/-/has-bigints-1.0.2.tgz#0871bd3e3d51626f6ca0966668ba35d5602d6eaa"
@@ -7020,10 +7034,11 @@ rollup@^4.60.3:
     fsevents "~2.3.2"
 
 roughjs@^4.5.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/roughjs/-/roughjs-4.5.2.tgz#aab644dcb41e9a75826c8bd5a5b0a859095f2f10"
-  integrity sha512-2xSlLDKdsWyFxrveYWk9YQ/Y9UfK38EAMRNkYkMqYBJvPX8abCa9PN0x3w02H8Oa6/0bcZICJU+U95VumPqseg==
+  version "4.6.6"
+  resolved "https://registry.yarnpkg.com/roughjs/-/roughjs-4.6.6.tgz#1059f49a5e0c80dee541a005b20cc322b222158b"
+  integrity sha512-ZUz/69+SYpFN/g/lUlo2FXcIjRkSu3nDarreVdGGndHEBJ6cXPdKguS8JGxwj5HA5xIbVKSmLgr5b3AWxtRfvQ==
   dependencies:
+    hachure-fill "^0.5.2"
     path-data-parser "^0.1.0"
     points-on-curve "^0.2.0"
     points-on-path "^0.2.1"
@@ -7574,15 +7589,6 @@ svgdom@^0.1.16, svgdom@^0.1.29:
     fontkit "^2.0.4"
     image-size "^2.0.2"
     sax "^1.4.1"
-
-svguitar@^2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/svguitar/-/svguitar-2.9.0.tgz#175d671afa02205a38c9f097088f98d073b0a829"
-  integrity sha512-2z+U5c0pi6hobWkbrfcizj9PQLr4gFN3b4At7OK4P+kO+dC4aFZ1NjNmSgyUmvC2wRCO3nLAeiMd3gWejpDUNg==
-  dependencies:
-    "@svgdotjs/svg.js" "3.2.5"
-    roughjs "^4.5.2"
-    svgdom "^0.1.16"
 
 symbol-tree@^3.2.4:
   version "3.2.4"
