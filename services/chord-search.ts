@@ -14,11 +14,8 @@ export interface ChordSearchResult {
   name: string
   instrument: Instrument
   voicing: number
-  voicings: number
   chord: Chord
 }
-
-const maxResults = 24
 
 const strings: Record<Instrument, number> = { guitar: 6, ukulele: 4 }
 
@@ -27,29 +24,26 @@ function getChord(name: string, voicing: number, instrument: Instrument): Chord 
 }
 
 /**
- * Every voicing of the best match first, then the first voicing of the other chords that start
- * with the search.
+ * Every voicing of the chord the search names, e.g. "am7" or "CM7", and nothing while it doesn't
+ * name a chord.
  */
 export function findChords(query: string, instrument: Instrument): ChordSearchResult[] {
-  const [best, ...others] = searchChords(query, instrument, maxResults)
-  if (!best) {
+  const search = query.trim().replace(/^[a-g]/, (root) => root.toUpperCase())
+  let voicings: number
+  try {
+    voicings = chordVoicings(search, instrument)
+  } catch {
     return []
   }
+  // the chord's usual name, e.g. "Cmaj7" for "CM7"
+  const [name] = searchChords(search, instrument, 1)
 
-  const result = (name: string, voicing: number): ChordSearchResult => ({
+  return Array.from({ length: voicings }, (_, voicing) => ({
     name,
     instrument,
     voicing,
-    voicings: chordVoicings(name, instrument),
     chord: getChord(name, voicing, instrument)
-  })
-
-  return [
-    ...Array.from({ length: chordVoicings(best, instrument) }, (_, voicing) =>
-      result(best, voicing)
-    ),
-    ...others.map((name) => result(name, 0))
-  ].slice(0, maxResults)
+  }))
 }
 
 /**
