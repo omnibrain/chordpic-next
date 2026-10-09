@@ -47,6 +47,29 @@ function needsRefresh(token: string | undefined): boolean {
   }
 }
 
+function sessionCookies(
+  request: NextRequest,
+  values: { [ACCESS_TOKEN]: string; [REFRESH_TOKEN]: string },
+  maxAge: number,
+): SessionCookie[] {
+  // Match the existing Pages API auth handlers, including local development.
+  const hostname = request.nextUrl.hostname;
+  const secure =
+    hostname !== "localhost" &&
+    hostname !== "127.0.0.1" &&
+    !hostname.endsWith(".local");
+
+  return [ACCESS_TOKEN, REFRESH_TOKEN].map((name) => ({
+    name,
+    value: values[name as keyof typeof values],
+    maxAge,
+    path: "/",
+    httpOnly: true,
+    secure,
+    sameSite: "lax",
+  }));
+}
+
 /** Refresh in Proxy: Server Components can read cookies but cannot write them. */
 export async function refreshAccountSession(
   request: NextRequest,
@@ -58,25 +81,27 @@ export async function refreshAccountSession(
   const { data, error } = await createAuthClient().auth.api.refreshAccessToken(
     refreshToken,
   );
-  if (error || !data?.access_token || !data.refresh_token) return [];
 
-  // Match the existing Pages API auth handlers, including local development.
-  const hostname = request.nextUrl.hostname;
-  const secure =
-    hostname !== "localhost" &&
-    hostname !== "127.0.0.1" &&
-    !hostname.endsWith(".local");
-  const cookies: SessionCookie[] = [
-    { name: ACCESS_TOKEN, value: data.access_token },
-    { name: REFRESH_TOKEN, value: data.refresh_token },
-  ].map((cookie) => ({
-    ...cookie,
-    maxAge: ONE_YEAR,
-    path: "/",
-    httpOnly: true,
-    secure,
-    sameSite: "lax",
-  }));
+  if (error || !data?.access_token || !data.refresh_token) {
+    // A refresh token Supabase rejects stays invalid, so stop sending it and
+    // treat the visitor as signed out. Network and server errors keep it.
+    const status = (error as { status?: number } | null)?.status;
+    if (status === undefined || status < 400 || status >= 500) return [];
+
+    request.cookies.delete(ACCESS_TOKEN);
+    request.cookies.delete(REFRESH_TOKEN);
+    return sessionCookies(
+      request,
+      { [ACCESS_TOKEN]: "", [REFRESH_TOKEN]: "" },
+      0,
+    );
+  }
+
+  const cookies = sessionCookies(
+    request,
+    { [ACCESS_TOKEN]: data.access_token, [REFRESH_TOKEN]: data.refresh_token },
+    ONE_YEAR,
+  );
 
   // Forward these request headers to the page as well as setting the response
   // cookies, so this very request sees the refreshed session.
