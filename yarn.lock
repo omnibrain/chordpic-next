@@ -2226,6 +2226,11 @@
   resolved "https://registry.yarnpkg.com/@svgdotjs/svg.js/-/svg.js-3.2.5.tgz#fbbc56728b2b565f3ae3e3713301ff82abbb45bd"
   integrity sha512-/VNHWYhNu+BS7ktbYoVGrCmsXDh+chFMaONMwGNdIBcFHrWqk2jY8fNyr3DLdtQUIalvkPfM554ZSFa3dm3nxQ==
 
+"@svguitar/chords-plugin@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@svguitar/chords-plugin/-/chords-plugin-0.0.3.tgz#f927534671e5cf8e6454c63e35ce438bed9dd41c"
+  integrity sha512-vWlADZqp/mKujSpBHVviw92mp9JxPd+SxdhqwNPL8r46KI4Dq9XvuBU9Fy7uasJnM+MnyvKomVzvPYddNDMMdw==
+
 "@svguitar/core@^2.9.0":
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/@svguitar/core/-/core-2.9.0.tgz#b9daf381163e9862940a459d40fbd16d3eb180ce"
