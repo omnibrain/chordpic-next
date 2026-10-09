@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { T, useT } from "@magic-translate/react";
-import { Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +15,8 @@ type Instrument = import("@/services/chord-search").Instrument;
 
 const numStrings: Record<Instrument, number> = { guitar: 6, ukulele: 4 };
 
+const pageSize = 12;
+
 export const ChordSearch: React.FunctionComponent<{
   settings: ChartSettings;
   onChart(chart: Chart, name: string): void;
@@ -23,6 +25,7 @@ export const ChordSearch: React.FunctionComponent<{
   const [query, setQuery] = useState("");
   const [instrument, setInstrument] = useState<Instrument>("guitar");
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(0);
   // The chord database is loaded on first use, it isn't needed to draw a chord
   const [search, setSearch] = useState<ChordSearchModule>();
   const ref = useRef<HTMLDivElement>(null);
@@ -46,6 +49,9 @@ export const ChordSearch: React.FunctionComponent<{
     () => search?.findChords(deferredQuery, instrument) ?? [],
     [search, deferredQuery, instrument],
   );
+
+  const pages = Math.ceil(results.length / pageSize);
+  const pageResults = results.slice(page * pageSize, (page + 1) * pageSize);
 
   const onSelect = (result: (typeof results)[number]) => {
     if (search) {
@@ -74,6 +80,7 @@ export const ChordSearch: React.FunctionComponent<{
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
+              setPage(0);
               setOpen(true);
             }}
             onFocus={() => setOpen(true)}
@@ -91,7 +98,10 @@ export const ChordSearch: React.FunctionComponent<{
               size="sm"
               variant={instrument === value ? "default" : "ghost"}
               aria-pressed={instrument === value}
-              onClick={() => setInstrument(value)}
+              onClick={() => {
+                setInstrument(value);
+                setPage(0);
+              }}
             >
               {label}
             </Button>
@@ -99,20 +109,20 @@ export const ChordSearch: React.FunctionComponent<{
         </div>
       </div>
       {showResults && (
-        <div className="absolute z-20 max-h-[28rem] w-full overflow-y-auto rounded-md border bg-popover p-3 text-popover-foreground shadow-md">
+        <div className="absolute z-20 w-full rounded-md border bg-popover p-3 text-popover-foreground shadow-md">
           {results.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               <T>No chords found</T>
             </p>
           ) : (
-            <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-              {results.map((result) => (
+            <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+              {pageResults.map((result) => (
                 <li key={`${result.name}-${result.voicing}`}>
                   <button
                     type="button"
                     className="flex h-full w-full flex-col items-center justify-end gap-1 rounded-md border bg-white p-1 text-black hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label={`${result.name} (${result.voicing + 1}/${
-                      result.voicings
+                      results.length
                     })`}
                     onClick={() => onSelect(result)}
                   >
@@ -121,15 +131,37 @@ export const ChordSearch: React.FunctionComponent<{
                       strings={numStrings[result.instrument]}
                     />
                     <span className="text-sm font-medium">{result.name}</span>
-                    {result.voicings > 1 && (
-                      <span className="text-xs text-neutral-500">
-                        {result.voicing + 1}/{result.voicings}
-                      </span>
-                    )}
                   </button>
                 </li>
               ))}
             </ul>
+          )}
+          {pages > 1 && (
+            <div className="mt-3 flex items-center justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                aria-label={t("Previous page")}
+                disabled={page === 0}
+                onClick={() => setPage(page - 1)}
+              >
+                <ChevronLeft />
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {page + 1} / {pages}
+              </span>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                aria-label={t("Next page")}
+                disabled={page === pages - 1}
+                onClick={() => setPage(page + 1)}
+              >
+                <ChevronRight />
+              </Button>
+            </div>
           )}
         </div>
       )}
