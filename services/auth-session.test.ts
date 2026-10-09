@@ -88,14 +88,35 @@ it.each(["localhost", "127.0.0.1", "chordpic.local"])(
   },
 );
 
-it("does not overwrite cookies when Supabase rejects a refresh", async () => {
-  refreshAccessToken.mockResolvedValue({
-    data: null,
-    error: new Error("expired"),
-  });
+it.each([
+  ["a network failure", { message: "Network request failed" }],
+  ["a server error", { message: "Internal error", status: 500 }],
+])("keeps the cookies after %s", async (_, error) => {
+  refreshAccessToken.mockResolvedValue({ data: null, error });
   const request = requestWith(jwt(0));
   const originalCookies = request.headers.get("cookie");
 
   await expect(refreshAccountSession(request)).resolves.toEqual([]);
   expect(request.headers.get("cookie")).toBe(originalCookies);
+});
+
+it("signs the visitor out when Supabase rejects the refresh token", async () => {
+  refreshAccessToken.mockResolvedValue({
+    data: null,
+    error: { message: "Refresh token is not valid", status: 400 },
+  });
+  const request = requestWith(jwt(0));
+  const cookies = await refreshAccountSession(request);
+
+  expect(cookies).toEqual([
+    expect.objectContaining({ name: "sb-access-token", value: "", maxAge: 0 }),
+    expect.objectContaining({ name: "sb-refresh-token", value: "", maxAge: 0 }),
+  ]);
+  cookies.forEach((cookie) =>
+    expect(cookie).toMatchObject({ path: "/", httpOnly: true, secure: true }),
+  );
+  // the page rendered for this request sees no session either
+  expect(request.cookies.has("sb-access-token")).toBe(false);
+  expect(request.cookies.has("sb-refresh-token")).toBe(false);
+  expect(request.cookies.get("other")?.value).toBe("keep");
 });

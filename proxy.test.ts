@@ -83,3 +83,33 @@ it.each(["/account", "/de/account"])(
     );
   },
 );
+
+it("deletes the session cookies of a rejected refresh token on /account", async () => {
+  jest.mocked(refreshAccountSession).mockImplementationOnce(async (request) => {
+    request.cookies.delete("sb-access-token");
+    request.cookies.delete("sb-refresh-token");
+    return ["sb-access-token", "sb-refresh-token"].map((name) => ({
+      name,
+      value: "",
+      maxAge: 0,
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax" as const,
+    }));
+  });
+  const response = await proxy(
+    new NextRequest("https://chordpic.com/account", {
+      headers: {
+        cookie: "sb-access-token=old; sb-refresh-token=old; other=keep",
+      },
+    }),
+  );
+
+  const setCookie = response.headers.getSetCookie().join("\n");
+  expect(setCookie).toMatch(/sb-access-token=;.*Max-Age=0/);
+  expect(setCookie).toMatch(/sb-refresh-token=;.*Max-Age=0/);
+  const forwarded = response.headers.get("x-middleware-request-cookie") ?? "";
+  expect(forwarded).not.toContain("sb-access-token");
+  expect(forwarded).toContain("other=keep");
+});
