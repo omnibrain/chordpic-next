@@ -95,6 +95,7 @@ export const ChordSearch: React.FunctionComponent<{
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <motion.div
           layout
+          layoutDependency={open}
           role="search"
           className={cn(
             "pointer-events-auto overflow-hidden text-popover-foreground",
@@ -109,6 +110,7 @@ export const ChordSearch: React.FunctionComponent<{
               <motion.div
                 key="panel"
                 layout="position"
+                layoutDependency={open}
                 className="max-h-[calc(100dvh-7rem)] space-y-3 overflow-y-auto overscroll-contain p-3 pb-0"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -156,7 +158,8 @@ export const ChordSearch: React.FunctionComponent<{
                     <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
                       {pageResults.map((result, i) => (
                         <motion.li
-                          key={`${result.name}-${result.voicing}`}
+                          // Kept by position, so typing redraws the tiles instead of replacing them
+                          key={i}
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ ...spring, delay: i * 0.015 }}
@@ -213,6 +216,7 @@ export const ChordSearch: React.FunctionComponent<{
           </AnimatePresence>
           <motion.div
             layout="position"
+            layoutDependency={open}
             className={cn("relative", open && "p-3")}
           >
             <Search
