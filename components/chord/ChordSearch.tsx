@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import type { Chart, ChartSettings } from "@/domain/chart";
 import { useEscHandler } from "@/hooks/use-esc-handler";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
+import { useVisualViewport } from "@/hooks/use-visual-viewport";
 import { cn } from "@/lib/utils";
 import { ChordThumbnail } from "./ChordThumbnail";
 
@@ -50,6 +51,7 @@ export const ChordSearch: React.FunctionComponent<{
 
   useEscHandler(close);
   useScrollLock(open);
+  const viewport = useVisualViewport();
 
   useEffect(() => {
     if (open && !search) {
@@ -83,7 +85,8 @@ export const ChordSearch: React.FunctionComponent<{
           <motion.div
             key="backdrop"
             aria-hidden
-            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px]"
+            // reaches past the screen, as iOS moves the visible area around the keyboard
+            className="fixed inset-x-0 -bottom-[100vh] -top-[100vh] z-40 bg-black/30 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -92,7 +95,17 @@ export const ChordSearch: React.FunctionComponent<{
           />
         )}
       </AnimatePresence>
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <div
+        className={cn(
+          "pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center justify-end px-4 pb-[max(1rem,env(safe-area-inset-bottom))]",
+          open && "top-0 pt-4",
+        )}
+        style={
+          open && viewport
+            ? { top: viewport.top, bottom: "auto", height: viewport.height }
+            : undefined
+        }
+      >
         <motion.div
           layout
           layoutDependency={open}
@@ -100,7 +113,7 @@ export const ChordSearch: React.FunctionComponent<{
           className={cn(
             "pointer-events-auto overflow-hidden text-popover-foreground",
             open
-              ? "w-full max-w-3xl border bg-popover shadow-lg"
+              ? "flex max-h-full w-full max-w-3xl flex-col border bg-popover shadow-lg"
               : "w-72 max-w-full shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
           )}
           style={{ borderRadius: open ? 12 : 6 }}
@@ -111,7 +124,7 @@ export const ChordSearch: React.FunctionComponent<{
                 key="panel"
                 layout="position"
                 layoutDependency={open}
-                className="max-h-[calc(100dvh-7rem)] space-y-3 overflow-y-auto overscroll-contain p-3 pb-0"
+                className="min-h-0 space-y-3 overflow-y-auto overscroll-contain p-3 pb-0"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 12, transition: { duration: 0.1 } }}
@@ -217,7 +230,7 @@ export const ChordSearch: React.FunctionComponent<{
           <motion.div
             layout="position"
             layoutDependency={open}
-            className={cn("relative", open && "p-3")}
+            className={cn("relative shrink-0", open && "p-3")}
           >
             <Search
               className={cn(
