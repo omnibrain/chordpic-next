@@ -85,8 +85,12 @@ export const ChordSearch: React.FunctionComponent<{
           <motion.div
             key="backdrop"
             aria-hidden
-            // reaches past the screen, as iOS moves the visible area around the keyboard
-            className="fixed inset-x-0 -bottom-[100vh] -top-[100vh] z-40 bg-black/30 backdrop-blur-[2px]"
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px]"
+            style={
+              viewport
+                ? { top: viewport.top, bottom: "auto", height: viewport.height }
+                : undefined
+            }
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
