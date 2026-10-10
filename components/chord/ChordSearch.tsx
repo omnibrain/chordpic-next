@@ -223,7 +223,8 @@ export const ChordSearch: React.FunctionComponent<{
               aria-label={t("Find a chord")}
               className={cn(
                 "bg-background ps-9 [&::-webkit-search-cancel-button]:appearance-none",
-                !open && "shadow-lg",
+                !open &&
+                  "shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
               )}
               placeholder={
                 open ? t("Search a chord, e.g. Am7 or D/F#") : t("Find a chord")
