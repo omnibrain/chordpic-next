@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { T, useT } from "@magic-translate/react";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import type { Chart, ChartSettings } from "@/domain/chart";
 import { useEscHandler } from "@/hooks/use-esc-handler";
-import { useOutsideHandler } from "@/hooks/use-outside-click";
+import { cn } from "@/lib/utils";
 import { ChordThumbnail } from "./ChordThumbnail";
 
 type ChordSearchModule = typeof import("@/services/chord-search");
@@ -16,6 +15,8 @@ type Instrument = import("@/services/chord-search").Instrument;
 const numStrings: Record<Instrument, number> = { guitar: 6, ukulele: 4 };
 
 const pageSize = 12;
+
+const spring = { type: "spring", stiffness: 420, damping: 34, mass: 0.9 } as const;
 
 export const ChordSearch: React.FunctionComponent<{
   settings: ChartSettings;
@@ -28,15 +29,19 @@ export const ChordSearch: React.FunctionComponent<{
   const [page, setPage] = useState(0);
   // The chord database is loaded on first use, it isn't needed to draw a chord
   const [search, setSearch] = useState<ChordSearchModule>();
-  const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const instruments: { value: Instrument; label: string }[] = [
     { value: "guitar", label: t("Guitar") },
     { value: "ukulele", label: t("Ukulele") },
   ];
 
-  useOutsideHandler(ref, () => setOpen(false));
-  useEscHandler(() => setOpen(false));
+  const close = () => {
+    setOpen(false);
+    inputRef.current?.blur();
+  };
+
+  useEscHandler(close);
 
   useEffect(() => {
     if (open && !search) {
@@ -58,113 +63,166 @@ export const ChordSearch: React.FunctionComponent<{
       onChart(search.chartFromSearchResult(result, settings), result.name);
     }
     setQuery("");
-    setOpen(false);
+    close();
   };
 
-  const showResults = open && query.trim() !== "" && search !== undefined;
+  const showResults = query.trim() !== "" && search !== undefined;
 
   return (
-    <div ref={ref} className="relative mt-10 space-y-2">
-      <Label htmlFor="chord-search" className="block">
-        <T>Find a chord</T>
-      </Label>
-      <div className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            id="chord-search"
-            type="search"
-            autoComplete="off"
-            className="ps-9"
-            placeholder={t("Search a chord, e.g. Am7 or D/F#")}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setPage(0);
-              setOpen(true);
-            }}
-            onFocus={() => setOpen(true)}
+    <MotionConfig transition={spring} reducedMotion="user">
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="backdrop"
+            aria-hidden
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={close}
           />
-        </div>
-        <div
-          role="group"
-          aria-label={t("Instrument")}
-          className="flex rounded-md border border-input p-0.5"
+        )}
+      </AnimatePresence>
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <motion.div
+          layout
+          role="search"
+          className={cn(
+            "pointer-events-auto overflow-hidden border bg-popover text-popover-foreground shadow-lg",
+            open ? "w-full max-w-3xl" : "w-72 max-w-full",
+          )}
+          style={{ borderRadius: open ? 16 : 28 }}
         >
-          {instruments.map(({ value, label }) => (
-            <Button
-              key={value}
-              type="button"
-              size="sm"
-              variant={instrument === value ? "default" : "ghost"}
-              aria-pressed={instrument === value}
-              onClick={() => {
-                setInstrument(value);
-                setPage(0);
-              }}
-            >
-              {label}
-            </Button>
-          ))}
-        </div>
-      </div>
-      {showResults && (
-        <div className="absolute z-20 w-full rounded-md border bg-popover p-3 text-popover-foreground shadow-md">
-          {results.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              <T>No chords found</T>
-            </p>
-          ) : (
-            <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-              {pageResults.map((result) => (
-                <li key={`${result.name}-${result.voicing}`}>
-                  <button
-                    type="button"
-                    className="flex h-full w-full flex-col items-center justify-end gap-1 rounded-md border bg-white p-1 text-black hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label={`${result.name} (${result.voicing + 1}/${
-                      results.length
-                    })`}
-                    onClick={() => onSelect(result)}
+          <AnimatePresence initial={false} mode="popLayout">
+            {open && (
+              <motion.div
+                key="panel"
+                layout="position"
+                className="max-h-[calc(100dvh-7rem)] space-y-3 overflow-y-auto p-3 pb-0"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12, transition: { duration: 0.1 } }}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div
+                    role="group"
+                    aria-label={t("Instrument")}
+                    className="flex rounded-md border border-input p-0.5"
                   >
-                    <ChordThumbnail
-                      chord={result.chord}
-                      strings={numStrings[result.instrument]}
-                    />
-                    <span className="text-sm font-medium">{result.name}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-          {pages > 1 && (
-            <div className="mt-3 flex items-center justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                aria-label={t("Previous page")}
-                disabled={page === 0}
-                onClick={() => setPage(page - 1)}
-              >
-                <ChevronLeft />
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                {page + 1} / {pages}
-              </span>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                aria-label={t("Next page")}
-                disabled={page === pages - 1}
-                onClick={() => setPage(page + 1)}
-              >
-                <ChevronRight />
-              </Button>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+                    {instruments.map(({ value, label }) => (
+                      <Button
+                        key={value}
+                        type="button"
+                        size="sm"
+                        variant={instrument === value ? "default" : "ghost"}
+                        aria-pressed={instrument === value}
+                        onClick={() => {
+                          setInstrument(value);
+                          setPage(0);
+                          inputRef.current?.focus();
+                        }}
+                      >
+                        {label}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t("Close")}
+                    onClick={close}
+                  >
+                    <X />
+                  </Button>
+                </div>
+                {showResults &&
+                  (results.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      <T>No chords found</T>
+                    </p>
+                  ) : (
+                    <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+                      {pageResults.map((result, i) => (
+                        <motion.li
+                          key={`${result.name}-${result.voicing}`}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ ...spring, delay: i * 0.015 }}
+                        >
+                          <button
+                            type="button"
+                            className="flex h-full w-full flex-col items-center justify-end gap-1 rounded-md border bg-white p-1 text-black transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            aria-label={`${result.name} (${result.voicing + 1}/${
+                              results.length
+                            })`}
+                            onClick={() => onSelect(result)}
+                          >
+                            <ChordThumbnail
+                              chord={result.chord}
+                              strings={numStrings[result.instrument]}
+                            />
+                            <span className="text-sm font-medium">
+                              {result.name}
+                            </span>
+                          </button>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  ))}
+                {showResults && pages > 1 && (
+                  <div className="flex items-center justify-between">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      aria-label={t("Previous page")}
+                      disabled={page === 0}
+                      onClick={() => setPage(page - 1)}
+                    >
+                      <ChevronLeft />
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      {page + 1} / {pages}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      aria-label={t("Next page")}
+                      disabled={page === pages - 1}
+                      onClick={() => setPage(page + 1)}
+                    >
+                      <ChevronRight />
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <motion.div layout="position" className="relative p-2">
+            <Search className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              ref={inputRef}
+              type="search"
+              autoComplete="off"
+              aria-label={t("Find a chord")}
+              className="h-10 w-full rounded-full bg-transparent pe-3 ps-9 text-base outline-none placeholder:text-muted-foreground"
+              placeholder={
+                open ? t("Search a chord, e.g. Am7 or D/F#") : t("Find a chord")
+              }
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(0);
+                setOpen(true);
+              }}
+              onFocus={() => setOpen(true)}
+            />
+          </motion.div>
+        </motion.div>
+      </div>
+    </MotionConfig>
   );
 };
