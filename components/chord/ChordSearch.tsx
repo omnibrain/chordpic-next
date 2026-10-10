@@ -208,7 +208,7 @@ export const ChordSearch: React.FunctionComponent<{
               type="search"
               autoComplete="off"
               aria-label={t("Find a chord")}
-              className="h-10 w-full rounded-full bg-transparent pe-3 ps-9 text-base outline-none placeholder:text-muted-foreground"
+              className="h-10 w-full rounded-full bg-transparent pe-3 ps-9 text-base outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:appearance-none"
               placeholder={
                 open ? t("Search a chord, e.g. Am7 or D/F#") : t("Find a chord")
               }
