@@ -18,7 +18,12 @@ const numStrings: Record<Instrument, number> = { guitar: 6, ukulele: 4 };
 
 const pageSize = 12;
 
-const spring = { type: "spring", stiffness: 420, damping: 34, mass: 0.9 } as const;
+const spring = {
+  type: "spring",
+  stiffness: 420,
+  damping: 34,
+  mass: 0.9,
+} as const;
 
 export const ChordSearch: React.FunctionComponent<{
   settings: ChartSettings;
@@ -95,7 +100,7 @@ export const ChordSearch: React.FunctionComponent<{
             "pointer-events-auto overflow-hidden text-popover-foreground",
             open
               ? "w-full max-w-3xl border bg-popover shadow-lg"
-              : "w-72 max-w-full",
+              : "w-72 max-w-full shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
           )}
           style={{ borderRadius: open ? 12 : 6 }}
         >
@@ -159,9 +164,9 @@ export const ChordSearch: React.FunctionComponent<{
                           <button
                             type="button"
                             className="flex h-full w-full flex-col items-center justify-end gap-1 rounded-md border bg-white p-1 text-black transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            aria-label={`${result.name} (${result.voicing + 1}/${
-                              results.length
-                            })`}
+                            aria-label={`${result.name} (${
+                              result.voicing + 1
+                            }/${results.length})`}
                             onClick={() => onSelect(result)}
                           >
                             <ChordThumbnail
@@ -223,8 +228,6 @@ export const ChordSearch: React.FunctionComponent<{
               aria-label={t("Find a chord")}
               className={cn(
                 "bg-background ps-9 [&::-webkit-search-cancel-button]:appearance-none",
-                !open &&
-                  "shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
               )}
               placeholder={
                 open ? t("Search a chord, e.g. Am7 or D/F#") : t("Find a chord")
