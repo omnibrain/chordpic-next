@@ -104,6 +104,19 @@ export const ChordSearch: React.FunctionComponent<{
             onClick={close}
           />
         )}
+        {fullScreen && (
+          // Hides the page also behind the see-through iOS toolbars and
+          // keyboard, which sit outside the visible area the panel fills
+          <motion.div
+            key="cover"
+            aria-hidden
+            className="fixed inset-x-0 -bottom-[100vh] -top-[50vh] z-40 bg-popover"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
       </AnimatePresence>
       <div
         className={cn(
