@@ -4,8 +4,10 @@ import { T, useT } from "@magic-translate/react";
 import { ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import type { Chart, ChartSettings } from "@/domain/chart";
 import { useEscHandler } from "@/hooks/use-esc-handler";
+import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cn } from "@/lib/utils";
 import { ChordThumbnail } from "./ChordThumbnail";
 
@@ -42,6 +44,7 @@ export const ChordSearch: React.FunctionComponent<{
   };
 
   useEscHandler(close);
+  useScrollLock(open);
 
   useEffect(() => {
     if (open && !search) {
@@ -89,17 +92,19 @@ export const ChordSearch: React.FunctionComponent<{
           layout
           role="search"
           className={cn(
-            "pointer-events-auto overflow-hidden border bg-popover text-popover-foreground shadow-lg",
-            open ? "w-full max-w-3xl" : "w-72 max-w-full",
+            "pointer-events-auto overflow-hidden text-popover-foreground",
+            open
+              ? "w-full max-w-3xl border bg-popover shadow-lg"
+              : "w-72 max-w-full",
           )}
-          style={{ borderRadius: open ? 16 : 28 }}
+          style={{ borderRadius: open ? 12 : 6 }}
         >
           <AnimatePresence initial={false} mode="popLayout">
             {open && (
               <motion.div
                 key="panel"
                 layout="position"
-                className="max-h-[calc(100dvh-7rem)] space-y-3 overflow-y-auto p-3 pb-0"
+                className="max-h-[calc(100dvh-7rem)] space-y-3 overflow-y-auto overscroll-contain p-3 pb-0"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 12, transition: { duration: 0.1 } }}
@@ -201,14 +206,25 @@ export const ChordSearch: React.FunctionComponent<{
               </motion.div>
             )}
           </AnimatePresence>
-          <motion.div layout="position" className="relative p-2">
-            <Search className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
+          <motion.div
+            layout="position"
+            className={cn("relative", open && "p-3")}
+          >
+            <Search
+              className={cn(
+                "pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground",
+                open ? "start-6" : "start-3",
+              )}
+            />
+            <Input
               ref={inputRef}
               type="search"
               autoComplete="off"
               aria-label={t("Find a chord")}
-              className="h-10 w-full rounded-full bg-transparent pe-3 ps-9 text-base outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:appearance-none"
+              className={cn(
+                "bg-background ps-9 [&::-webkit-search-cancel-button]:appearance-none",
+                !open && "shadow-lg",
+              )}
               placeholder={
                 open ? t("Search a chord, e.g. Am7 or D/F#") : t("Find a chord")
               }
