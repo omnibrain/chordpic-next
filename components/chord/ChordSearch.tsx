@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Chart, ChartSettings } from "@/domain/chart";
 import { useEscHandler } from "@/hooks/use-esc-handler";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { useVisualViewport } from "@/hooks/use-visual-viewport";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,11 @@ export const ChordSearch: React.FunctionComponent<{
   useEscHandler(close);
   useScrollLock(open);
   const viewport = useVisualViewport();
+  // Phones get the whole screen, which is simpler around the iOS keyboard
+  const tabletUp = useMediaQuery("(min-width: 768px)");
+  const fullScreen = open && !tabletUp;
+  const keyboardOpen =
+    viewport !== undefined && viewport.height < window.innerHeight - 100;
 
   useEffect(() => {
     if (open && !search) {
@@ -81,7 +87,7 @@ export const ChordSearch: React.FunctionComponent<{
   return (
     <MotionConfig transition={spring} reducedMotion="user">
       <AnimatePresence>
-        {open && (
+        {open && !fullScreen && (
           <motion.div
             key="backdrop"
             aria-hidden
@@ -103,6 +109,7 @@ export const ChordSearch: React.FunctionComponent<{
         className={cn(
           "pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center justify-end px-4 pb-[max(1rem,env(safe-area-inset-bottom))]",
           open && "top-0 pt-4",
+          fullScreen && "p-0",
         )}
         style={
           open && viewport
@@ -116,11 +123,13 @@ export const ChordSearch: React.FunctionComponent<{
           role="search"
           className={cn(
             "pointer-events-auto overflow-hidden text-popover-foreground",
-            open
+            fullScreen
+              ? "flex h-full w-full flex-col bg-popover"
+              : open
               ? "flex max-h-full w-full max-w-3xl flex-col border bg-popover shadow-lg"
               : "w-72 max-w-full shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
           )}
-          style={{ borderRadius: open ? 12 : 6 }}
+          style={{ borderRadius: fullScreen ? 0 : open ? 12 : 6 }}
         >
           <AnimatePresence initial={false} mode="popLayout">
             {open && (
@@ -128,7 +137,11 @@ export const ChordSearch: React.FunctionComponent<{
                 key="panel"
                 layout="position"
                 layoutDependency={open}
-                className="min-h-0 space-y-3 overflow-y-auto overscroll-contain p-3 pb-0"
+                className={cn(
+                  "min-h-0 space-y-3 overflow-y-auto overscroll-contain p-3 pb-0",
+                  fullScreen &&
+                    "flex-1 pt-[max(0.75rem,env(safe-area-inset-top))]",
+                )}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 12, transition: { duration: 0.1 } }}
@@ -234,7 +247,13 @@ export const ChordSearch: React.FunctionComponent<{
           <motion.div
             layout="position"
             layoutDependency={open}
-            className={cn("relative shrink-0", open && "p-3")}
+            className={cn(
+              "relative shrink-0",
+              open && "p-3",
+              fullScreen &&
+                !keyboardOpen &&
+                "pb-[max(0.75rem,env(safe-area-inset-bottom))]",
+            )}
           >
             <Search
               className={cn(
