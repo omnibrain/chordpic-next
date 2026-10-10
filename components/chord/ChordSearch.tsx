@@ -53,11 +53,10 @@ export const ChordSearch: React.FunctionComponent<{
   useEscHandler(close);
   useScrollLock(open);
   const viewport = useVisualViewport();
-  // Phones get the whole screen, which is simpler around the iOS keyboard
+  // Phones get the whole screen with the search field on top, so the iOS
+  // keyboard only ever covers results
   const tabletUp = useMediaQuery("(min-width: 768px)");
   const fullScreen = open && !tabletUp;
-  const keyboardOpen =
-    viewport !== undefined && viewport.height < window.innerHeight - 100;
 
   useEffect(() => {
     if (open && !search) {
@@ -125,7 +124,7 @@ export const ChordSearch: React.FunctionComponent<{
           fullScreen && "p-0",
         )}
         style={
-          open && viewport
+          open && !fullScreen && viewport
             ? { top: viewport.top, bottom: "auto", height: viewport.height }
             : undefined
         }
@@ -147,51 +146,67 @@ export const ChordSearch: React.FunctionComponent<{
           <AnimatePresence initial={false} mode="popLayout">
             {open && (
               <motion.div
-                key="panel"
+                key="header"
                 layout="position"
                 layoutDependency={open}
                 className={cn(
-                  "min-h-0 space-y-3 overflow-y-auto overscroll-contain p-3 pb-0",
-                  fullScreen &&
-                    "flex-1 pt-[max(0.75rem,env(safe-area-inset-top))]",
+                  "order-1 flex shrink-0 items-center justify-between gap-2 p-3 pb-0",
+                  fullScreen && "pt-[max(0.75rem,env(safe-area-inset-top))]",
                 )}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 12, transition: { duration: 0.1 } }}
               >
-                <div className="flex items-center justify-between gap-2">
-                  <div
-                    role="group"
-                    aria-label={t("Instrument")}
-                    className="flex rounded-md border border-input p-0.5"
-                  >
-                    {instruments.map(({ value, label }) => (
-                      <Button
-                        key={value}
-                        type="button"
-                        size="sm"
-                        variant={instrument === value ? "default" : "ghost"}
-                        aria-pressed={instrument === value}
-                        onClick={() => {
-                          setInstrument(value);
-                          setPage(0);
-                          inputRef.current?.focus();
-                        }}
-                      >
-                        {label}
-                      </Button>
-                    ))}
-                  </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t("Close")}
-                    onClick={close}
-                  >
-                    <X />
-                  </Button>
+                <div
+                  role="group"
+                  aria-label={t("Instrument")}
+                  className="flex rounded-md border border-input p-0.5"
+                >
+                  {instruments.map(({ value, label }) => (
+                    <Button
+                      key={value}
+                      type="button"
+                      size="sm"
+                      variant={instrument === value ? "default" : "ghost"}
+                      aria-pressed={instrument === value}
+                      onClick={() => {
+                        setInstrument(value);
+                        setPage(0);
+                        inputRef.current?.focus();
+                      }}
+                    >
+                      {label}
+                    </Button>
+                  ))}
                 </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label={t("Close")}
+                  onClick={close}
+                >
+                  <X />
+                </Button>
+              </motion.div>
+            )}
+            {open && (
+              <motion.div
+                key="results"
+                layout="position"
+                layoutDependency={open}
+                className={cn(
+                  "min-h-0 space-y-3 overflow-y-auto overscroll-contain px-3",
+                  fullScreen
+                    ? "order-3 flex-1 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+                    : "order-2 pt-3",
+                )}
+                // Scrolling the results puts the keyboard away to show more of them
+                onTouchMove={() => fullScreen && inputRef.current?.blur()}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12, transition: { duration: 0.1 } }}
+              >
                 {showResults &&
                   (results.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
@@ -263,9 +278,7 @@ export const ChordSearch: React.FunctionComponent<{
             className={cn(
               "relative shrink-0",
               open && "p-3",
-              fullScreen &&
-                !keyboardOpen &&
-                "pb-[max(0.75rem,env(safe-area-inset-bottom))]",
+              fullScreen ? "order-2" : "order-3",
             )}
           >
             <Search
