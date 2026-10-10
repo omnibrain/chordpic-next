@@ -20,7 +20,7 @@ export const useScrollLock = (locked: boolean) => {
 
     return () => {
       body.style.cssText = previous;
-      window.scrollTo(0, scrollY);
+      window.scrollTo({ top: scrollY, behavior: "instant" });
     };
   }, [locked]);
 };

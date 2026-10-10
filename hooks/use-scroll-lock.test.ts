@@ -25,7 +25,7 @@ it("pins the body on touch devices and restores the scroll position", () => {
   rerender({ locked: false });
 
   expect(document.body.style.position).toBe("");
-  expect(window.scrollTo).toHaveBeenCalledWith(0, 300);
+  expect(window.scrollTo).toHaveBeenCalledWith({ top: 300, behavior: "instant" });
 });
 
 it("leaves the page alone with a mouse", () => {
