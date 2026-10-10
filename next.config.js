@@ -13,7 +13,7 @@ const moduleExports = {
   outputFileTracingIncludes: {
     "/**": [
       "./assets/fonts/*.ttf",
-      "./node_modules/svguitar/dist/svguitar.umd.js",
+      "./node_modules/@svguitar/core/dist/svguitar.umd.js",
     ],
   },
   async rewrites() {

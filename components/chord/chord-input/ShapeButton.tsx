@@ -1,5 +1,5 @@
 import React from "react";
-import { Shape } from "svguitar";
+import { Shape } from "@svguitar/core";
 
 function ngonPath(x: number, y: number, size: number, edges: number): string {
   let i: number;

@@ -2,7 +2,7 @@ import * as React from "react";
 import { ClickCellContainer } from "./ClickCellContainer";
 import { IChordInputSettings } from "../ChordEditor";
 import { ShapeButton } from "./ShapeButton";
-import { Shape } from "svguitar";
+import { Shape } from "@svguitar/core";
 import { ChordMatrix } from "../../../services/chord-matrix";
 import { EditMode } from "../../../domain/edit-mode";
 
