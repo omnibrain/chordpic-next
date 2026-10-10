@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { SVGuitarChord, type Chord } from "@svguitar/core";
 
 export const ChordThumbnail: React.FunctionComponent<{
@@ -8,7 +8,8 @@ export const ChordThumbnail: React.FunctionComponent<{
 }> = ({ chord, strings }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // Drawn before paint so a tile never shows up empty
+  useLayoutEffect(() => {
     if (!ref.current) {
       return;
     }
