@@ -16,8 +16,6 @@ import { ChordThumbnail } from "./ChordThumbnail";
 type ChordSearchModule = typeof import("@/services/chord-search");
 type Instrument = import("@/services/chord-search").Instrument;
 
-const numStrings: Record<Instrument, number> = { guitar: 6, ukulele: 4 };
-
 const pageSize = 12;
 
 const spring = {
@@ -72,7 +70,15 @@ export const ChordSearch: React.FunctionComponent<{
   );
 
   const pages = Math.ceil(results.length / pageSize);
-  const pageResults = results.slice(page * pageSize, (page + 1) * pageSize);
+  // Drawn in the style of the current chart
+  const pageCharts = React.useMemo(
+    () =>
+      results.slice(page * pageSize, (page + 1) * pageSize).map((result) => ({
+        result,
+        chart: search!.chartFromSearchResult(result, settings),
+      })),
+    [results, page, search, settings],
+  );
 
   const onSelect = (result: (typeof results)[number]) => {
     if (search) {
@@ -186,7 +192,7 @@ export const ChordSearch: React.FunctionComponent<{
                     </p>
                   ) : (
                     <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-                      {pageResults.map((result, i) => (
+                      {pageCharts.map(({ result, chart }, i) => (
                         <motion.li
                           // Kept by position, so typing redraws the tiles instead of replacing them
                           key={i}
@@ -202,10 +208,7 @@ export const ChordSearch: React.FunctionComponent<{
                             }/${results.length})`}
                             onClick={() => onSelect(result)}
                           >
-                            <ChordThumbnail
-                              chord={result.chord}
-                              strings={numStrings[result.instrument]}
-                            />
+                            <ChordThumbnail chart={chart} />
                             <span className="text-sm font-medium">
                               {result.name}
                             </span>
