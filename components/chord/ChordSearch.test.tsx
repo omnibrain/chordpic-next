@@ -1,6 +1,9 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MotionGlobalConfig } from "motion/react";
 import { ChordSearch } from "./ChordSearch";
+
+MotionGlobalConfig.skipAnimations = true;
 
 jest.mock("@magic-translate/react", () => ({
   T: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -40,7 +43,9 @@ it("shows the voicings of the chord and replaces the chart with the selected one
   );
   // the search is done
   expect((input as HTMLInputElement).value).toBe("");
-  expect(screen.queryByRole("button", { name: /^Am / })).toBeNull();
+  await waitFor(() =>
+    expect(screen.queryByRole("button", { name: /^Am / })).toBeNull(),
+  );
 });
 
 it("shows the voicings in pages of 12", async () => {
@@ -74,6 +79,7 @@ it("searches ukulele chords", async () => {
   const onChart = jest.fn();
   render(<ChordSearch settings={settings} onChart={onChart} />);
 
+  fireEvent.focus(screen.getByRole("searchbox"));
   fireEvent.click(screen.getByRole("button", { name: "Ukulele" }));
   fireEvent.change(screen.getByRole("searchbox"), { target: { value: "C" } });
   fireEvent.click(await screen.findByRole("button", { name: /^C \(1\// }));
@@ -105,12 +111,20 @@ it("says when no chord matches", async () => {
   expect(await screen.findByText("No chords found")).not.toBeNull();
 });
 
-it("closes the results with escape", async () => {
+it("opens when the search field is focused and closes with escape", async () => {
   render(<ChordSearch settings={settings} onChart={jest.fn()} />);
+
+  expect(screen.queryByRole("button", { name: "Ukulele" })).toBeNull();
+  fireEvent.focus(screen.getByRole("searchbox"));
+  expect(screen.getByRole("button", { name: "Ukulele" })).not.toBeNull();
 
   fireEvent.change(screen.getByRole("searchbox"), { target: { value: "G" } });
   await screen.findByRole("button", { name: /^G \(1\// });
   fireEvent.keyDown(document, { keyCode: 27 });
 
-  expect(screen.queryByRole("button", { name: /^G \(1\// })).toBeNull();
+  await waitFor(() =>
+    expect(screen.queryByRole("button", { name: /^G \(1\// })).toBeNull(),
+  );
+  // the query stays for the next time
+  expect((screen.getByRole("searchbox") as HTMLInputElement).value).toBe("G");
 });
