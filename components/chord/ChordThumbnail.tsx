@@ -21,5 +21,12 @@ export const ChordThumbnail: React.FunctionComponent<{
       .draw();
   }, [chord, strings]);
 
-  return <div ref={ref} className="w-full" aria-hidden />;
+  return (
+    <div
+      ref={ref}
+      // narrower diagrams with fewer strings, so a ukulele isn't much taller than a guitar
+      className={strings < 6 ? "mx-auto w-[65%]" : "w-full"}
+      aria-hidden
+    />
+  );
 };
