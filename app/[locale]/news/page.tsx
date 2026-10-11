@@ -5,6 +5,7 @@ import {
 
 import Image from "next/image";
 
+import chordSearch from "@/public/images/chord-search.png";
 import barreAndFingerSameFret from "@/public/images/barre-and-finger-same-fret.png";
 import exampleHorizontalChord from "@/public/images/example-horizontal-chord.png";
 import exampleLeftHandedChord from "@/public/images/example-left-handed-chord.png";
@@ -39,6 +40,7 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
 
   // Batch attribute translations; the body uses async Server Components.
   const [
+    chordSearchAlt,
     fretMarkersAlt,
     slidersAlt,
     horizontalChordAlt,
@@ -47,6 +49,7 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
     barreAlt,
     leftHandedAlt,
   ] = await Promise.all([
+    t("Search results for the chord Am7"),
     t("Chord diagram with fret markers"),
     t("Sliders with numerical values"),
     t("Example horizontal chord"),
@@ -78,6 +81,34 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
             write us an email
           </a>
           , we would love to hear your story and tell other people about it!
+        </T>
+      </p>
+
+      <h2 id="chord-search">
+        <T>Find any chord by its name 🔎</T>
+      </h2>
+      <p>
+        <em>
+          <T>October 11th, 2026</T>
+        </em>
+      </p>
+      <p>
+        <T>
+          No more placing every finger by hand: type a chord name like Am7,
+          Cmaj9 or D/F# into the new search and pick one of its voicings. It
+          opens in the editor right away, title included, ready to customize and
+          download.
+        </T>
+      </p>
+      <div className="flex justify-center">
+        <Image src={chordSearch} alt={chordSearchAlt} />
+      </div>
+      <p>
+        <T>
+          There are over 9,000 guitar chords and 7,000 ukulele chords to choose
+          from. On a computer, the search sits at the bottom of the screen and
+          opens with ⌘K (Ctrl K on Windows). On your phone, you&apos;ll find it
+          right above the title.
         </T>
       </p>
 
