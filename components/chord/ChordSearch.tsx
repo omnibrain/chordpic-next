@@ -7,8 +7,9 @@ import {
   useSyncExternalStore,
 } from "react";
 import { T, useT } from "@magic-translate/react";
-import { ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, Search, X } from "lucide-react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import Link from "@/components/LocalizedLink";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Chart, ChartSettings } from "@/domain/chart";
@@ -17,6 +18,9 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { useVisualViewport } from "@/hooks/use-visual-viewport";
 import { cn } from "@/lib/utils";
+import { GA } from "@/services/google-analytics";
+import { SubscriptionType } from "@/types";
+import { useSubscription } from "@/utils/useSubscription";
 import { ChordThumbnail } from "./ChordThumbnail";
 
 type ChordSearchModule = typeof import("@/services/chord-search");
@@ -26,6 +30,9 @@ type Result = import("@/services/chord-search").ChordSearchResult;
 const numStrings: Record<Instrument, number> = { guitar: 6, ukulele: 4 };
 
 const pageSize = 12;
+
+/** Voicings of a chord everyone can use, the others need Pro */
+const freeVoicings = 2;
 
 const spring = {
   type: "spring",
@@ -321,6 +328,9 @@ const InstrumentToggle: React.FunctionComponent<{
   );
 };
 
+const tileClassName =
+  "flex h-full w-full flex-col items-center justify-end gap-1 rounded-md border bg-white p-1 text-black transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
 const SearchResults: React.FunctionComponent<{
   results: Result[];
   page: number;
@@ -328,8 +338,10 @@ const SearchResults: React.FunctionComponent<{
   onSelect(result: Result): void;
 }> = ({ results, page, onPage, onSelect }) => {
   const t = useT();
-  const pages = Math.ceil(results.length / pageSize);
-  const pageResults = results.slice(page * pageSize, (page + 1) * pageSize);
+  const locked = useSubscription() !== SubscriptionType.PRO;
+  const pages = locked ? 1 : Math.ceil(results.length / pageSize);
+  const first = locked ? 0 : page * pageSize;
+  const pageResults = results.slice(first, first + pageSize);
 
   if (results.length === 0) {
     return (
@@ -350,23 +362,60 @@ const SearchResults: React.FunctionComponent<{
             animate={{ opacity: 1, scale: 1 }}
             transition={{ ...spring, delay: i * 0.015 }}
           >
-            <button
-              type="button"
-              className="flex h-full w-full flex-col items-center justify-end gap-1 rounded-md border bg-white p-1 text-black transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label={`${result.name} (${result.voicing + 1}/${
-                results.length
-              })`}
-              onClick={() => onSelect(result)}
-            >
-              <ChordThumbnail
-                chord={result.chord}
-                strings={numStrings[result.instrument]}
-              />
-              <span className="text-sm font-medium">{result.name}</span>
-            </button>
+            {locked && first + i >= freeVoicings ? (
+              <Link
+                href="/pricing"
+                className={cn(tileClassName, "relative")}
+                aria-label={`${result.name} (${result.voicing + 1}/${
+                  results.length
+                }), ${t("Pro only")}`}
+                onClick={() =>
+                  GA()?.("event", "search_pro_tile", { chord: result.name })
+                }
+              >
+                <div className="w-full blur-[3px]" aria-hidden>
+                  <ChordThumbnail
+                    chord={result.chord}
+                    strings={numStrings[result.instrument]}
+                  />
+                </div>
+                <span className="text-sm font-medium blur-[2px]" aria-hidden>
+                  {result.name}
+                </span>
+                <Lock className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" />
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className={tileClassName}
+                aria-label={`${result.name} (${result.voicing + 1}/${
+                  results.length
+                })`}
+                onClick={() => onSelect(result)}
+              >
+                <ChordThumbnail
+                  chord={result.chord}
+                  strings={numStrings[result.instrument]}
+                />
+                <span className="text-sm font-medium">{result.name}</span>
+              </button>
+            )}
           </motion.li>
         ))}
       </ul>
+      {locked && results.length > freeVoicings && (
+        <div className="flex justify-center">
+          <Button asChild>
+            <Link
+              href="/pricing"
+              onClick={() => GA()?.("event", "search_pro_cta")}
+            >
+              <Lock />
+              <T>Get Pro to see all voicings</T>
+            </Link>
+          </Button>
+        </div>
+      )}
       {pages > 1 && (
         <div className="flex items-center justify-between">
           <Button
