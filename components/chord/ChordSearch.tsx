@@ -1,5 +1,11 @@
 import * as React from "react";
-import { useDeferredValue, useRef, useState } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { T, useT } from "@magic-translate/react";
 import { ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
@@ -28,6 +34,8 @@ const spring = {
   mass: 0.9,
 } as const;
 
+const isMac = () => /Mac|iPhone|iPad/.test(navigator.platform);
+
 const inputClassName =
   "bg-background ps-9 [&::-webkit-search-cancel-button]:appearance-none";
 
@@ -48,6 +56,12 @@ export const ChordSearch: React.FunctionComponent<{
   // The chord database is loaded on first use, it isn't needed to draw a chord
   const [search, setSearch] = useState<ChordSearchModule>();
   const floatingInputRef = useRef<HTMLInputElement>(null);
+  const pageInputRef = useRef<HTMLInputElement>(null);
+  const mac = useSyncExternalStore(
+    () => () => {},
+    isMac,
+    () => false,
+  );
 
   const loadSearch = () => {
     if (!search) {
@@ -65,6 +79,18 @@ export const ChordSearch: React.FunctionComponent<{
   const viewport = useVisualViewport();
   // Only decides where results go, which only exist after typing
   const tabletUp = useMediaQuery("(min-width: 768px)");
+
+  // ⌘K / Ctrl+K jumps to the search
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        (tabletUp ? floatingInputRef : pageInputRef).current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [tabletUp]);
 
   const deferredQuery = useDeferredValue(query);
   const results = React.useMemo(
@@ -111,6 +137,7 @@ export const ChordSearch: React.FunctionComponent<{
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
+              ref={pageInputRef}
               id="chord-search"
               type="search"
               autoComplete="off"
@@ -232,7 +259,8 @@ export const ChordSearch: React.FunctionComponent<{
                 type="search"
                 autoComplete="off"
                 aria-label={t("Find a chord")}
-                className={inputClassName}
+                aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}
+                className={cn(inputClassName, !open && "pe-14")}
                 placeholder={
                   open
                     ? t("Search a chord, e.g. Am7 or D/F#")
@@ -248,6 +276,11 @@ export const ChordSearch: React.FunctionComponent<{
                   setOpen(true);
                 }}
               />
+              {!open && (
+                <kbd className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 rounded border bg-muted px-1.5 font-sans text-xs text-muted-foreground [@media(pointer:coarse)]:hidden">
+                  {mac ? "⌘K" : "Ctrl K"}
+                </kbd>
+              )}
             </motion.div>
           </motion.div>
         </div>
