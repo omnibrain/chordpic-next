@@ -1,6 +1,7 @@
 import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MotionGlobalConfig } from "motion/react";
+import { SubscriptionType } from "../../types";
 import { ChordSearch } from "./ChordSearch";
 
 MotionGlobalConfig.skipAnimations = true;
@@ -8,6 +9,19 @@ MotionGlobalConfig.skipAnimations = true;
 jest.mock("@magic-translate/react", () => ({
   T: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   useT: () => (s: string) => s,
+}));
+const mockSubscription = jest.fn();
+jest.mock("../../utils/useSubscription", () => ({
+  useSubscription: () => mockSubscription(),
+}));
+jest.mock("../LocalizedLink", () => ({
+  __esModule: true,
+  default: ({
+    href,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a href={href} {...props} />
+  ),
 }));
 // Drawing the diagrams is up to SVGuitar.
 jest.mock("./ChordThumbnail", () => ({ ChordThumbnail: () => null }));
@@ -17,6 +31,10 @@ const settings = { strings: 6, frets: 5, title: "Old", color: "#f00" };
 // the field in the page on phones and the floating one on larger screens
 const pageField = () => screen.getAllByRole("searchbox")[0];
 const floatingField = () => screen.getAllByRole("searchbox")[1];
+
+beforeEach(() => {
+  mockSubscription.mockReturnValue(SubscriptionType.PRO);
+});
 
 afterEach(() => {
   delete (window as { matchMedia?: unknown }).matchMedia;
@@ -157,4 +175,29 @@ it("opens the search with Ctrl+K and shows the shortcut", () => {
 
   expect(document.activeElement).toBe(floatingField());
   expect(screen.getByRole("button", { name: "Close" })).not.toBeNull();
+});
+
+it("shows the first two voicings without Pro and blurs the others", async () => {
+  mockSubscription.mockReturnValue(SubscriptionType.FREE);
+  const onChart = jest.fn();
+  render(<ChordSearch settings={settings} onChart={onChart} />);
+
+  // C has more than 12 voicings
+  fireEvent.change(pageField(), { target: { value: "C" } });
+  await screen.findByRole("button", { name: /^C \(1\// });
+
+  expect(screen.getAllByRole("button", { name: /^C \(/ })).toHaveLength(2);
+  const locked = screen.getAllByRole("link", {
+    name: /^C \(\d+\/\d+\), Pro only$/,
+  });
+  expect(locked).toHaveLength(10);
+  expect(locked[0].getAttribute("href")).toBe("/pricing");
+  expect(
+    screen.getByRole("link", { name: "Get Pro to see all voicings" }),
+  ).not.toBeNull();
+  // the rest isn't a page away either
+  expect(screen.queryByRole("button", { name: "Next page" })).toBeNull();
+
+  fireEvent.click(screen.getByRole("button", { name: /^C \(2\// }));
+  expect(onChart).toHaveBeenCalled();
 });
