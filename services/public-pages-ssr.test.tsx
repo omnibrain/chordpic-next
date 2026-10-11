@@ -108,8 +108,8 @@ it("renders the landing headline and lead in the server response", async () => {
   const html = await render(<LandingIntro locale="es" />);
   expect(html).toContain("es:Guitar Chord Diagram Creator");
   expect(html).toContain("es:It&#x27;s never been easier");
-  expect(html).toContain("es:Get the Pro version (no ads, no watermark)");
-  expect(html).toContain("es:Get the Pro version (no watermark)");
+  expect(html).toContain("es:Get the Pro version (no ads, no watermark, all chord voicings)");
+  expect(html).toContain("es:Get the Pro version (no watermark, all chord voicings)");
   expect(html).toContain('href="#editor"');
   expect(html).toContain('href="#result"');
   expect(html).toContain('/pricing"');

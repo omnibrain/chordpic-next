@@ -44,10 +44,12 @@ export const LandingIntro = ({ locale }: { locale: string }) => {
           className="font-medium underline underline-offset-4"
         >
           <span className="[.ads-off_&]:hidden">
-            <T>Get the Pro version (no ads, no watermark)</T>
+            <T>
+              Get the Pro version (no ads, no watermark, all chord voicings)
+            </T>
           </span>
           <span className="hidden [.ads-off_&]:inline">
-            <T>Get the Pro version (no watermark)</T>
+            <T>Get the Pro version (no watermark, all chord voicings)</T>
           </span>
         </NextLink>
       </p>
