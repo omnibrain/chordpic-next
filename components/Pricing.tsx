@@ -30,14 +30,17 @@ export default async function Pricing({ products, locale }: Props) {
           <T>
             Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
             <strong> without watermark</strong>,{" "}
-            <strong>handdrawn style</strong> and <strong>no ads</strong>.
+            <strong>handdrawn style</strong>,{" "}
+            <strong>all voicings in the chord search</strong> and{" "}
+            <strong>no ads</strong>.
           </T>
         </span>
         <span className="hidden [.ads-off_&]:inline">
           <T>
             Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
-            <strong> without watermark</strong> and{" "}
-            <strong>handdrawn style</strong>.
+            <strong> without watermark</strong>,{" "}
+            <strong>handdrawn style</strong> and{" "}
+            <strong>all voicings in the chord search</strong>.
           </T>
         </span>
       </p>
