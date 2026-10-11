@@ -101,7 +101,7 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
         </T>
       </p>
       <div className="flex justify-center">
-        <Image src={chordSearch} alt={chordSearchAlt} />
+        <Image src={chordSearch} alt={chordSearchAlt} width={768} />
       </div>
       <p>
         <T>
