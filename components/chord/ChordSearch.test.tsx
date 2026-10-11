@@ -143,3 +143,18 @@ it("opens the floating search on larger screens and closes it with escape", asyn
   // the query stays for the next time
   expect((floatingField() as HTMLInputElement).value).toBe("G");
 });
+
+it("opens the search with Ctrl+K and shows the shortcut", () => {
+  window.matchMedia = jest.fn().mockReturnValue({
+    matches: true,
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+  }) as unknown as typeof window.matchMedia;
+  render(<ChordSearch settings={settings} onChart={jest.fn()} />);
+
+  expect(screen.getByText("Ctrl K")).not.toBeNull();
+  fireEvent.keyDown(document, { key: "k", ctrlKey: true });
+
+  expect(document.activeElement).toBe(floatingField());
+  expect(screen.getByRole("button", { name: "Close" })).not.toBeNull();
+});
