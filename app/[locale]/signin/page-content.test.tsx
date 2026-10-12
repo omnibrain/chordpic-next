@@ -74,3 +74,20 @@ it("goes back to the form to try another address", async () => {
   expect(email.value).toBe("ross@example.com");
   expect(screen.queryByText("Magic link sent!")).toBeNull();
 });
+
+it("hands off to Google and shows its error if the redirect can't start", async () => {
+  mockSignIn.mockResolvedValue({
+    error: { message: "Provider is not enabled" },
+  });
+  render(<SignIn />);
+
+  fireEvent.click(
+    screen.getByRole("button", { name: /continue with google/i }),
+  );
+
+  expect(await screen.findByText("Provider is not enabled")).not.toBeNull();
+  expect(mockSignIn).toHaveBeenCalledWith(
+    { provider: "google" },
+    expect.objectContaining({ redirectTo: expect.any(String) }),
+  );
+});

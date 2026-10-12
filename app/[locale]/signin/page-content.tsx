@@ -6,8 +6,8 @@ import NextLink from "@/components/LocalizedLink";
 import { useLocalizedRouter } from "@/utils/use-localized-router";
 import { FormEvent, useEffect, useState } from "react";
 
-import { Provider } from "@supabase/supabase-js";
 import { AuthBox } from "@/components/AuthBox";
+import { GoogleSignInButton, OrDivider } from "@/components/GoogleSignInButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -91,15 +91,6 @@ const SignIn = () => {
     }
   };
 
-  const handleOAuthSignIn = async (provider: Provider) => {
-    setLoading(true);
-    const { error } = await supabaseClient.auth.signIn({ provider });
-    if (error) {
-      setMessage({ type: "error", content: error.message });
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
     if (user) {
       router.replace("/account");
@@ -122,6 +113,11 @@ const SignIn = () => {
             <T>{message.content}</T>
           </p>
         )}
+
+        <GoogleSignInButton
+          onError={(content) => setMessage({ type: "error", content })}
+        />
+        <OrDivider />
 
         {!showPasswordInput && (
           <form onSubmit={handleSignin}>

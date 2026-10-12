@@ -8,6 +8,7 @@ import { FormEvent, useEffect, useState } from "react";
 
 import { User } from "@supabase/gotrue-js";
 import { AuthBox } from "@/components/AuthBox";
+import { GoogleSignInButton, OrDivider } from "@/components/GoogleSignInButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
@@ -75,6 +76,10 @@ const SignUp = () => {
             <T>{message.content}</T>
           </div>
         )}
+        <GoogleSignInButton
+          onError={(content) => setMessage({ type: "error", content })}
+        />
+        <OrDivider />
         <div className="flex flex-col gap-2">
           <Input
             placeholder={t("Name")}
