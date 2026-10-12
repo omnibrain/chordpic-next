@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from "react";
+import { PriceTag } from "./PriceTag";
 import { ProductWithPrice } from "../types";
 import { serverTranslate } from "@/services/server-translate";
 import {
@@ -27,12 +28,6 @@ export const FreeProduct: React.FunctionComponent<
     return null;
   }
 
-  const priceString = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: price.currency,
-    minimumFractionDigits: 0,
-  }).format(0);
-
   return (
     <Card key={product.id}>
       <CardHeader>
@@ -42,7 +37,7 @@ export const FreeProduct: React.FunctionComponent<
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <span className="text-5xl font-semibold">{priceString}</span>
+        <PriceTag cents={0} />
         <span className="text-muted-foreground">
           /<T>{billingInterval}</T>
         </span>
