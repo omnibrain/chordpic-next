@@ -300,6 +300,9 @@ export const ChordSearch: React.FunctionComponent<{
                   loadSearch();
                   setOpen(true);
                 }}
+                // Chrome clears a search field on Escape, which would reopen
+                // the panel; Escape only closes it
+                onKeyDown={(e) => e.key === "Escape" && e.preventDefault()}
               />
               {!open && (
                 <kbd className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 rounded border bg-muted px-1.5 font-sans text-xs text-muted-foreground [@media(pointer:coarse)]:hidden">
