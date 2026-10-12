@@ -201,3 +201,27 @@ it("shows the first two voicings without Pro and blurs the others", async () => 
   fireEvent.click(screen.getByRole("button", { name: /^C \(2\// }));
   expect(onChart).toHaveBeenCalled();
 });
+
+it("tracks a search once the visitor stops typing", async () => {
+  const gtag = jest.fn();
+  (globalThis as { gtag?: unknown }).gtag = gtag;
+  render(<ChordSearch settings={settings} onChart={jest.fn()} />);
+
+  fireEvent.change(pageField(), { target: { value: "A" } });
+  fireEvent.change(pageField(), { target: { value: "Am7" } });
+  await screen.findByRole("button", { name: /^Am7 \(1\// });
+
+  await waitFor(
+    () =>
+      expect(gtag).toHaveBeenCalledWith("event", "search", {
+        search_term: "Am7",
+        instrument: "guitar",
+        results: expect.any(Number),
+      }),
+    { timeout: 2000 },
+  );
+  expect(gtag.mock.calls.filter(([, name]) => name === "search")).toHaveLength(
+    1,
+  );
+  delete (globalThis as { gtag?: unknown }).gtag;
+});

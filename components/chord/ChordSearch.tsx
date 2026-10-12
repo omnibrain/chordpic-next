@@ -106,6 +106,24 @@ export const ChordSearch: React.FunctionComponent<{
   );
   const showResults = query.trim() !== "" && search !== undefined;
 
+  // GA4's recommended search event, once the visitor stops typing
+  const trackedSearch = useRef("");
+  useEffect(() => {
+    const term = deferredQuery.trim();
+    if (!term || !search) return;
+
+    const timeout = setTimeout(() => {
+      if (trackedSearch.current === `${instrument}:${term}`) return;
+      trackedSearch.current = `${instrument}:${term}`;
+      GA()?.("event", "search", {
+        search_term: term,
+        instrument,
+        results: results.length,
+      });
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [deferredQuery, instrument, search, results.length]);
+
   const onQuery = (value: string) => {
     loadSearch();
     setQuery(value);
