@@ -113,3 +113,18 @@ it("deletes the session cookies of a rejected refresh token on /account", async 
   expect(forwarded).not.toContain("sb-access-token");
   expect(forwarded).toContain("other=keep");
 });
+
+it("tells the page to show euros only to visitors in the euro area", async () => {
+  const germany = await proxy(
+    new NextRequest("https://chordpic.com/pricing", {
+      headers: { "x-vercel-ip-country": "DE" },
+    }),
+  );
+  expect(germany.cookies.get("cp_cur")?.value).toBe("eur");
+  const switzerland = await proxy(
+    new NextRequest("https://chordpic.com/pricing", {
+      headers: { "x-vercel-ip-country": "CH" },
+    }),
+  );
+  expect(switzerland.cookies.get("cp_cur")?.value).toBe("usd");
+});

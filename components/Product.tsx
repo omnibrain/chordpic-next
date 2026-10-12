@@ -4,6 +4,7 @@ import { useLocalizedRouter } from "../utils/use-localized-router";
 import React, { PropsWithChildren, useState } from "react";
 import { GA4_ID } from "../global";
 import { Price, ProductWithPrice } from "../types";
+import { PriceTag } from "./PriceTag";
 import { postData } from "../utils/helpers";
 import { getStripe } from "../utils/stripe-client";
 import { useUser } from "../utils/useUser";
@@ -153,12 +154,6 @@ export const Product: React.FunctionComponent<
     return null;
   }
 
-  const priceString = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: price.currency,
-    minimumFractionDigits: 0,
-  }).format((price?.unit_amount || 0) / 100);
-
   return (
     <Card
       key={product.id}
@@ -173,7 +168,7 @@ export const Product: React.FunctionComponent<
         <CardDescription>{labels.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <span className="text-5xl font-semibold">{priceString}</span>
+        <PriceTag cents={price?.unit_amount || 0} />
         <span className="text-muted-foreground">
           /{labels[billingInterval]}
         </span>

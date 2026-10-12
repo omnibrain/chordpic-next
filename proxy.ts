@@ -15,6 +15,7 @@ import {
   preferredLocale,
   stripLocaleFromPathname,
 } from "./services/i18n";
+import { CURRENCY_COOKIE, currencyForCountry } from "./services/currency";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
@@ -103,6 +104,14 @@ export async function proxy(request: NextRequest) {
     path: "/",
     sameSite: "lax",
   });
+
+  // Vercel's geo header, the same signal Checkout uses to pick the currency.
+  // Absent locally, where the page then shows USD.
+  response.cookies.set(
+    CURRENCY_COOKIE,
+    currencyForCountry(request.headers.get("x-vercel-ip-country")),
+    { path: "/", sameSite: "lax" },
+  );
 
   return response;
 }
