@@ -45,6 +45,8 @@ export interface Price {
   interval_count?: number;
   trial_period_days?: number | null;
   metadata?: Stripe.Metadata;
+  /** Amount per currency, from the Stripe price's currency_options. */
+  currency_options?: Partial<Record<string, number>> | null;
   products?: Product;
 }
 
@@ -66,6 +68,8 @@ export interface Subscription {
   canceled_at?: string;
   trial_start?: string;
   trial_end?: string;
+  /** What this subscription is charged in; can differ from prices.currency. */
+  currency?: string | null;
   prices?: Price;
 }
 

@@ -114,7 +114,7 @@ it("deletes the session cookies of a rejected refresh token on /account", async 
   expect(forwarded).toContain("other=keep");
 });
 
-it("tells the page to show euros only to visitors in the euro area", async () => {
+it("tells the page which currency Checkout will charge in", async () => {
   const germany = await proxy(
     new NextRequest("https://chordpic.com/pricing", {
       headers: { "x-vercel-ip-country": "DE" },
@@ -126,5 +126,11 @@ it("tells the page to show euros only to visitors in the euro area", async () =>
       headers: { "x-vercel-ip-country": "CH" },
     }),
   );
-  expect(switzerland.cookies.get("cp_cur")?.value).toBe("usd");
+  expect(switzerland.cookies.get("cp_cur")?.value).toBe("chf");
+  const us = await proxy(
+    new NextRequest("https://chordpic.com/pricing", {
+      headers: { "x-vercel-ip-country": "US" },
+    }),
+  );
+  expect(us.cookies.get("cp_cur")?.value).toBe("usd");
 });

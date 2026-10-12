@@ -10,13 +10,20 @@ describe("currency init script", () => {
   afterEach(() => {
     document.cookie = `cp_cur=; ${EXPIRED}`;
     document.cookie = `xcp_cur=; ${EXPIRED}`;
-    document.documentElement.classList.remove("cur-eur");
+    document.cookie = `cp_cur=; ${EXPIRED}`;
+    document.documentElement.classList.remove("cur-eur", "cur-chf");
   });
 
   it("switches the page to euros when the server says so", () => {
     document.cookie = "cp_cur=eur";
     runInitScript();
     expect(document.documentElement.classList.contains("cur-eur")).toBe(true);
+  });
+
+  it("switches the page to francs when the server says so", () => {
+    document.cookie = "cp_cur=chf";
+    runInitScript();
+    expect(document.documentElement.classList.contains("cur-chf")).toBe(true);
   });
 
   it("keeps dollars otherwise", () => {

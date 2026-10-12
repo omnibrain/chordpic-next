@@ -28,7 +28,11 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   console.log(`Product inserted/updated: ${product.id}`);
 };
 
-const upsertPriceRecord = async (price: Stripe.Price) => {
+const upsertPriceRecord = async (event: Stripe.Price) => {
+  // Webhook payloads leave out currency_options.
+  const price = await stripe.prices.retrieve(event.id, {
+    expand: ["currency_options"],
+  });
   const priceData: Price = {
     id: price.id,
     product_id: typeof price.product === "string" ? price.product : "",
@@ -41,6 +45,12 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
     interval_count: price.recurring?.interval_count,
     trial_period_days: price.recurring?.trial_period_days,
     metadata: price.metadata,
+    currency_options: Object.fromEntries(
+      Object.entries(price.currency_options ?? {}).map(([currency, option]) => [
+        currency,
+        option.unit_amount ?? undefined,
+      ])
+    ),
   };
 
   const { error } = await supabaseAdmin
@@ -131,6 +141,7 @@ const manageSubscriptionStatusChange = async (
     metadata: subscription.metadata,
     status: subscription.status,
     price_id: subscription.items.data[0].price.id,
+    currency: subscription.currency,
     //TODO check quantity on subscription
     // @ts-ignore
     quantity: subscription.quantity,
