@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { PriceTag } from "./PriceTag";
-import { ProductWithPrice } from "../types";
+import { Price, ProductWithPrice } from "../types";
 import { serverTranslate } from "@/services/server-translate";
 import {
   Card,
@@ -9,6 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+const FREE: Price = {
+  id: "free",
+  currency: "usd",
+  unit_amount: 0,
+  currency_options: { eur: 0, chf: 0 },
+};
 
 export interface FreeProductProps {
   billingInterval: "year" | "month";
@@ -37,7 +44,7 @@ export const FreeProduct: React.FunctionComponent<
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <PriceTag cents={0} />
+        <PriceTag price={FREE} />
         <span className="text-muted-foreground">
           /<T>{billingInterval}</T>
         </span>

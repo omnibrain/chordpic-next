@@ -168,7 +168,7 @@ export const Product: React.FunctionComponent<
         <CardDescription>{labels.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <PriceTag cents={price?.unit_amount || 0} />
+        <PriceTag price={price} />
         <span className="text-muted-foreground">
           /{labels[billingInterval]}
         </span>

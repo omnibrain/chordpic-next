@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { amountIn, formatPrice } from "@/services/currency";
 import { postData } from "@/utils/helpers";
 import { useUser } from "@/utils/useUser";
 import { T, useT } from "@magic-translate/react";
@@ -56,13 +57,16 @@ export default function Account({ user }: { user: User }) {
     setLoading(false);
   };
 
+  const subscriptionCurrency =
+    subscription?.currency ?? subscription?.prices?.currency ?? "usd";
   const subscriptionPrice =
-    subscription &&
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: subscription?.prices?.currency,
-      minimumFractionDigits: 0,
-    }).format((subscription?.prices?.unit_amount || 0) / 100);
+    subscription?.prices &&
+    formatPrice(
+      amountIn(subscription.prices, subscriptionCurrency) ??
+        subscription.prices.unit_amount ??
+        0,
+      subscriptionCurrency,
+    );
 
   return (
     <section>

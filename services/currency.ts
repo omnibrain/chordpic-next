@@ -1,13 +1,13 @@
 /**
- * Stripe Checkout charges visitors in the euro area in EUR (the prices carry
- * EUR currency_options at the same amounts as USD), so the pricing page shows
- * the same currency they will be asked to pay in.
+ * Stripe Checkout charges visitors in the euro area in EUR and in Switzerland
+ * in CHF (via the prices' currency_options), so the pricing page shows the
+ * same currency they will be asked to pay in.
  *
  * Shared by proxy.ts and the browser, so it must stay free of DOM and Node APIs.
  */
 export const CURRENCY_COOKIE = "cp_cur";
 
-export type Currency = "usd" | "eur";
+export type Currency = "usd" | "eur" | "chf";
 
 const EURO_AREA = new Set([
   "AT",
@@ -39,11 +39,34 @@ const EURO_AREA = new Set([
   "XK",
 ]);
 
+const FRANC_AREA = new Set(["CH", "LI"]);
+
 export function currencyForCountry(country: string | null): Currency {
-  return country && EURO_AREA.has(country.toUpperCase()) ? "eur" : "usd";
+  const code = country?.toUpperCase() ?? "";
+  if (EURO_AREA.has(code)) return "eur";
+  if (FRANC_AREA.has(code)) return "chf";
+  return "usd";
 }
 
-export function formatPrice(cents: number, currency: Currency) {
+/**
+ * The price in a given currency, or null when Stripe has no option for it —
+ * Checkout then falls back to the default currency.
+ */
+export function amountIn(
+  price: {
+    currency?: string;
+    unit_amount?: number;
+    currency_options?: Partial<Record<string, number>> | null;
+  },
+  currency: string,
+): number | null {
+  return (
+    price.currency_options?.[currency] ??
+    (price.currency === currency ? price.unit_amount ?? null : null)
+  );
+}
+
+export function formatPrice(cents: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
