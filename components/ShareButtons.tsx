@@ -41,7 +41,16 @@ export const ShareButtons = ({ chart }: IProps) => {
 
   const title = `ChordPic.com | ${chart.settings.title || "Unnamed Chord"}`;
 
+  // GA4's recommended share event, one per way of sharing
+  const trackShare = (method: string) => () =>
+    GA()?.("event", "share", {
+      method,
+      content_type: "chord",
+      item_id: chart.settings.title || "",
+    });
+
   const copyLink = () => {
+    trackShare("copy_link")();
     if (inputRef.current) {
       inputRef.current.select();
       document.execCommand("copy");
@@ -81,14 +90,21 @@ export const ShareButtons = ({ chart }: IProps) => {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            <FacebookShareButton url={link}>
+            <FacebookShareButton
+              url={link}
+              beforeOnClick={trackShare("facebook")}
+            >
               <span className={shareButtonClass}>
                 <MdFacebook />
                 Facebook
               </span>
             </FacebookShareButton>
 
-            <TelegramShareButton url={link} title={title}>
+            <TelegramShareButton
+              url={link}
+              beforeOnClick={trackShare("telegram")}
+              title={title}
+            >
               <span className={shareButtonClass}>
                 <FaTelegram />
                 Telegram
@@ -97,6 +113,7 @@ export const ShareButtons = ({ chart }: IProps) => {
 
             <TwitterShareButton
               url={link}
+              beforeOnClick={trackShare("twitter")}
               title={title}
               via="https://chordpic.com"
               hashtags={["guitar", "chord"]}
@@ -107,7 +124,11 @@ export const ShareButtons = ({ chart }: IProps) => {
               </span>
             </TwitterShareButton>
 
-            <WhatsappShareButton url={link} title={title}>
+            <WhatsappShareButton
+              url={link}
+              beforeOnClick={trackShare("whatsapp")}
+              title={title}
+            >
               <span className={shareButtonClass}>
                 <FaWhatsapp />
                 WhatsApp
@@ -115,6 +136,7 @@ export const ShareButtons = ({ chart }: IProps) => {
             </WhatsappShareButton>
 
             <EmailShareButton
+              beforeOnClick={trackShare("email")}
               subject={title}
               url={link}
               body="Here's a chord chart I created on ChordPic.com"
