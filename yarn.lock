@@ -2240,6 +2240,11 @@
     roughjs "^4.5.2"
     svgdom "^0.1.16"
 
+"@svguitar/play-plugin@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@svguitar/play-plugin/-/play-plugin-0.0.2.tgz#3e06ed93f50cbdd151cb61c6f6acc59a9bdf7c5f"
+  integrity sha512-E+LtbuTlDzf01Fk+dUset8kFnYou5RnCU8hu5ieacigETGmZqa9X8dG9rmi/YA/CzzO7/WwLWUh1PlcpYqlCtg==
+
 "@swc/helpers@0.5.23", "@swc/helpers@^0.5.12":
   version "0.5.23"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.23.tgz#19287d0d86d962b111376039a50c792902c9a86a"
