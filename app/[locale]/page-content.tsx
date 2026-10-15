@@ -7,6 +7,7 @@ import { Orientation } from "@svguitar/core";
 import { ChordEditor } from "@/components/chord/ChordEditor";
 import { ChordSearch } from "@/components/chord/ChordSearch";
 import { ChordResult } from "@/components/chord/ChordResult";
+import { PlayButton } from "@/components/chord/PlayButton";
 import { useChart } from "@/components/chord/useChart";
 import { AdjustableChordSettings, ChordForm } from "@/components/ChordForm";
 import { DownloadButtons } from "@/components/DownloadButtons";
@@ -89,6 +90,7 @@ const Home = () => {
                 <T>Result</T>
               </h2>
               <div className="absolute right-0 top-0 z-10 flex gap-2">
+                <PlayButton chart={chart} />
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
