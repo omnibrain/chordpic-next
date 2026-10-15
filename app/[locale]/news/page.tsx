@@ -6,6 +6,7 @@ import {
 import Image from "next/image";
 
 import chordSearch from "@/public/images/chord-search.png";
+import playChord from "@/public/images/play-chord.png";
 import barreAndFingerSameFret from "@/public/images/barre-and-finger-same-fret.png";
 import exampleHorizontalChord from "@/public/images/example-horizontal-chord.png";
 import exampleLeftHandedChord from "@/public/images/example-left-handed-chord.png";
@@ -40,6 +41,7 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
 
   // Batch attribute translations; the body uses async Server Components.
   const [
+    playChordAlt,
     chordSearchAlt,
     fretMarkersAlt,
     slidersAlt,
@@ -49,6 +51,7 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
     barreAlt,
     leftHandedAlt,
   ] = await Promise.all([
+    t("Am chord diagram with the play button"),
     t("Search results for the chord Am7"),
     t("Chord diagram with fret markers"),
     t("Sliders with numerical values"),
@@ -81,6 +84,34 @@ export default async function NewsPage({ params }: LocalizedPageProps) {
             write us an email
           </a>
           , we would love to hear your story and tell other people about it!
+        </T>
+      </p>
+
+      <h2 id="play-chords">
+        <T>Hear your chords 🔊</T>
+      </h2>
+      <p>
+        <em>
+          <T>October 15th, 2026</T>
+        </em>
+      </p>
+      <p>
+        <T>
+          Not sure your chord diagram is right? Click the new play button above
+          your chord diagram, next to the hand button, and ChordPic strums the
+          chord for you. Muted strings stay silent and open strings ring, just
+          like on a real guitar.
+        </T>
+      </p>
+      <div className="flex justify-center">
+        <Image src={playChord} alt={playChordAlt} width={478} />
+      </div>
+      <p>
+        <T>
+          It plays guitar chords with 6 strings and ukulele chords with 4
+          strings. For other instruments or tunings, write the note of every
+          string in the fields below the editor, like D A D G B E for drop D,
+          and ChordPic plays those notes instead.
         </T>
       </p>
 
