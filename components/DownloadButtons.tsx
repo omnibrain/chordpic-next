@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 
 const downloadPng =
   (chartDom: HTMLDivElement | null, width: number, title?: string) => () => {
-    if (!chartDom || !chartDom.firstChild) {
+    // Server-drawn diagrams nest the chart in an outer <svg> without a viewBox.
+    const svg = chartDom?.querySelector<SVGSVGElement>("svg[viewBox]");
+    if (!svg) {
       return;
     }
 
@@ -15,7 +17,6 @@ const downloadPng =
       value: width,
     });
 
-    const svg = chartDom.firstChild as SVGElement;
     ImageService.downloadPng(svg, width, title);
   };
 
