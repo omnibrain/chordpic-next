@@ -12,6 +12,7 @@ import {
   adsInitScript,
   currencyInitScript,
   colorModeInitScript,
+  translateGuardScript,
 } from "@/services/document-scripts";
 import "@/styles/globals.css";
 
@@ -81,6 +82,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: currencyInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: translateGuardScript }} />
         <Providers>{children}</Providers>
         <Analytics />
         <SpeedInsights />
