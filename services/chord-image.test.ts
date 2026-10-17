@@ -1,5 +1,6 @@
 /** @jest-environment node */
 
+import type { ChordStyle } from "@svguitar/core";
 import { Chart } from "../domain/chart";
 import { PREVIEW_SIZE, renderChordPng } from "./chord-image";
 
@@ -29,4 +30,13 @@ it("draws the labels", async () => {
   });
 
   expect(titled.equals(untitled)).toBe(false);
+});
+
+it("previews hand-drawn chords in the normal style", async () => {
+  const handdrawn = await renderChordPng({
+    ...chart,
+    settings: { ...chart.settings, style: "handdrawn" as ChordStyle },
+  });
+
+  expect(handdrawn.equals(await renderChordPng(chart))).toBe(true);
 });
