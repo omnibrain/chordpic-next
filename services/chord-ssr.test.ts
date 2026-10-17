@@ -33,6 +33,9 @@ it("draws a shared chord to standalone SVG markup", async () => {
   expect(svg).toContain("created with chordpic.com");
   expect(svg).toContain(`viewBox="0 0 ${width} ${height}"`);
 
+  // A single, standalone <svg>: nothing wrapped around SVGuitar's own.
+  expect(svg.match(/<svg/g)).toHaveLength(1);
+
   // One circle per finger, plus the two corner markers SVGuitar always draws.
   expect(svg.match(/<circle/g)).toHaveLength(5);
 });
