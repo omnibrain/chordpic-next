@@ -88,7 +88,7 @@ export default async function RootLayout({
         <SpeedInsights />
         <Script
           id="cookieyes"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           src="https://cdn-cookieyes.com/client_data/1b604b2eba7bd9fee27ccb84/script.js"
         />
         <Script id="rewardful-queue" strategy="beforeInteractive">
