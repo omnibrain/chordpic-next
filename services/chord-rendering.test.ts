@@ -1,7 +1,7 @@
 import { ChordStyle, OPEN, Orientation, SILENT, SVGuitarChord } from "@svguitar/core";
 import { EditableChord } from "../domain/chart";
 import { ChordMatrix } from "./chord-matrix";
-import { toSvguitarChord } from "./chord-rendering";
+import { fretMarkersFrom, toSvguitarChord } from "./chord-rendering";
 
 describe("Open/silent string rendering", () => {
   const originalGetBBox = Object.getOwnPropertyDescriptor(
@@ -195,4 +195,18 @@ describe("Open/silent string rendering", () => {
       expect(toSvguitarChord(chord).barres).toEqual(chord.barres);
     },
   );
+});
+
+describe("fretMarkersFrom", () => {
+  test("marks the inlay frets when the diagram starts at the nut", () => {
+    expect(fretMarkersFrom()).toEqual([
+      2, 4, 6, 8, { fret: 11, double: true }, 14, 16, 18, 20, { fret: 23, double: true },
+    ]);
+  });
+
+  test("keeps the markers on the same frets for a later starting fret", () => {
+    // Starting at fret 5, the 5th, 7th, 9th and 12th frets are the 1st, 3rd, 5th and 8th drawn.
+    expect(fretMarkersFrom(5).slice(0, 4)).toEqual([0, 2, 4, { fret: 7, double: true }]);
+    expect(fretMarkersFrom(12)[0]).toEqual({ fret: 0, double: true });
+  });
 });
