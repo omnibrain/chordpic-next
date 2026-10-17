@@ -32,11 +32,20 @@ it("draws the labels", async () => {
   expect(titled.equals(untitled)).toBe(false);
 });
 
-it("previews hand-drawn chords in the normal style", async () => {
-  const handdrawn = await renderChordPng({
+it("previews hand-drawn chords in the hand-drawn style", async () => {
+  const handdrawn: Chart = {
     ...chart,
     settings: { ...chart.settings, style: "handdrawn" as ChordStyle },
-  });
+  };
+  const png = await renderChordPng(handdrawn);
 
-  expect(handdrawn.equals(await renderChordPng(chart))).toBe(true);
+  expect(pngSize(png)).toEqual(PREVIEW_SIZE);
+  expect(png.equals(await renderChordPng(chart))).toBe(false);
+
+  // Its labels are drawn in Patrick Hand, which resvg also has to find.
+  const untitled = await renderChordPng({
+    ...handdrawn,
+    settings: { ...handdrawn.settings, title: "" },
+  });
+  expect(png.equals(untitled)).toBe(false);
 });
