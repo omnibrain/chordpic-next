@@ -35,7 +35,6 @@ const fontFiles = {
 };
 
 interface Renderer {
-  document: Document;
   SVGuitarChord: typeof SVGuitarChord;
 }
 
@@ -76,7 +75,6 @@ async function loadRenderer(): Promise<Renderer> {
   runInNewContext(source, sandbox, { filename: umdBundle });
 
   return {
-    document: window.document,
     SVGuitarChord: (sandbox.exports as { SVGuitarChord: typeof SVGuitarChord })
       .SVGuitarChord,
   };
@@ -90,21 +88,12 @@ export async function renderChord(
   watermark = FREE_WATERMARK,
 ): Promise<ChordDiagram> {
   renderer ??= loadRenderer();
-  const { document, SVGuitarChord } = await renderer;
+  const { SVGuitarChord } = await renderer;
 
-  const container = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "svg",
-  );
-  document.documentElement.appendChild(container);
-  try {
-    const { width, height } = new SVGuitarChord(container as never)
-      .configure(toSvguitarSettings(chart.settings, watermark))
-      .chord(toSvguitarChord(chart.chord))
-      .draw();
+  const diagram = new SVGuitarChord()
+    .configure(toSvguitarSettings(chart.settings, watermark))
+    .chord(toSvguitarChord(chart.chord));
+  const { width, height } = diagram.draw();
 
-    return { svg: container.outerHTML, width, height };
-  } finally {
-    container.remove();
-  }
+  return { svg: diagram.toSvg(), width, height };
 }
