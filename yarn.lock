@@ -2231,10 +2231,10 @@
   resolved "https://registry.yarnpkg.com/@svguitar/chords-plugin/-/chords-plugin-0.0.4.tgz#c382362d6607d264a24a56879cfc97c56aad7b5f"
   integrity sha512-6WRFEQAiuJXUlwnoqUwee3dDDpv0uW7JnFdOeS9LiC6o+qL11/Qp5GzQujY2K+OO3NbFKbrtNgpVUmPEtb/BdQ==
 
-"@svguitar/core@^2.9.0":
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@svguitar/core/-/core-2.9.0.tgz#b9daf381163e9862940a459d40fbd16d3eb180ce"
-  integrity sha512-rZ2TnZBSyHKWLWfihkSv7M/37j1Bxub/gWuiCFITIusV51o0kZTbbzA6grORgg6pZ4IoNvkGzRujI9G/lFcFDQ==
+"@svguitar/core@^2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@svguitar/core/-/core-2.10.1.tgz#db4a4b47ea67e9ff9e64f20c041df8828b9559f2"
+  integrity sha512-8Fec8xj4jffeX07Y78A/OYQAHaR1G0pVTqlvG3dYRpl+joBv7RzPCvrsNjJ3psaec+YVXf6PkOcQCNPPxvGxjQ==
   dependencies:
     "@svgdotjs/svg.js" "3.2.5"
     roughjs "^4.5.2"

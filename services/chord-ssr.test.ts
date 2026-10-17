@@ -1,6 +1,6 @@
 /** @jest-environment node */
 
-import type { FretLabelFormat } from "@svguitar/core";
+import type { ChordStyle, FretLabelFormat } from "@svguitar/core";
 import { Chart } from "../domain/chart";
 import { renderChord } from "./chord-ssr";
 
@@ -92,4 +92,36 @@ it("renders without polluting the server's globals", async () => {
 
   expect("window" in globalThis).toBe(false);
   expect("document" in globalThis).toBe(false);
+});
+
+describe("hand-drawn style", () => {
+  const handdrawn: Chart = {
+    ...chart,
+    settings: { ...chart.settings, style: "handdrawn" as ChordStyle },
+  };
+
+  it("draws a shared chord to standalone SVG markup", async () => {
+    const { svg } = await renderChord(handdrawn);
+
+    expect(svg).toMatch(/^<svg[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
+    expect(svg).toContain('font-family="Patrick Hand"');
+    expect(svg).toContain(">Am</text>");
+    expect(svg.match(/<svg/g)).toHaveLength(1);
+  });
+
+  it("lays the diagram out the way a browser would", async () => {
+    // Chromium draws this chord 459 high, see the normal style above.
+    const { width, height } = await renderChord(handdrawn);
+
+    expect(width).toBe(400);
+    expect(height).toBeGreaterThan(456);
+    expect(height).toBeLessThan(466);
+  });
+
+  it("draws the same chord the same way every time", async () => {
+    // So the server's diagram matches the one the browser draws over it.
+    expect((await renderChord(handdrawn)).svg).toBe(
+      (await renderChord(handdrawn)).svg,
+    );
+  });
 });

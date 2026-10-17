@@ -1,6 +1,5 @@
 import "server-only";
 import path from "node:path";
-import type { ChordStyle } from "@svguitar/core";
 import { Chart } from "../domain/chart";
 import { renderChord } from "./chord-ssr";
 
@@ -23,12 +22,7 @@ const fontFiles = [
  * a font it cannot find it simply leaves every label out of the drawing.
  */
 export async function renderChordPng(chart: Chart): Promise<Buffer> {
-  // SVGuitar cannot draw the hand-drawn style without a browser, and a plain
-  // preview beats a broken one.
-  const { svg } = await renderChord({
-    ...chart,
-    settings: { ...chart.settings, style: "normal" as ChordStyle },
-  });
+  const { svg } = await renderChord(chart);
   const { Resvg } = await import("@resvg/resvg-js");
 
   const canvas = `<svg xmlns="http://www.w3.org/2000/svg" width="${
