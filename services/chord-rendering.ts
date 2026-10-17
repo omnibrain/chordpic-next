@@ -8,7 +8,18 @@ import { EditableChord } from '../domain/chart'
  */
 const OPEN: OpenString = 0
 
-const fretMarkers = [2, 4, 6, 8, { fret: 11, double: true }, 14, 16, 18, 20, { fret: 23, double: true }]
+// The frets with an inlay on a real guitar neck; 12 and 24 have two dots.
+const inlays = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
+
+/**
+ * SVGuitar counts fret markers from the first drawn fret, so shift the inlays
+ * by the starting fret to keep them on the same frets as on a real neck.
+ */
+export function fretMarkersFrom(position = 1): NonNullable<ChordSettings['fretMarkers']> {
+  return inlays
+    .filter((fret) => fret >= position)
+    .map((fret) => (fret % 12 === 0 ? { fret: fret - position, double: true } : fret - position))
+}
 
 /**
  * The SVGuitar configuration behind every diagram, in the browser and on the server.
@@ -24,7 +35,7 @@ export function toSvguitarSettings(
     fretSize: 1.75,
     barreChordRadius: 0.5,
     ...settings,
-    fretMarkers,
+    fretMarkers: fretMarkersFrom(settings.position),
     svgTitle: 'Chord diagram created with chordpic.com',
     watermark,
     watermarkFontSize: 16,
