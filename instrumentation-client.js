@@ -14,6 +14,13 @@ Sentry.init({
   dsn: SENTRY_DSN || 'https://e34c5fd2adc64d2a96fd7179e6564d21@o4504032663240704.ingest.sentry.io/4504032664223744',
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,
+  // AdSense's own scripts throw (e.g. "int64" on visibilitychange) and get
+  // caught by Sentry's addEventListener wrapper; nothing we can fix.
+  beforeSend(event) {
+    const frames = event.exception?.values?.flatMap((v) => v.stacktrace?.frames ?? []) ?? [];
+    if (frames.some((f) => f.filename?.includes('/pagead/'))) return null;
+    return event;
+  },
   // ...
   // Note: if you want to override the automatic release value, do not set a
   // `release` value here - use the environment variable `SENTRY_RELEASE`, so
