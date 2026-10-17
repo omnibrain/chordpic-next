@@ -1,10 +1,15 @@
 import React, { useCallback, useRef, useState } from "react";
-import { ColorResult } from "react-color";
-import SketchPicker from "react-color/lib/components/sketch/Sketch";
+import dynamic from "next/dynamic";
+import type { ColorResult } from "react-color";
 import { T } from "@magic-translate/react";
 import { useOutsideHandler } from "../hooks/use-outside-click";
 import { useEscHandler } from "../hooks/use-esc-handler";
 import { Button } from "@/components/ui/button";
+
+// react-color pulls in all of lodash; load it when a picker is first wanted.
+const loadSketchPicker = () =>
+  import("react-color/lib/components/sketch/Sketch");
+const SketchPicker = dynamic(loadSketchPicker, { ssr: false });
 
 interface Props {
   onChange: (color: string) => void;
@@ -36,7 +41,11 @@ export const ColorInput = ({ direction = "down", ...props }: Props) => {
   };
 
   return (
-    <div className="relative flex flex-1 flex-col items-center justify-center">
+    <div
+      className="relative flex flex-1 flex-col items-center justify-center"
+      onPointerEnter={loadSketchPicker}
+      onFocus={loadSketchPicker}
+    >
       {props.render ? (
         props.render({
           value: props.value,
