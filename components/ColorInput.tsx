@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { Loader2 } from "lucide-react";
 import type { ColorResult } from "react-color";
 import { T } from "@magic-translate/react";
 import { useOutsideHandler } from "../hooks/use-outside-click";
@@ -9,7 +10,15 @@ import { Button } from "@/components/ui/button";
 // react-color pulls in all of lodash; load it when a picker is first wanted.
 const loadSketchPicker = () =>
   import("react-color/lib/components/sketch/Sketch");
-const SketchPicker = dynamic(loadSketchPicker, { ssr: false });
+const SketchPicker = dynamic(loadSketchPicker, {
+  ssr: false,
+  // Same box as the picker, so a slow first load still answers the tap.
+  loading: () => (
+    <div className="flex h-[297px] w-[220px] items-center justify-center rounded bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.15),0_8px_16px_rgba(0,0,0,0.15)]">
+      <Loader2 className="h-5 w-5 animate-spin text-neutral-400" />
+    </div>
+  ),
+});
 
 interface Props {
   onChange: (color: string) => void;
