@@ -49,7 +49,10 @@ jest.mock("../components/Product", () => ({
     labels,
     billingInterval,
   }: import("../components/Product").ProductProps) => (
-    <div data-product={product.id}>
+    <div
+      data-product={product.id}
+      data-price={product.prices?.find((p) => p.interval === billingInterval)?.id}
+    >
       {product.name}|{labels.description}|{labels[billingInterval]}|
       {labels.subscribe}|{labels.manage}
     </div>
@@ -201,6 +204,22 @@ it("renders pricing text and supplies translated labels without changing checkou
     "Chordpic Pro|fr:Unlock all features|fr:year|fr:Subscribe|fr:Manage",
   );
   expect(product.name).toBe("Chordpic Pro");
+});
+
+it("shows prices from every active product as one Pro plan", async () => {
+  const product = (id: string, interval: "month" | "year") => ({
+    id,
+    name: "Chordpic Pro",
+    prices: [{ id: `price_${interval}`, interval, currency: "usd" }],
+  });
+  const html = await render(
+    await Pricing({
+      products: [product("prod_year", "year"), product("prod_month", "month")],
+      locale: "en",
+    }),
+  );
+  expect(html).toContain('data-price="price_month"');
+  expect(html).toContain('data-price="price_year"');
 });
 
 it("skips requests for English and retains source text for empty translations", async () => {
