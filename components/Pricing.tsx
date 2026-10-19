@@ -11,7 +11,12 @@ interface Props {
 
 export default async function Pricing({ products, locale }: Props) {
   const { T, t } = serverTranslate(locale);
-  const product = products[0];
+  // Monthly and yearly Pro can live on separate Stripe products (so coupons can
+  // target one interval), so show them as one plan.
+  const product = products[0] && {
+    ...products[0],
+    prices: products.flatMap((p) => p.prices ?? []),
+  };
   const [description, month, year, subscribe, manage] = await Promise.all([
     product?.description ? t(product.description) : Promise.resolve(""),
     t("month"),
