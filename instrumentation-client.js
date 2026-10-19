@@ -17,6 +17,8 @@ Sentry.init({
   // AdSense's own scripts throw (e.g. "int64" on visibilitychange) and get
   // caught by Sentry's addEventListener wrapper; nothing we can fix.
   beforeSend(event) {
+    // Pages saved to disk and reopened offline (CookieYes then throws on the origin).
+    if (event.request?.url?.startsWith('file:')) return null;
     const frames = event.exception?.values?.flatMap((v) => v.stacktrace?.frames ?? []) ?? [];
     if (frames.some((f) => f.filename?.includes('/pagead/'))) return null;
     return event;
