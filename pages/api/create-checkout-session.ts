@@ -44,12 +44,22 @@ const createCheckoutSession = async (
       let validCoupon: string | undefined;
       if (coupon) {
         try {
-          const retrievedCoupon = await stripe.coupons.retrieve(coupon);
+          const retrievedCoupon = await stripe.coupons.retrieve(coupon, {
+            expand: ["applies_to"],
+          });
           // `retrieve` still returns coupons that exist but are no longer
           // usable (expired or past `max_redemptions`); those come back with
-          // `valid: false`. Only apply the coupon when it's actually valid,
-          // otherwise Stripe rejects the Checkout Session and blocks checkout.
-          if (retrievedCoupon.valid) {
+          // `valid: false`. Only apply the coupon when it's actually valid and
+          // covers the chosen price's product (e.g. a monthly-only coupon on
+          // the yearly plan), otherwise checkout is blocked or the visitor
+          // loses the promo code field.
+          const products = retrievedCoupon.applies_to?.products;
+          const appliesToPrice =
+            !products ||
+            products.includes(
+              (await stripe.prices.retrieve(price.id)).product as string,
+            );
+          if (retrievedCoupon.valid && appliesToPrice) {
             validCoupon = coupon;
           } else {
             console.log("Invalid Rewardful coupon, ignoring", coupon);
