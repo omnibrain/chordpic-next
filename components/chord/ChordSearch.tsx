@@ -221,7 +221,7 @@ export const ChordSearch: React.FunctionComponent<{
               "pointer-events-auto flex flex-col overflow-hidden text-popover-foreground",
               open
                 ? "max-h-full w-full max-w-3xl border bg-popover shadow-lg"
-                : "w-72 max-w-full shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
+                : "w-96 max-w-full shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
             )}
             style={{ borderRadius: open ? 12 : 6 }}
           >
@@ -275,7 +275,7 @@ export const ChordSearch: React.FunctionComponent<{
             >
               <Search
                 className={cn(
-                  "pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground",
+                  "pointer-events-none absolute top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground",
                   open ? "start-6" : "start-3",
                 )}
               />
@@ -285,7 +285,11 @@ export const ChordSearch: React.FunctionComponent<{
                 autoComplete="off"
                 aria-label={t("Find a chord")}
                 aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}
-                className={cn(inputClassName, !open && "pe-14")}
+                className={cn(
+                  inputClassName,
+                  "h-11 ps-10 md:text-base",
+                  !open && "pe-14",
+                )}
                 placeholder={
                   open
                     ? t("Search a chord, e.g. Am7 or D/F#")
