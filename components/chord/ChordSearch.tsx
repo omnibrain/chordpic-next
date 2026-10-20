@@ -221,7 +221,7 @@ export const ChordSearch: React.FunctionComponent<{
               "pointer-events-auto flex flex-col overflow-hidden text-popover-foreground",
               open
                 ? "max-h-full w-full max-w-3xl border bg-popover shadow-lg"
-                : "w-96 max-w-full shadow-[0_6px_20px_-4px_rgb(0_0_0/0.12),0_2px_6px_-2px_rgb(0_0_0/0.06)]",
+                : "w-96 max-w-full shadow-[0_10px_32px_-4px_rgb(0_0_0/0.28),0_3px_10px_-2px_rgb(0_0_0/0.14)]",
             )}
             style={{ borderRadius: open ? 12 : 6 }}
           >
