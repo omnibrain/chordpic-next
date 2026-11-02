@@ -197,11 +197,11 @@ export const ChordForm: React.FunctionComponent<{
               valueAsNumber: true,
               min: {
                 value: 1,
-                message: "Must have at least 1 fret",
+                message: t("Must have at least 1 fret"),
               },
               max: {
                 value: 50,
-                message: "Too many frets!",
+                message: t("Too many frets!"),
               },
             })}
             type="number"
@@ -209,16 +209,16 @@ export const ChordForm: React.FunctionComponent<{
         </Field>
         <Field label={<T>Number of strings</T>} error={errors.strings?.message}>
           <Input
-            placeholder="Number of string..."
+            placeholder={t("Number of strings...")}
             {...register("strings", {
               valueAsNumber: true,
               min: {
                 value: 2,
-                message: "Must have at least 2 strings",
+                message: t("Must have at least 2 strings"),
               },
               max: {
                 value: 50,
-                message: "Too many strings!",
+                message: t("Too many strings!"),
               },
             })}
             type="number"
@@ -258,7 +258,7 @@ export const ChordForm: React.FunctionComponent<{
               )}
             />
           </Field>
-          <Field label="Orientation" error={errors.orientation?.message}>
+          <Field label={<T>Orientation</T>} error={errors.orientation?.message}>
             <Controller
               control={control}
               name="orientation"
