@@ -1,6 +1,7 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  BarreChordStyle,
   ChordSettings,
   ChordStyle,
   FretLabelFormat,
@@ -33,6 +34,7 @@ import {
 export type AdjustableChordSettings = Pick<
   ChordSettings,
   | "orientation"
+  | "barreChordStyle"
   | "frets"
   | "strings"
   | "position"
@@ -54,6 +56,7 @@ export type AdjustableChordSettings = Pick<
 
 export const defaultValues: AdjustableChordSettings = {
   orientation: Orientation.vertical,
+  barreChordStyle: BarreChordStyle.RECTANGLE,
   title: "",
   frets: 4,
   strings: 6,
@@ -273,6 +276,30 @@ export const ChordForm: React.FunctionComponent<{
                     </SelectItem>
                     <SelectItem value={Orientation.horizontal}>
                       {t("Horizontal")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </Field>
+          <Field label={<T>Barre style</T>}>
+            <Controller
+              control={control}
+              name="barreChordStyle"
+              render={({ field }) => (
+                <Select
+                  value={field.value ?? BarreChordStyle.RECTANGLE}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger aria-label={t("Barre style")}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={BarreChordStyle.RECTANGLE}>
+                      {t("Bar")}
+                    </SelectItem>
+                    <SelectItem value={BarreChordStyle.ARC}>
+                      {t("Arc")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
