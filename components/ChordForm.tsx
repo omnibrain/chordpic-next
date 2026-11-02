@@ -1,6 +1,7 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  BarreChordStyle,
   ChordSettings,
   ChordStyle,
   FretLabelFormat,
@@ -33,6 +34,7 @@ import {
 export type AdjustableChordSettings = Pick<
   ChordSettings,
   | "orientation"
+  | "barreChordStyle"
   | "frets"
   | "strings"
   | "position"
@@ -54,6 +56,7 @@ export type AdjustableChordSettings = Pick<
 
 export const defaultValues: AdjustableChordSettings = {
   orientation: Orientation.vertical,
+  barreChordStyle: BarreChordStyle.RECTANGLE,
   title: "",
   frets: 4,
   strings: 6,
@@ -194,11 +197,11 @@ export const ChordForm: React.FunctionComponent<{
               valueAsNumber: true,
               min: {
                 value: 1,
-                message: "Must have at least 1 fret",
+                message: t("Must have at least 1 fret"),
               },
               max: {
                 value: 50,
-                message: "Too many frets!",
+                message: t("Too many frets!"),
               },
             })}
             type="number"
@@ -206,16 +209,16 @@ export const ChordForm: React.FunctionComponent<{
         </Field>
         <Field label={<T>Number of strings</T>} error={errors.strings?.message}>
           <Input
-            placeholder="Number of string..."
+            placeholder={t("Number of strings...")}
             {...register("strings", {
               valueAsNumber: true,
               min: {
                 value: 2,
-                message: "Must have at least 2 strings",
+                message: t("Must have at least 2 strings"),
               },
               max: {
                 value: 50,
-                message: "Too many strings!",
+                message: t("Too many strings!"),
               },
             })}
             type="number"
@@ -255,7 +258,7 @@ export const ChordForm: React.FunctionComponent<{
               )}
             />
           </Field>
-          <Field label="Orientation" error={errors.orientation?.message}>
+          <Field label={<T>Orientation</T>} error={errors.orientation?.message}>
             <Controller
               control={control}
               name="orientation"
@@ -273,6 +276,30 @@ export const ChordForm: React.FunctionComponent<{
                     </SelectItem>
                     <SelectItem value={Orientation.horizontal}>
                       {t("Horizontal")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </Field>
+          <Field label={<T>Barre style</T>}>
+            <Controller
+              control={control}
+              name="barreChordStyle"
+              render={({ field }) => (
+                <Select
+                  value={field.value ?? BarreChordStyle.RECTANGLE}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger aria-label={t("Barre style")}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={BarreChordStyle.RECTANGLE}>
+                      {t("Bar")}
+                    </SelectItem>
+                    <SelectItem value={BarreChordStyle.ARC}>
+                      {t("Arc")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
