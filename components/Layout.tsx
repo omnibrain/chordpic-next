@@ -12,6 +12,10 @@ import {
 import { useConsentSettled } from "../hooks/use-consent-settled";
 import { Footer } from "./Footer";
 import { NavBar } from "./NavBar";
+import { disableAnalyticsForSpamReferrers } from "../utils/referral-spam";
+
+// Before anything below configures gtag.
+if (typeof window !== "undefined") disableAnalyticsForSpamReferrers();
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const subscription = useSubscription();
