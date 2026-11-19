@@ -41,6 +41,7 @@ import {
 } from "@/services/saved-chords";
 import { SubscriptionType } from "@/types";
 import { useSubscription } from "@/utils/useSubscription";
+import { useUser } from "@/utils/useUser";
 
 const sortOptions = [
   { value: "created_at:desc", label: "Sorted by date, newest first" },
@@ -122,6 +123,9 @@ const MyChords = () => {
   const t = useT();
   const queryClient = useQueryClient();
   const subscription = useSubscription();
+  // Queries wait for the session; before it is restored they would run anonymously.
+  const { user } = useUser();
+  const userId = user?.id;
   const [search, setSearch] = useState("");
   const [sortValue, setSortValue] = useState(sortOptions[0].value);
   const [renaming, setRenaming] = useState<SavedChord | null>(null);
@@ -142,17 +146,22 @@ const MyChords = () => {
     isFetchingNextPage,
     fetchNextPage,
   } = useInfiniteQuery(
-    ["saved-chords", "list", debouncedSearch, sort, direction],
+    ["saved-chords", userId, "list", debouncedSearch, sort, direction],
     ({ pageParam = 0 }) =>
       fetchSavedChords({ search: debouncedSearch, sort, direction }, pageParam),
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.length === SAVED_CHORDS_PAGE_SIZE ? pages.length : undefined,
       keepPreviousData: true,
+      enabled: !!userId,
     },
   );
 
-  const { data: count } = useQuery(["saved-chords", "count"], countSavedChords);
+  const { data: count } = useQuery(
+    ["saved-chords", userId, "count"],
+    countSavedChords,
+    { enabled: !!userId },
+  );
 
   // Load the next 50 once the end of the list scrolls into view.
   useEffect(() => {
