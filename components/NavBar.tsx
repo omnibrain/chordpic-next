@@ -14,6 +14,7 @@ import { SubscriptionType } from "../types";
 import { languageMap } from "../utils/translate";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { WithTooltip } from "@/components/ui/with-tooltip";
 import { cn } from "@/lib/utils";
 
 const Logo: React.FunctionComponent = () => {
@@ -54,14 +55,16 @@ const ColorModeToggle: React.FunctionComponent = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={toggleColorMode}
-      aria-label="Toggle dark mode"
-    >
-      {colorMode === "dark" ? <Sun /> : <Moon />}
-    </Button>
+    <WithTooltip label={<T>Toggle dark mode</T>}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggleColorMode}
+        aria-label="Toggle dark mode"
+      >
+        {colorMode === "dark" ? <Sun /> : <Moon />}
+      </Button>
+    </WithTooltip>
   );
 };
 
@@ -132,14 +135,16 @@ export const NavBar = () => {
         </div>
         <div className="flex items-center gap-1 md:hidden">
           <ColorModeToggle />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-          >
-            {isOpen ? <X /> : <Menu />}
-          </Button>
+          <WithTooltip label={isOpen ? <T>Close menu</T> : <T>Open menu</T>}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+            >
+              {isOpen ? <X /> : <Menu />}
+            </Button>
+          </WithTooltip>
         </div>
       </nav>
       {isOpen && (

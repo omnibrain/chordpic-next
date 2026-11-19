@@ -1,8 +1,17 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render as rtlRender,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { MotionGlobalConfig } from "motion/react";
 import { SubscriptionType } from "../../types";
+import { TooltipProvider } from "../ui/tooltip";
 import { ChordSearch } from "./ChordSearch";
+
+const render = (ui: React.ReactElement) =>
+  rtlRender(<TooltipProvider>{ui}</TooltipProvider>);
 
 MotionGlobalConfig.skipAnimations = true;
 
@@ -145,9 +154,9 @@ it("opens the floating search on larger screens and closes it with escape", asyn
   }) as unknown as typeof window.matchMedia;
   render(<ChordSearch settings={settings} onChart={jest.fn()} />);
 
-  expect(screen.queryByRole("button", { name: "Close" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Close search" })).toBeNull();
   fireEvent.focus(floatingField());
-  expect(screen.getByRole("button", { name: "Close" })).not.toBeNull();
+  expect(screen.getByRole("button", { name: "Close search" })).not.toBeNull();
 
   fireEvent.change(floatingField(), { target: { value: "G" } });
   await screen.findByRole("button", { name: /^G \(1\// });
@@ -174,7 +183,7 @@ it("opens the search with Ctrl+K and shows the shortcut", () => {
   fireEvent.keyDown(document, { key: "k", ctrlKey: true });
 
   expect(document.activeElement).toBe(floatingField());
-  expect(screen.getByRole("button", { name: "Close" })).not.toBeNull();
+  expect(screen.getByRole("button", { name: "Close search" })).not.toBeNull();
 });
 
 it("shows the first two voicings without Pro and blurs the others", async () => {
