@@ -28,6 +28,8 @@ import { SubscriptionType } from "@/types";
 import { useLocalizedRouter } from "@/utils/use-localized-router";
 import { useSubscription } from "@/utils/useSubscription";
 
+const actionButton = "h-6 gap-1 px-2 text-[11px] [&_svg]:size-3";
+
 // Same sizes as the editor's download buttons
 const pngSizes = [
   { multiplier: 0.5, name: "Small" },
@@ -135,7 +137,7 @@ export const SavedChordItem = ({ savedChord, onRename, onDelete }: Props) => {
         aria-label={name}
       />
       <div className="mt-auto flex flex-wrap justify-center gap-1.5">
-        <Button size="sm" className="h-8 px-2.5 text-xs" onClick={openInEditor}>
+        <Button size="sm" className={actionButton} onClick={openInEditor}>
           <SquarePen />
           <T>Open in editor</T>
         </Button>
@@ -144,7 +146,7 @@ export const SavedChordItem = ({ savedChord, onRename, onDelete }: Props) => {
             <Button
               size="sm"
               variant="outline"
-              className="h-8 px-2.5 text-xs"
+              className={actionButton}
               disabled={!size}
             >
               <Download />
