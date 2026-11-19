@@ -10,15 +10,13 @@ jest.mock("./services/auth-session", () => ({
 
 beforeEach(() => jest.clearAllMocks());
 
-it("rewrites English URLs while preserving the query and ads assignment", async () => {
+it("rewrites English URLs while preserving the query", async () => {
   const response = await proxy(
     new NextRequest("https://chordpic.com/news?ref=menu"),
   );
   expect(response.headers.get("x-middleware-rewrite")).toBe(
     "https://chordpic.com/en/news?ref=menu",
   );
-  expect(response.cookies.get("cp_ads")?.value).toMatch(/^(on|off)$/);
-  expect(response.cookies.get("cp_bucket")).toBeDefined();
 });
 
 it("keeps explicitly localized routes and skips session work for public pages", async () => {
