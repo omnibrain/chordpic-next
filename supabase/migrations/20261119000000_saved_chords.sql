@@ -25,7 +25,7 @@ create policy "Can delete own saved chords." on public.saved_chords
   for delete using (auth.uid() = user_id);
 
 -- Only the name can change after saving.
-revoke update on public.saved_chords from anon, authenticated;
+revoke update, truncate on public.saved_chords from anon, authenticated;
 grant update (name) on public.saved_chords to authenticated;
 
 -- Free accounts keep up to 3 chords; Pro is unlimited. Same Pro check as
