@@ -90,19 +90,48 @@ export const SavedChordItem = ({ savedChord, onRename, onDelete }: Props) => {
 
   return (
     <Card className="flex flex-col p-4">
-      <h2 className="truncate font-heading text-lg font-semibold" title={name}>
-        {name}
-      </h2>
-      <p className="text-xs text-muted-foreground">
-        {new Date(savedChord.created_at).toLocaleDateString()}
-      </p>
+      <div className="flex items-start gap-2">
+        <div className="min-w-0 flex-1">
+          <h2
+            className="truncate font-heading text-lg font-semibold"
+            title={name}
+          >
+            {name}
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {new Date(savedChord.created_at).toLocaleDateString()}
+          </p>
+        </div>
+        <div className="-me-2 -mt-1 flex shrink-0">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            aria-label={t("Rename")}
+            title={t("Rename")}
+            onClick={() => onRename(savedChord)}
+          >
+            <Pencil />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 text-destructive hover:text-destructive"
+            aria-label={t("Delete")}
+            title={t("Delete")}
+            onClick={() => onDelete(savedChord)}
+          >
+            <Trash2 />
+          </Button>
+        </div>
+      </div>
       <div
         ref={ref}
         className="mx-auto my-3 aspect-square w-full max-w-60 [&>svg]:h-full [&>svg]:w-full"
         role="img"
         aria-label={name}
       />
-      <div className="mt-auto flex flex-wrap gap-2">
+      <div className="mt-auto flex flex-wrap justify-center gap-2">
         <Button size="sm" onClick={openInEditor}>
           <SquarePen />
           <T>Open in editor</T>
@@ -137,28 +166,6 @@ export const SavedChordItem = ({ savedChord, onRename, onDelete }: Props) => {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className="ms-auto flex gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8"
-            aria-label={t("Rename")}
-            title={t("Rename")}
-            onClick={() => onRename(savedChord)}
-          >
-            <Pencil />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 text-destructive hover:text-destructive"
-            aria-label={t("Delete")}
-            title={t("Delete")}
-            onClick={() => onDelete(savedChord)}
-          >
-            <Trash2 />
-          </Button>
-        </div>
       </div>
     </Card>
   );
