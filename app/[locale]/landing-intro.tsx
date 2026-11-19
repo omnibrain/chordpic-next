@@ -43,7 +43,10 @@ export const LandingIntro = ({ locale }: { locale: string }) => {
           href="/pricing"
           className="font-medium underline underline-offset-4"
         >
-          <T>Get the Pro version (no ads, no watermark, all chord voicings)</T>
+          <T>
+            Get the Pro version (no ads, no watermark, all chord voicings,
+            unlimited saved chords)
+          </T>
         </NextLink>
       </p>
     </>

@@ -40,7 +40,7 @@ export class ImageService {
 
   static fileName(name: string | undefined, extension: string) {
     return name
-      ? sanitize(name)
+      ? `${sanitize(name)}.${extension}`
       : `chart-${dayjs().format(FILENAME_DATE_FORMAT)}.${extension}`;
   }
 }

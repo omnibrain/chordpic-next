@@ -91,6 +91,9 @@ const MenuLinks: React.FunctionComponent<{
       )}
       {user ? (
         <>
+          <NavbarMenuItem onNavigate={onCloseMenu} to="/my-chords">
+            <T>My chords</T>
+          </NavbarMenuItem>
           <NavbarMenuItem onNavigate={onCloseMenu} to="/account">
             <T>Account</T>
           </NavbarMenuItem>

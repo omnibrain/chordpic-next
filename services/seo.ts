@@ -48,6 +48,7 @@ const NOINDEX_PREFIXES = [
   "/signin",
   "/signup",
   "/account",
+  "/my-chords",
   "/reset-password",
   "/new-password",
   "/playground",

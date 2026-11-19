@@ -3,6 +3,7 @@
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
 import NextLink from "@/components/LocalizedLink";
+import { signInDestination, useLocationSearch } from "@/utils/auth-redirect";
 import { useLocalizedRouter } from "@/utils/use-localized-router";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -30,6 +31,7 @@ const SignUp = () => {
   const { user } = useUser();
   const { toast } = useToast();
   const t = useT();
+  const search = useLocationSearch();
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +60,7 @@ const SignUp = () => {
 
   useEffect(() => {
     if (newUser || user) {
-      router.replace("/account");
+      router.replace(signInDestination(window.location.search));
     }
   }, [newUser, user, router]);
 
@@ -111,7 +113,7 @@ const SignUp = () => {
             <T>Do you have an account?</T>
           </span>{" "}
           <NextLink
-            href="/signin"
+            href={`/signin${search}`}
             className="font-medium underline underline-offset-4"
           >
             <T>Sign in</T>
