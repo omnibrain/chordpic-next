@@ -14,6 +14,7 @@ export interface SavedChord {
 
 export type SavedChordsSort = "created_at" | "name";
 export type SortDirection = "asc" | "desc";
+export type SavedChordsView = "list" | "grid";
 
 export interface SavedChordsQuery {
   search: string;

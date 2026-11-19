@@ -3,9 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { SVGuitarChord } from "@svguitar/core";
 import * as Sentry from "@sentry/nextjs";
-import { ChevronDown, Download, Pencil, SquarePen, Trash2 } from "lucide-react";
+import {
+  Download,
+  MoreHorizontal,
+  Pencil,
+  SquarePen,
+  Trash2,
+} from "lucide-react";
 import { T, useT } from "@magic-translate/react";
 import { useChart } from "@/components/chord/useChart";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -22,13 +29,11 @@ import {
 } from "@/services/chord-rendering";
 import { GA } from "@/services/google-analytics";
 import { ImageService } from "@/services/image-service";
-import type { SavedChord } from "@/services/saved-chords";
+import type { SavedChord, SavedChordsView } from "@/services/saved-chords";
 import { WithTooltip } from "@/components/ui/with-tooltip";
 import { SubscriptionType } from "@/types";
 import { useLocalizedRouter } from "@/utils/use-localized-router";
 import { useSubscription } from "@/utils/useSubscription";
-
-const actionButton = "h-6 gap-1 px-2 text-[11px] [&_svg]:size-3";
 
 // Same sizes as the editor's download buttons
 const pngSizes = [
@@ -42,9 +47,15 @@ interface Props {
   savedChord: SavedChord;
   onRename(savedChord: SavedChord): void;
   onDelete(savedChord: SavedChord): void;
+  view: SavedChordsView;
 }
 
-export const SavedChordItem = ({ savedChord, onRename, onDelete }: Props) => {
+export const SavedChordItem = ({
+  savedChord,
+  onRename,
+  onDelete,
+  view,
+}: Props) => {
   const t = useT();
   const { chart, name } = savedChord;
   const ref = useRef<HTMLDivElement>(null);
@@ -91,92 +102,114 @@ export const SavedChordItem = ({ savedChord, onRename, onDelete }: Props) => {
     router.push("/");
   };
 
-  return (
-    <Card className="flex flex-col p-3">
-      <div className="flex items-start gap-2">
-        <div className="min-w-0 flex-1">
-          <h2
-            className="truncate font-heading text-base font-semibold"
-            title={name}
-          >
-            {name}
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            {new Date(savedChord.created_at).toLocaleDateString()}
-          </p>
-        </div>
-        <div className="-me-1.5 -mt-1 flex shrink-0">
-          <WithTooltip label={t("Rename chord")}>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-7 w-7"
-              aria-label={t("Rename chord")}
-              onClick={() => onRename(savedChord)}
-            >
-              <Pencil />
-            </Button>
-          </WithTooltip>
-          <WithTooltip label={t("Delete chord")}>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-7 w-7"
-              aria-label={t("Delete chord")}
-              onClick={() => onDelete(savedChord)}
-            >
-              <Trash2 />
-            </Button>
-          </WithTooltip>
-        </div>
-      </div>
-      <div
-        ref={ref}
-        className="mx-auto my-2 aspect-square w-full max-w-40 [&>svg]:h-full [&>svg]:w-full"
-        role="img"
-        aria-label={name}
-      />
-      <div className="mt-auto flex flex-wrap justify-center gap-1.5">
-        <Button size="sm" className={actionButton} onClick={openInEditor}>
+  const actions = (
+    <div className="flex shrink-0 items-center gap-0.5">
+      <WithTooltip label={t("Open in editor")}>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-8 w-8"
+          aria-label={t("Open in editor")}
+          onClick={openInEditor}
+        >
           <SquarePen />
-          <T>Open in editor</T>
         </Button>
-        <DropdownMenu>
+      </WithTooltip>
+      <DropdownMenu>
+        <WithTooltip label={t("Download")}>
           <DropdownMenuTrigger asChild>
             <Button
-              size="sm"
-              variant="outline"
-              className={actionButton}
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8"
+              aria-label={t("Download")}
               disabled={!size}
             >
               <Download />
-              <T>Download</T>
-              <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem onSelect={downloadSvg}>SVG</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>PNG</DropdownMenuLabel>
-            {size &&
-              pngSizes.map(({ multiplier, name: sizeName }) => {
-                const width = Math.round(size.width * multiplier);
-                const height = Math.round(size.height * multiplier);
-                return (
-                  <DropdownMenuItem
-                    key={multiplier}
-                    onSelect={() => downloadPng(width)}
-                  >
-                    <T>{sizeName} PNG</T>
-                    <span className="ms-auto ps-4 text-xs text-muted-foreground">
-                      {width} x {height}
-                    </span>
-                  </DropdownMenuItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        </WithTooltip>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={downloadSvg}>SVG</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>PNG</DropdownMenuLabel>
+          {size &&
+            pngSizes.map(({ multiplier, name: sizeName }) => {
+              const width = Math.round(size.width * multiplier);
+              const height = Math.round(size.height * multiplier);
+              return (
+                <DropdownMenuItem
+                  key={multiplier}
+                  onSelect={() => downloadPng(width)}
+                >
+                  <T>{sizeName} PNG</T>
+                  <span className="ms-auto ps-4 text-xs text-muted-foreground">
+                    {width} x {height}
+                  </span>
+                </DropdownMenuItem>
+              );
+            })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DropdownMenu>
+        <WithTooltip label={t("More actions")}>
+          <DropdownMenuTrigger asChild>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8"
+              aria-label={t("More actions")}
+            >
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+        </WithTooltip>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={() => onRename(savedChord)}>
+            <Pencil />
+            <T>Rename</T>
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => onDelete(savedChord)}>
+            <Trash2 />
+            <T>Delete</T>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+
+  const preview = (className: string) => (
+    <div
+      ref={ref}
+      className={cn("shrink-0 [&>svg]:h-auto [&>svg]:w-full", className)}
+      role="img"
+      aria-label={name}
+    />
+  );
+
+  if (view === "grid") {
+    return (
+      <Card className="flex flex-col items-center px-1 pb-1 pt-3">
+        <WithTooltip label={name}>
+          {preview("w-full max-w-28 px-1")}
+        </WithTooltip>
+        <div className="mt-auto pt-1">{actions}</div>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3 px-3 py-2">
+      {preview("w-16")}
+      <div className="min-w-0 flex-1">
+        <h2 className="truncate font-heading font-semibold" title={name}>
+          {name}
+        </h2>
+        <p className="text-xs text-muted-foreground">
+          {new Date(savedChord.created_at).toLocaleDateString()}
+        </p>
       </div>
-    </Card>
+      {actions}
+    </div>
   );
 };

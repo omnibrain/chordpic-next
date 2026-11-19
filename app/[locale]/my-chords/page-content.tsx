@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Search } from "lucide-react";
+import { LayoutGrid, List, Loader2, Search } from "lucide-react";
 import {
   useInfiniteQuery,
   useQuery,
@@ -11,6 +11,7 @@ import { T, useT } from "@magic-translate/react";
 import NextLink from "@/components/LocalizedLink";
 import { ChordNameDialog } from "@/components/saved-chords/ChordNameDialog";
 import { SavedChordItem } from "@/components/saved-chords/SavedChordItem";
+import { useSavedChordsView } from "@/components/saved-chords/useSavedChordsView";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -39,6 +41,7 @@ import {
   type SavedChordsSort,
   type SortDirection,
 } from "@/services/saved-chords";
+import { WithTooltip } from "@/components/ui/with-tooltip";
 import { SubscriptionType } from "@/types";
 import { useSubscription } from "@/utils/useSubscription";
 import { useUser } from "@/utils/useUser";
@@ -130,6 +133,7 @@ const MyChords = () => {
   const [sortValue, setSortValue] = useState(sortOptions[0].value);
   const [renaming, setRenaming] = useState<SavedChord | null>(null);
   const [deleting, setDeleting] = useState<SavedChord | null>(null);
+  const [view, setView] = useSavedChordsView();
   const sentinel = useRef<HTMLDivElement>(null);
 
   const debouncedSearch = useDebounced(search.trim(), 300);
@@ -179,6 +183,15 @@ const MyChords = () => {
 
   const refresh = () => queryClient.invalidateQueries(["saved-chords"]);
   const chords = data?.pages.flat() ?? [];
+  const items = chords.map((savedChord) => (
+    <SavedChordItem
+      key={savedChord.id}
+      savedChord={savedChord}
+      view={view}
+      onRename={setRenaming}
+      onDelete={setDeleting}
+    />
+  ));
 
   return (
     <section>
@@ -211,18 +224,44 @@ const MyChords = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Select value={sortValue} onValueChange={setSortValue}>
-          <SelectTrigger className="sm:w-64" aria-label={t("Sort")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {sortOptions.map(({ value, label }) => (
-              <SelectItem key={value} value={value}>
-                {t(label)}
-              </SelectItem>
+        <div className="flex gap-2">
+          <Select value={sortValue} onValueChange={setSortValue}>
+            <SelectTrigger
+              className="flex-1 sm:w-64 sm:flex-none"
+              aria-label={t("Sort")}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {sortOptions.map(({ value, label }) => (
+                <SelectItem key={value} value={value}>
+                  {t(label)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="flex rounded-md border p-0.5">
+            {(
+              [
+                ["list", List, t("List view")],
+                ["grid", LayoutGrid, t("Grid view")],
+              ] as const
+            ).map(([value, Icon, label]) => (
+              <WithTooltip key={value} label={label}>
+                <Button
+                  size="icon"
+                  variant={view === value ? "secondary" : "ghost"}
+                  className="h-7 w-7"
+                  aria-label={label}
+                  aria-pressed={view === value}
+                  onClick={() => setView(value)}
+                >
+                  <Icon />
+                </Button>
+              </WithTooltip>
             ))}
-          </SelectContent>
-        </Select>
+          </div>
+        </div>
       </div>
 
       {isLoading ? (
@@ -253,17 +292,12 @@ const MyChords = () => {
             </>
           )}
         </div>
-      ) : (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-          {chords.map((savedChord) => (
-            <SavedChordItem
-              key={savedChord.id}
-              savedChord={savedChord}
-              onRename={setRenaming}
-              onDelete={setDeleting}
-            />
-          ))}
+      ) : view === "grid" ? (
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+          {items}
         </div>
+      ) : (
+        <Card className="divide-y">{items}</Card>
       )}
 
       <div ref={sentinel} />
