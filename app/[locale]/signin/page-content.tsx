@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, MailCheck } from "lucide-react";
-import { getURL } from "@/utils/helpers";
+import { signInDestination, useLocationSearch } from "@/utils/auth-redirect";
+import { getAuthRedirectURL } from "@/utils/helpers";
 import { T, useT } from "@magic-translate/react";
 
 const linkClasses = "font-medium underline underline-offset-4";
@@ -66,6 +67,7 @@ const SignIn = () => {
   const router = useLocalizedRouter();
   const { user } = useUser();
   const t = useT();
+  const search = useLocationSearch();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -76,7 +78,7 @@ const SignIn = () => {
 
       const { error } = await supabaseClient.auth.signIn(
         { email, password },
-        { redirectTo: getURL() },
+        { redirectTo: getAuthRedirectURL() },
       );
       if (error) {
         setMessage({ type: "error", content: error.message });
@@ -93,7 +95,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user) {
-      router.replace("/account");
+      router.replace(signInDestination(window.location.search));
     }
   }, [user, router]);
 
@@ -215,7 +217,7 @@ const SignIn = () => {
           <span>
             <T>Don&apos;t have an account?</T>
           </span>{" "}
-          <NextLink href="/signup" className={linkClasses}>
+          <NextLink href={`/signup${search}`} className={linkClasses}>
             <T>Sign up</T>
           </NextLink>
           .

@@ -11,6 +11,9 @@ import { CURRENCY_COOKIE, currencyForCountry } from "./services/currency";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
+// Server-rendered pages that need the visitor's session.
+const SESSION_PAGES = ["/account", "/my-chords"];
+
 async function routeRequest(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const locale = pathnameLocale(pathname);
@@ -42,10 +45,11 @@ async function routeRequest(request: NextRequest) {
     }
   }
 
-  const sessionCookies =
-    stripLocaleFromPathname(pathname) === "/account"
-      ? await refreshAccountSession(request)
-      : [];
+  const sessionCookies = SESSION_PAGES.includes(
+    stripLocaleFromPathname(pathname),
+  )
+    ? await refreshAccountSession(request)
+    : [];
   const options = sessionCookies.length
     ? { request: { headers: request.headers } }
     : undefined;

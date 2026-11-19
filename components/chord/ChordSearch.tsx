@@ -12,6 +12,7 @@ import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import Link from "@/components/LocalizedLink";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { WithTooltip } from "@/components/ui/with-tooltip";
 import type { Chart, ChartSettings } from "@/domain/chart";
 import { useEscHandler } from "@/hooks/use-esc-handler";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -243,15 +244,17 @@ export const ChordSearch: React.FunctionComponent<{
                       floatingInputRef.current?.focus();
                     }}
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t("Close")}
-                    onClick={close}
-                  >
-                    <X />
-                  </Button>
+                  <WithTooltip label={t("Close search")}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={t("Close search")}
+                      onClick={close}
+                    >
+                      <X />
+                    </Button>
+                  </WithTooltip>
                 </motion.div>
               )}
               {open && (
@@ -443,29 +446,33 @@ const SearchResults: React.FunctionComponent<{
       )}
       {pages > 1 && (
         <div className="flex items-center justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            aria-label={t("Previous page")}
-            disabled={page === 0}
-            onClick={() => onPage(page - 1)}
-          >
-            <ChevronLeft />
-          </Button>
+          <WithTooltip label={t("Previous page")}>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label={t("Previous page")}
+              disabled={page === 0}
+              onClick={() => onPage(page - 1)}
+            >
+              <ChevronLeft />
+            </Button>
+          </WithTooltip>
           <span className="text-sm text-muted-foreground">
             {page + 1} / {pages}
           </span>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            aria-label={t("Next page")}
-            disabled={page === pages - 1}
-            onClick={() => onPage(page + 1)}
-          >
-            <ChevronRight />
-          </Button>
+          <WithTooltip label={t("Next page")}>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label={t("Next page")}
+              disabled={page === pages - 1}
+              onClick={() => onPage(page + 1)}
+            >
+              <ChevronRight />
+            </Button>
+          </WithTooltip>
         </div>
       )}
     </div>

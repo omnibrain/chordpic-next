@@ -11,6 +11,7 @@ import { PlayButton } from "@/components/chord/PlayButton";
 import { useChart } from "@/components/chord/useChart";
 import { AdjustableChordSettings, ChordForm } from "@/components/ChordForm";
 import { DownloadButtons } from "@/components/DownloadButtons";
+import { SaveChord } from "@/components/saved-chords/SaveChord";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -152,7 +153,10 @@ const Home = () => {
       </React.Fragment>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <DownloadButtons title={chart.settings.title} />
-        <ShareButtons chart={chart} />
+        <div>
+          <SaveChord chart={chart} />
+          <ShareButtons chart={chart} />
+        </div>
       </div>
     </>
   );

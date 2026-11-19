@@ -24,23 +24,23 @@ export class ImageService {
   }
 
   static downloadSvg(svgString: string, name?: string) {
-    // / Create a fake <a> element
-    const fakeLink = document.createElement("a");
-
-    // hack to trigger the download
-    fakeLink.setAttribute(
-      "href",
-      `data:image/svg+xml;base64,${btoa(
-        unescape(encodeURIComponent(svgString))
-      )}`
+    // iOS Safari ignores downloads of data: URLs and of links that aren't in the document
+    const url = URL.createObjectURL(
+      new Blob([svgString], { type: "image/svg+xml" }),
     );
-    fakeLink.setAttribute("download", ImageService.fileName(name, "svg"));
-    fakeLink.click();
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = ImageService.fileName(name, "svg");
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10_000);
   }
 
   static fileName(name: string | undefined, extension: string) {
     return name
-      ? sanitize(name)
+      ? `${sanitize(name)}.${extension}`
       : `chart-${dayjs().format(FILENAME_DATE_FORMAT)}.${extension}`;
   }
 }

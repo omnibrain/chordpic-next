@@ -5,6 +5,7 @@ import Link from "@/components/LocalizedLink";
 import { ChordResult } from "@/components/chord/ChordResult";
 import { useChart } from "@/components/chord/useChart";
 import { DownloadButtons } from "@/components/DownloadButtons";
+import { SaveChord } from "@/components/saved-chords/SaveChord";
 import { ShareButtons } from "@/components/ShareButtons";
 import { buttonVariants } from "@/components/ui/button";
 import { Chart } from "@/domain/chart";
@@ -58,6 +59,7 @@ const ChordView = ({
       </div>
       <div>
         <DownloadButtons title={chart.settings.title} />
+        <SaveChord chart={chart} />
         <ShareButtons chart={chart} />
         <h2 className="mb-3 mt-8 font-heading text-2xl font-semibold tracking-tight">
           {editHeading}

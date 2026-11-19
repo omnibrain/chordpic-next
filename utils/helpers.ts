@@ -12,6 +12,19 @@ export const getURL = () => {
   return url.includes("http") ? url : `https://${url}`;
 };
 
+/**
+ * Where Supabase sends people back after auth emails and OAuth: this deployment, so previews
+ * return to themselves, and back to this sign-in page when it has a `next` destination to resume.
+ */
+export const getAuthRedirectURL = () => {
+  if (typeof window === "undefined") return getURL();
+  const { origin, pathname, search } = window.location;
+  const next = new URLSearchParams(search).get("next");
+  return next
+    ? `${origin}${pathname}?${new URLSearchParams({ next })}`
+    : origin;
+};
+
 export const postData = async ({
   url,
   data,

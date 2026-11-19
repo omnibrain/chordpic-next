@@ -34,8 +34,8 @@ export default async function Pricing({ products, locale }: Props) {
         <T>
           Start for free. Go <strong>Pro</strong> for chord diagrams{" "}
           <strong> without watermark</strong>, <strong>handdrawn style</strong>,{" "}
-          <strong>all voicings in the chord search</strong> and{" "}
-          <strong>no ads</strong>.
+          <strong>all voicings in the chord search</strong>,{" "}
+          <strong>unlimited saved chords</strong> and <strong>no ads</strong>.
         </T>
       </p>
 
