@@ -146,6 +146,7 @@ const MyChords = () => {
     data,
     error,
     isLoading,
+    isFetching,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -173,13 +174,14 @@ const MyChords = () => {
     if (!element || !hasNextPage) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isFetchingNextPage) fetchNextPage();
+        // fetchNextPage would cancel a pending refresh and append to stale pages
+        if (entry.isIntersecting && !isFetching) fetchNextPage();
       },
       { rootMargin: "400px" },
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetching, fetchNextPage]);
 
   const refresh = () => queryClient.invalidateQueries(["saved-chords"]);
   const chords = data?.pages.flat() ?? [];
