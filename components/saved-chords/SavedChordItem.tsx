@@ -151,7 +151,8 @@ export const SavedChordItem = ({
             })}
         </DropdownMenuContent>
       </DropdownMenu>
-      <DropdownMenu>
+      {/* Modal menus leave pointer-events: none on <body> when they open a dialog */}
+      <DropdownMenu modal={false}>
         <WithTooltip label={t("More actions")}>
           <DropdownMenuTrigger asChild>
             <Button
