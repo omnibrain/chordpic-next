@@ -5,7 +5,7 @@ import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { Loader2 } from "lucide-react";
 import { T } from "@magic-translate/react";
 import { Button } from "@/components/ui/button";
-import { getURL } from "@/utils/helpers";
+import { getAuthRedirectURL } from "@/utils/helpers";
 
 const GoogleLogo = () => (
   <svg viewBox="0 0 48 48" aria-hidden="true">
@@ -37,7 +37,7 @@ export const GoogleSignInButton: React.FunctionComponent<{
     setRedirecting(true);
     const { error } = await supabaseClient.auth.signIn(
       { provider: "google" },
-      { redirectTo: getURL() },
+      { redirectTo: getAuthRedirectURL() },
     );
     if (error) {
       onError(error.message);

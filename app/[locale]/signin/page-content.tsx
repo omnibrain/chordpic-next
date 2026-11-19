@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, MailCheck } from "lucide-react";
 import { signInDestination, useLocationSearch } from "@/utils/auth-redirect";
-import { getURL } from "@/utils/helpers";
+import { getAuthRedirectURL } from "@/utils/helpers";
 import { T, useT } from "@magic-translate/react";
 
 const linkClasses = "font-medium underline underline-offset-4";
@@ -78,7 +78,7 @@ const SignIn = () => {
 
       const { error } = await supabaseClient.auth.signIn(
         { email, password },
-        { redirectTo: getURL() },
+        { redirectTo: getAuthRedirectURL() },
       );
       if (error) {
         setMessage({ type: "error", content: error.message });

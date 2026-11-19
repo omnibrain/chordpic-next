@@ -12,6 +12,10 @@ export const getURL = () => {
   return url.includes("http") ? url : `https://${url}`;
 };
 
+// Where Supabase sends people back after auth emails and OAuth, so preview deployments return to themselves
+export const getAuthRedirectURL = () =>
+  typeof window === "undefined" ? getURL() : window.location.origin;
+
 export const postData = async ({
   url,
   data,

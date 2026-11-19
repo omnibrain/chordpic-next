@@ -2,6 +2,7 @@
 
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
+import { getAuthRedirectURL } from "@/utils/helpers";
 import NextLink from "@/components/LocalizedLink";
 import { signInDestination, useLocationSearch } from "@/utils/auth-redirect";
 import { useLocalizedRouter } from "@/utils/use-localized-router";
@@ -38,10 +39,10 @@ const SignUp = () => {
 
     setLoading(true);
     setMessage({});
-    const { error, user: createdUser } = await supabaseClient.auth.signUp({
-      email,
-      password,
-    });
+    const { error, user: createdUser } = await supabaseClient.auth.signUp(
+      { email, password },
+      { redirectTo: getAuthRedirectURL() },
+    );
     if (error) {
       setMessage({ type: "error", content: error.message });
     } else {

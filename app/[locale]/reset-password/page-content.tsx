@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getURL } from "@/utils/helpers";
+import { getAuthRedirectURL } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase-client";
 import { T, useT } from "@magic-translate/react";
 
@@ -30,7 +30,7 @@ const ResetPassword = () => {
       setMessage({});
 
       const { error } = await supabase.auth.api.resetPasswordForEmail(email, {
-        redirectTo: getURL(),
+        redirectTo: getAuthRedirectURL(),
       });
       if (error) {
         setMessage({ type: "error", content: error.message });
