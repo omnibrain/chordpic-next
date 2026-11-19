@@ -9,7 +9,6 @@ import Providers from "../providers";
 import { locales, isLocale } from "@/services/i18n";
 import { isRtl } from "@/utils/translate";
 import {
-  adsInitScript,
   currencyInitScript,
   colorModeInitScript,
   translateGuardScript,
@@ -80,7 +79,6 @@ export default async function RootLayout({
     >
       <body>
         <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
-        <script dangerouslySetInnerHTML={{ __html: adsInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: currencyInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: translateGuardScript }} />
         <Providers>{children}</Providers>

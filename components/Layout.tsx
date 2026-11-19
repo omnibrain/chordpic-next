@@ -5,10 +5,6 @@ import React, { PropsWithChildren, useEffect } from "react";
 import { GA4_ID } from "../global";
 import { SubscriptionType } from "../types";
 import { useSubscription } from "../utils/useSubscription";
-import {
-  readAdsAssignment,
-  useAdsAssignment,
-} from "../hooks/use-ads-assignment";
 import { useConsentSettled } from "../hooks/use-consent-settled";
 import { Footer } from "./Footer";
 import { NavBar } from "./NavBar";
@@ -19,14 +15,9 @@ if (typeof window !== "undefined") disableAnalyticsForSpamReferrers();
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const subscription = useSubscription();
-  const adsAssignment = useAdsAssignment();
   const consentSettled = useConsentSettled();
 
   useEffect(() => {
-    // Read straight from the cookie rather than from state: user properties
-    // only apply to events sent after them, so this has to land before config.
-    const ads = readAdsAssignment();
-
     // @ts-ignore
     window.dataLayer = window.dataLayer || [];
     function gtag() {
@@ -35,26 +26,20 @@ export const Layout = ({ children }: PropsWithChildren) => {
     }
     // @ts-ignore
     gtag("js", new Date());
-    if (ads.assigned) {
-      // @ts-ignore
-      gtag("set", "user_properties", { ads_arm: ads.arm });
-    }
     // @ts-ignore
     gtag("config", GA4_ID);
   }, []);
 
   return (
     <>
-      {subscription === SubscriptionType.FREE &&
-        adsAssignment?.arm === "on" &&
-        consentSettled && (
-          <Script
-            data-ad-client="ca-pub-5764824207547220"
-            async
-            strategy="afterInteractive"
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-          />
-        )}
+      {subscription === SubscriptionType.FREE && consentSettled && (
+        <Script
+          data-ad-client="ca-pub-5764824207547220"
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        />
+      )}
 
       {subscription && (
         <>

@@ -1,6 +1,5 @@
 // Run before hydration so persisted appearance does not flash on first paint.
 export const colorModeInitScript = `(function(){try{if(localStorage.getItem("color-mode")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})()`;
-export const adsInitScript = `(function(){try{var m=document.cookie.match(/(?:^|; )cp_ads=(on|off)/);if(m&&m[1]==="off"){document.documentElement.classList.add("ads-off")}}catch(e){}})()`;
 export const currencyInitScript = `(function(){try{var m=document.cookie.match(/(?:^|; )cp_cur=(eur|chf)(?:;|$)/);if(m){document.documentElement.classList.add("cur-"+m[1])}}catch(e){}})()`;
 
 // Google Translate swaps text nodes for its own <font> wrappers, so React later removes or inserts
