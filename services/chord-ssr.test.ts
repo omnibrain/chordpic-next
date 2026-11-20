@@ -1,6 +1,6 @@
 /** @jest-environment node */
 
-import type { ChordStyle, FretLabelFormat } from "@svguitar/core";
+import type { BarreChordStyle, ChordStyle, FretLabelFormat } from "@svguitar/core";
 import { Chart } from "../domain/chart";
 import { renderChord } from "./chord-ssr";
 
@@ -124,4 +124,23 @@ describe("hand-drawn style", () => {
       (await renderChord(handdrawn)).svg,
     );
   });
+});
+
+it("draws a barre as an arc when asked to", async () => {
+  const withBarre: Chart = {
+    ...chart,
+    chord: {
+      fingers: [],
+      barres: [{ fromString: 6, toString: 1, fret: 2 }],
+    },
+  };
+  const bar = await renderChord(withBarre);
+  const arc = await renderChord({
+    ...withBarre,
+    settings: { ...withBarre.settings, barreChordStyle: "arc" as BarreChordStyle },
+  });
+
+  expect(arc.svg).not.toEqual(bar.svg);
+  expect(arc.svg).toMatch(/<path[^>]*class="[^"]*barre/);
+  expect(bar.svg).not.toMatch(/<path[^>]*class="[^"]*barre/);
 });

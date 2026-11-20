@@ -1,4 +1,5 @@
 import * as React from "react";
+import { T } from "@magic-translate/react";
 import { IChordInputSettings } from "./ChordEditor";
 
 interface IProps {
@@ -26,7 +27,7 @@ export const TuningInput = (props: IProps) => (
       return (
         <div key={i} className="relative p-px" data-cell-index={i}>
           <label htmlFor={`tuning-input-string-${i}`} className="sr-only">
-            Tuning of String {stringLabel}
+            <T>Tuning of String {stringLabel}</T>
           </label>
           <input
             id={`tuning-input-string-${i}`}
